@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>protobot_localization</name>
+  <version>0.0.0</version>
+  <description>The protobot_localization package</description>
+
+  <maintainer email="mario@todo.todo">mario</maintainer>
+
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>orb_slam_2_ros</exec_depend>
+  <exec_depend>robot_localization</exec_depend>
+
+  <export>
+
+  </export>
+</package>

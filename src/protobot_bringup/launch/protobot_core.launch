@@ -1,0 +1,5 @@
+<launch>	
+	<include file="$(find protobot_description)/launch/view_model.launch"/>
+	<include file="$(find protobot_localization)/launch/protobot_localization.launch"/>
+	<include file="$(find protobot_teleop)/launch/protobot_teleop.launch"/>
+</launch>

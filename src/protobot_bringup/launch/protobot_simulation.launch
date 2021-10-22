@@ -1,0 +1,4 @@
+<launch>
+	<include file="$(find protobot_bringup)/launch/protobot_core.launch"/>
+	<include file="$(find protobot_gazebo)/launch/protobot_gazebo.launch"/>
+</launch>

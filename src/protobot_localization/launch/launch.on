@@ -1,0 +1,271 @@
+xacro: in-order processing became default in ROS Melodic. You can drop the option.
+[33m[ WARN] [1634698802.421004234]: The root link base_link has an inertia specified in the URDF, but KDL does not support a root link with an inertia.  As a workaround, you can add an extra dummy link to your URDF.[0m
+[31m[FATAL] [1634698802.471065708]: Could not read sensor update configuration for topic odom1 (type: 0, expected: 7). Error was type error
+[0m
+
+ORB-SLAM2 Copyright (C) 2014-2016 Raul Mur-Artal, University of Zaragoza.
+This program comes with ABSOLUTELY NO WARRANTY;
+This is free software, and you are welcome to redistribute it
+under certain conditions. See LICENSE.txt.
+
+OpenCV version : 4.2.0
+Major version : 4
+Minor version : 2
+Subminor version : 0
+Input sensor was set to: Stereo
+
+Loading ORB Vocabulary.
+Vocabulary loaded!
+
+
+Camera Parameters: 
+- fx: 909.508
+- fy: 909.508
+- cx: 960.5
+- cy: 540.5
+- k1: 0
+- k2: 0
+- p1: 0
+- p2: 0
+- fps: 30
+- bf: 0.07
+- color order: RGB (ignored if grayscale)
+
+ORB Extractor Parameters: 
+- Number of Features: 2000
+- Scale Levels: 8
+- Scale Factor: 1.2
+- Initial Fast Threshold: 20
+- Minimum Fast Threshold: 7
+
+Depth Threshold (Close/Far Points): 0.00269377
+Enable localization only: false
+[33m[ WARN] [1634698803.941645759, 45.894000000]: Failed to meet update rate! Took 45.893999999999998352[0m
+[33m[ WARN] [1634698803.941826427, 45.894000000]: Failed to meet update rate! Took 45.893999999999998352[0m
+[33m[ WARN] [1634698803.942993815, 45.895000000]: Failed to meet update rate! Took 45.860666666999996721[0m
+[33m[ WARN] [1634698803.943605997, 45.896000000]: Failed to meet update rate! Took 45.862666666999999165[0m
+[33m[ WARN] [1634698804.709430966, 46.007000000]: DiffDrive(ns = //): missing <rosDebugLevel> default is na[0m
+[33m[ WARN] [1634698804.710780482, 46.007000000]: DiffDrive(ns = //): <odometrySource> no matching key to 1[0m
+[33m[ WARN] [1634698804.710969089, 46.007000000]: GazeboRosDiffDrive Plugin (ns = ) missing <publishTf>, defaults to 1[0m
+[33m[ WARN] [1634698804.980407292, 46.257000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+New map created with 500 points
+Track lost soon after initialisation, reseting...
+System Reseting
+Reseting Local Mapper... done
+Reseting Loop Closing... done
+Reseting Database... done
+New map created with 463 points
+Track lost soon after initialisation, reseting...
+[33m[ WARN] [1634698807.009664360, 48.258000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+System Reseting
+Reseting Local Mapper... done
+Reseting Loop Closing... done
+Reseting Database... done
+New map created with 351 points
+[33m[ WARN] [1634698809.034948948, 50.258000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698811.060968194, 52.258000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698813.086905618, 54.262000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698815.151043365, 56.308000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698817.169688727, 58.308000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698819.215729015, 60.358000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698821.247622810, 62.358000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698823.266146916, 64.358000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698825.269252878, 66.358000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698827.340672039, 68.408000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698829.378787835, 70.408000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698831.425747512, 72.408000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698833.494034398, 74.458000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698835.522087030, 76.457000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698837.566703851, 78.458000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698839.652230624, 80.458000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698841.720977411, 82.461000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698842.294959184, 83.012000000]: Failed to meet update rate! Took 0.084667037000000000546[0m
+[33m[ WARN] [1634698843.791494612, 84.508000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698845.799239416, 86.510000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698847.947018237, 88.560000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698850.035089339, 90.608000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698851.029540985, 91.500000000]: Failed to meet update rate! Took 0.072667122000000000659[0m
+[33m[ WARN] [1634698852.137053202, 92.608000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698852.878709572, 93.296000000]: Failed to meet update rate! Took 0.06866714000000000151[0m
+[33m[ WARN] [1634698854.205151983, 94.608000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698856.252968420, 96.608000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698858.269576381, 98.608000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698860.313235238, 100.608000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698862.378185857, 102.657000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698864.423133221, 104.662000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698866.479909772, 106.707000000]: Transform from odom to map was unavailable for the time requested. Using latest instead.
+[0m
+[33m[ WARN] [1634698867.038826593, 107.264000000]: Failed to meet update rate! Took 0.070000613000000003194[0m
+[33m[ WARN] [1634698867.038942918, 107.264000000]: Failed to meet update rate! Took 0.068000613000000001418[0m
+terminate called after throwing an instance of 'boost::wrapexcept<boost::lock_error>'
+  what():  boost: mutex lock failed in pthread_mutex_lock: Invalid argument
+[0m[ INFO] [1634698803.367433534]: Finished loading Gazebo ROS API Plugin.[0m
+[0m[ INFO] [1634698803.370090941]: waitForService: Service [/gazebo/set_physics_properties] has not been advertised, waiting...[0m
+[0m[ INFO] [1634698803.681256375]: waitForService: Service [/gazebo/set_physics_properties] is now available.[0m
+[0m[ INFO] [1634698803.702332942]: Physics dynamic reconfigure ready.[0m
+[0m[ INFO] [1634698804.545776736, 46.007000000]: Camera Plugin: Using the 'robotNamespace' param: '/'[0m
+[0m[ INFO] [1634698804.546022243, 46.007000000]: Camera Plugin: Using the 'robotNamespace' param: '/'[0m
+[0m[ INFO] [1634698804.560771910, 46.007000000]: Camera Plugin (ns = /)  <tf_prefix_>, set to ""[0m
+[0m[ INFO] [1634698804.561070761, 46.007000000]: Camera Plugin (ns = /)  <tf_prefix_>, set to ""[0m
+[0m[ INFO] [1634698804.635907876, 46.007000000]: imu plugin missing <xyzOffset>, defaults to 0s[0m
+[0m[ INFO] [1634698804.639003718, 46.007000000]: imu plugin missing <rpyOffset>, defaults to 0s[0m
+[0m[ INFO] [1634698804.640636150, 46.007000000]: imu plugin missing <frameName>, defaults to <bodyName>[0m
+[0m[ INFO] [1634698804.709268586, 46.007000000]: Starting plugin DiffDrive(ns = //)[0m
+[0m[ INFO] [1634698804.710475591, 46.007000000]: DiffDrive(ns = //): <tf_prefix> = [0m
+[0m[ INFO] [1634698804.711500318, 46.007000000]: DiffDrive(ns = //): Try to subscribe to cmd_vel[0m
+[0m[ INFO] [1634698804.713207045, 46.007000000]: DiffDrive(ns = //): Subscribe to cmd_vel[0m
+[0m[ INFO] [1634698804.713727276, 46.007000000]: DiffDrive(ns = //): Advertise odom on localization/unfiltered/wheel_odom [0m
+[31mERROR: cannot launch node of type [robot_locaization/navsat_transform_node]: robot_locaization
+ROS path [0]=/opt/ros/noetic/share/ros
+ROS path [1]=/home/mario/RoboticSpaceExploration/protobot_ws/src
+ROS path [2]=/home/mario/RoboticSpaceExploration/test_robot_ws/src
+ROS path [3]=/opt/ros/noetic/share[0m
+[31m[gazebo_gui-11] escalating to SIGTERM[0m
+... logging to /home/mario/.ros/log/d14e919c-3151-11ec-b14c-a3dfedd75435/roslaunch-mario-virtualbox-12265.log
+Checking log directory for disk usage. This may take a while.
+Press Ctrl-C to interrupt
+Done checking log file disk usage. Usage is <1GB.
+]2;/home/mario/RoboticSpaceExploration/protobot_ws/src/protobot_bringup/launch/protobot_simulation.launch
+[1mstarted roslaunch server http://mario-virtualbox:46217/[0m
+
+SUMMARY
+========
+
+PARAMETERS
+ * /gazebo/enable_ros_network: True
+ * /global_ekf/base_link_frame: base_link
+ * /global_ekf/frequency: 30
+ * /global_ekf/imu0: imu/data
+ * /global_ekf/imu0_config: [False, False, Fa...
+ * /global_ekf/map_frame: map
+ * /global_ekf/odom0: /localization/unf...
+ * /global_ekf/odom0_config: [True, True, Fals...
+ * /global_ekf/odom1: /localization/unf...
+ * /global_ekf/odom_frame: odom
+ * /global_ekf/publish_tf: True
+ * /global_ekf/sensor_timeout: 0.1
+ * /global_ekf/two_d_mode: False
+ * /global_ekf/world_frame: map
+ * /local_ekf/base_link_frame: base_link
+ * /local_ekf/frequency: 30
+ * /local_ekf/imu0: imu/data
+ * /local_ekf/imu0_config: [False, False, Fa...
+ * /local_ekf/map_frame: map
+ * /local_ekf/odom0: /localization/unf...
+ * /local_ekf/odom0_config: [True, True, Fals...
+ * /local_ekf/odom_frame: odom
+ * /local_ekf/publish_tf: True
+ * /local_ekf/sensor_timeout: 0.1
+ * /local_ekf/two_d_mode: False
+ * /local_ekf/world_frame: odom
+ * /navsat_transform_node/magnetic_declination_radians: 0
+ * /navsat_transform_node/yaw_offset: 0
+ * /robot_description: <?xml version="1....
+ * /rosdistro: noetic
+ * /rosversion: 1.15.13
+ * /use_sim_time: True
+ * /vi_odom/ORBextractor/iniThFAST: 20
+ * /vi_odom/ORBextractor/minThFAST: 7
+ * /vi_odom/ORBextractor/nFeatures: 2000
+ * /vi_odom/ORBextractor/nLevels: 8
+ * /vi_odom/ORBextractor/scaleFactor: 1.2
+ * /vi_odom/camera_baseline: 0.07
+ * /vi_odom/camera_cx: 960.5
+ * /vi_odom/camera_cy: 540.5
+ * /vi_odom/camera_fps: 30
+ * /vi_odom/camera_frame_id: camera_link
+ * /vi_odom/camera_fx: 909.507589616437
+ * /vi_odom/camera_fy: 909.507589646437
+ * /vi_odom/camera_k1: 0.0
+ * /vi_odom/camera_k2: 0.0
+ * /vi_odom/camera_k3: 0.0
+ * /vi_odom/camera_p1: 0.0
+ * /vi_odom/camera_p2: 0.0
+ * /vi_odom/camera_rgb_encoding: True
+ * /vi_odom/load_calibration_from_cam: False
+ * /vi_odom/load_map: False
+ * /vi_odom/localize_only: False
+ * /vi_odom/min_num_kf_in_map: 5
+ * /vi_odom/pointcloud_frame_id: map
+ * /vi_odom/publish_pose: True
+ * /vi_odom/publish_tf: False
+ * /vi_odom/reset_map: False
+ * /vi_odom/voc_file: /home/mario/Robot...
+
+NODES
+  /
+    gazebo (gazebo_ros/gzserver)
+    gazebo_gui (gazebo_ros/gzclient)
+    global_ekf (robot_localization/ekf_localization_node)
+    joint_state_publisher (joint_state_publisher/joint_state_publisher)
+    local_ekf (robot_localization/ekf_localization_node)
+    navsat_transform_node (robot_locaization/navsat_transform_node)
+    robot_state_publisher (robot_state_publisher/robot_state_publisher)
+    rviz (rviz/rviz)
+    spawn_urdf (gazebo_ros/spawn_model)
+    teleop (teleop_twist_keyboard/teleop_twist_keyboard.py)
+    vi_odom (orb_slam2_ros/orb_slam2_ros_stereo)
+
+auto-starting new master
+[1mprocess[master]: started with pid [12275][0m
+[1mROS_MASTER_URI=http://localhost:11311[0m
+]2;/home/mario/RoboticSpaceExploration/protobot_ws/src/protobot_bringup/launch/protobot_simulation.launch http://localhost:11311
+[1msetting /run_id to d14e919c-3151-11ec-b14c-a3dfedd75435[0m
+[1mprocess[rosout-1]: started with pid [12285][0m
+started core service [/rosout]
+[1mprocess[robot_state_publisher-2]: started with pid [12292][0m
+[1mprocess[joint_state_publisher-3]: started with pid [12293][0m
+[1mprocess[rviz-4]: started with pid [12294][0m
+[1mprocess[global_ekf-6]: started with pid [12295][0m
+[1mprocess[local_ekf-7]: started with pid [12297][0m
+[1mprocess[vi_odom-8]: started with pid [12306][0m
+[1mprocess[teleop-9]: started with pid [12310][0m
+[1mprocess[gazebo-10]: started with pid [12315][0m
+[1mprocess[gazebo_gui-11]: started with pid [12319][0m
+[1mprocess[spawn_urdf-12]: started with pid [12321][0m
+[1m[spawn_urdf-12] process has finished cleanly
+log file: /home/mario/.ros/log/d14e919c-3151-11ec-b14c-a3dfedd75435/spawn_urdf-12*.log[0m
+[gazebo_gui-11] killing on exit
+[gazebo-10] killing on exit
+[teleop-9] killing on exit
+[vi_odom-8] killing on exit
+[local_ekf-7] killing on exit
+[global_ekf-6] killing on exit
+[rviz-4] killing on exit
+[joint_state_publisher-3] killing on exit
+[robot_state_publisher-2] killing on exit
+[rosout-1] killing on exit
+[master] killing on exit
+shutting down processing monitor...
+... shutting down processing monitor complete
+[1mdone[0m
