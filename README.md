@@ -4,8 +4,8 @@ Some dependency installation may be required, especially for ORB_SLAM2. Refer to
 
 # Setup
 1. Go to root directory of the repository and run ```catkin_make```
-2. Go to src/orb_slam_2 and run ```git submodule init``` and then ```git submodule update --recursive```
-3. Go back to root directory and rerun ```catkin_make```
+2. Go to src/orb_slam_2_ros (and any other submodules) and run ```git submodule init --update --recursive```
+3. Go back to root directory and rerun ```catkin_make``` to rebuild the project with the submodules included
 4. It is recommended to automatically source the project inside of your ~/.bashrc file. Put the following at the end of ~/.bashrc: ```source <cloned directory root path>/devel/setup.sh ```
 
 # Launch 
