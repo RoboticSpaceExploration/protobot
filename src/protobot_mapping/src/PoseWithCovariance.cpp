@@ -6,7 +6,7 @@
 class PoseWithCovariance{
 	public:
 	PoseWithCovariance() {
-		pub = nh.advertise<geometry_msgs::PoseWithCovaraince>("pose", 50);
+		pub = nh.advertise<geometry_msgs::PoseWithCovariance>("pose", 50);
         	sub = nh.subscribe("nav_messages/Odometry", 1000, &PoseMessageRecieved);
 
 }
