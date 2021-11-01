@@ -7,7 +7,7 @@ project(protobot_mapping)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp nav_msgs geometry_msgs)
+find_package(catkin REQUIRED COMPONENTS roscpp visualization_msgs pcl_conversions nav_msgs geometry_msgs)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -64,10 +64,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp nav_msgs geometry_msgs)
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
-# )
+ generate_messages(DEPENDENCIES std_msgs nav_msgs geometry_msgs visualization_msgs)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
