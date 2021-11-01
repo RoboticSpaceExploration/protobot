@@ -8,7 +8,6 @@ class PoseWithCovariance{
 	PoseWithCovariance() {
 		pub = nh.advertise<geometry_msgs::PoseWithCovariance>("pose", 50);
         	sub = nh.subscribe("nav_msgs/Odometry", 1000, &PoseWithCovariance::poseMessageRecieved, this);
-
 }
 	private:
 	ros::NodeHandle nh;
