@@ -3,11 +3,11 @@
 #include <geometry_msgs/PoseWithCovariance.h>
 #include <iomanip>
 
-class PoseWithCovariance{
+class OdometryTransform{
 	public:
 	PoseWithCovariance() {
 		pub = nh.advertise<geometry_msgs::PoseWithCovariance>("pose", 50);
-        	sub = nh.subscribe("nav_msgs/Odometry", 1000, &PoseWithCovariance::poseMessageRecieved, this);
+        	sub = nh.subscribe("nav_msgs/Odometry", 1000, &OdometryTransform::poseMessageRecieved, this);
 }
 	private:
 	ros::NodeHandle nh;
@@ -23,6 +23,6 @@ class PoseWithCovariance{
 };
 int main(int argc, char **argv) {
 	ros::init(argc, argv, "node initialized");
-	PoseWithCovariance pwc;
+	OdometryTransform pwc;
 	ros::spin();
 }
