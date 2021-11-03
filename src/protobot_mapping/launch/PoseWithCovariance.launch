@@ -1,3 +1,0 @@
-<launch>
-	<node pkg="protobot_mapping" type="PoseWithCovariance" name="PoseWithCovariance" output="screen"/>
-</launch>
