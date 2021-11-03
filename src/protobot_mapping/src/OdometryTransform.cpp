@@ -19,7 +19,7 @@ class OdometryTransform{
 		geometry_msgs::PoseWithCovariance pose2;
 		pose2 = msg.pose;
 		pub.publish(pose2);
-}
+	}
 };
 int main(int argc, char **argv) {
 	ros::init(argc, argv, "node initialized");
