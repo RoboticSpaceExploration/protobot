@@ -8,7 +8,7 @@ Source code for Protobot. This directory is currently using ROS 1 (Noetic) tenta
      - ros-noetic-costmap2d
 
 # Setup
-1. Go to src/ (and any other submodules) and run ```git submodule update --init --recursive```
+1. Go to src/ and run ```git submodule update --init --recursive```
 2. Go back to the root directory and run ```rosdep init``` and then ```rosdep install --from-paths src --ignore-src -r -y```
 3. Build your project using ```catkin_make -DCMAKE_BUILD_TYPE=Release```
 4. It is recommended to automatically source the project inside of your ~/.bashrc file. Put the following at the end of ~/.bashrc: ```source <cloned directory root path>/devel/setup.sh ```
