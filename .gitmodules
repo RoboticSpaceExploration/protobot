@@ -1,3 +1,9 @@
 [submodule "src/orb_slam_2_ros"]
 	path = src/orb_slam_2_ros
 	url = https://github.com/appliedAI-Initiative/orb_slam_2_ros
+[submodule "src/fiducials"]
+	path = src/fiducials
+	url = https://github.com/UbiquityRobotics/fiducials
+[submodule "src/vision_msgs"]
+	path = src/vision_msgs
+	url = https://github.com/ros-perception/vision_msgs
