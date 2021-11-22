@@ -64,7 +64,11 @@ find_package(catkin REQUIRED COMPONENTS roscpp visualization_msgs pcl_conversion
 # )
 
 ## Generate added messages and services with any dependencies listed here
+<<<<<<< HEAD
 generate_messages(DEPENDENCIES std_msgs nav_msgs geometry_msgs visualization_msgs)
+=======
+ generate_messages(DEPENDENCIES std_msgs nav_msgs geometry_msgs visualization_msgs)
+>>>>>>> c420c46a82cb02729b62b96a2f3e6be0a0b03fec
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##

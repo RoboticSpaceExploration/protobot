@@ -21,6 +21,7 @@ class OdometryTransform{
 		pub.publish(pose2);
 	}
 };
+
 int main(int argc, char **argv) {
 	ros::init(argc, argv, "node initialized");
 	OdometryTransform pwc;
