@@ -2,4 +2,7 @@
 	<include file="$(find protobot_description)/launch/view_model.launch"/>
 	<include file="$(find protobot_localization)/launch/protobot_localization.launch"/>
 	<include file="$(find protobot_teleop)/launch/protobot_teleop.launch"/>
+	<include file="$(find protobot_waypoint)/launch/aruco_detect.launch"/>
+	<include file="$(find protobot_waypoint)/launch/fiducial_slam.launch"/>
+	<include file="$(find protobot_waypoint)/launch/fiducial_rviz.launch"/>
 </launch>
