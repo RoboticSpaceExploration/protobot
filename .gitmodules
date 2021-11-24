@@ -1,3 +1,12 @@
 [submodule "src/orb_slam_2_ros"]
 	path = src/orb_slam_2_ros
 	url = https://github.com/appliedAI-Initiative/orb_slam_2_ros
+[submodule "src/ublox"]
+	path = src/ublox
+	url = https://github.com/KumarRobotics/ublox
+[submodule "src/librealsense"]
+	path = src/librealsense
+	url = https://github.com/IntelRealSense/librealsense.git
+[submodule "src/realsense-ros"]
+	path = src/realsense-ros
+	url = https://github.com/IntelRealSense/realsense-ros

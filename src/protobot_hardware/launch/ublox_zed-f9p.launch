@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+ <include file="$(find ublox_gps)/launch/ublox_device.launch">
+  <arg name="node_name" value="ublox_gps"/>
+  <arg name="param_file_name" value="zed_f9p"/>
+  <arg name="output" value="screen"/>
+  <arg name="respawn" value="true"/>
+  <arg name="respawn_delay" value="30"/>
+  <arg name="clear_params" value="false"/> 
+ </include>
+ 
+<arg name="bags_directory" value="/home/roselab/Desktop/bags/gps"/>
+<node pkg="rosbag" name="record" type="record" args="record -o $(arg bags_directory)/bag /rosout /ublox_gps/fix /ublox_gps/fix_velocity"/>
+
+</launch>
+
