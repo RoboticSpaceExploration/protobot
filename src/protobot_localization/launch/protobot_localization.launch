@@ -1,6 +1,6 @@
 <launch>
 
 <include file="$(find protobot_localization)/launch/ekf.launch"/>
-<include file="$(find protobot_localization)/launch/orb_slam2_stereo_sim.launch"/> 
-
+<!-- <include file="$(find protobot_localization)/launch/orb_slam2_stereo_sim.launch"/> 
+-->
 </launch>

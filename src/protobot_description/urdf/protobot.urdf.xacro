@@ -91,7 +91,8 @@
 <joint name="camera_joint" type="fixed">
 	<parent link="base_link"/>
 	<child link="camera_link"/>
-	<origin xyz="0 0.5 0.5" rpy="0 0 1.57"/>
+	<origin xyz="0 0.5 0.5" rpy="0 0 0"/>
+		<!--<origin xyz="0 0.5 0.5" rpy="0 0 1.57"/>-->
 </joint>
 
 
@@ -241,7 +242,7 @@
           <mean>0.0</mean>
           <stddev>0.007</stddev>
         </noise>
-      </camera>
+</camera>
       <plugin name="stereo_camera_controller" filename="libgazebo_ros_multicamera.so">
         <alwaysOn>true</alwaysOn>
         <updateRate>0.0</updateRate>
@@ -249,14 +250,40 @@
         <imageTopicName>image_color_rect</imageTopicName>
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
         <frameName>camera_link</frameName>
-        <!--<rightFrameName>right_camera_optical_frame</rightFrameName>-->
         <hackBaseline>0.07</hackBaseline>
         <distortionK1>0.0</distortionK1>
         <distortionK2>0.0</distortionK2>
         <distortionK3>0.0</distortionK3>
         <distortionT1>0.0</distortionT1>
         <distortionT2>0.0</distortionT2>
+     </plugin> 
+     </sensor>
+     <sensor type="depth" name="depth_camera">
+      <plugin name="camera_link_controller" filename="libgazebo_ros_openni_kinect.so">
+          <baseline>0.2</baseline>
+          <alwaysOn>true</alwaysOn>
+          <updateRate>1.0</updateRate>
+          <cameraName>camera</cameraName>
+          <imageTopicName>camera_gazebo/color/image_raw</imageTopicName>
+          <cameraInfoTopicName>camera_gazebo/color/camera_info</cameraInfoTopicName>
+          <depthImageTopicName>camera_gazebo/depth/image_raw</depthImageTopicName>
+          <depthImageInfoTopicName>camera_gazebo/depth/camera_info</depthImageInfoTopicName>
+	  <pointCloudTopicName>depth_camera/pointcloud</pointCloudTopicName>
+          <frameName>camera_link</frameName>
+          <pointCloudCutoff>0.5</pointCloudCutoff>
+          <pointCloudCutoffMax>3.0</pointCloudCutoffMax>
+          <distortionK1>0.00000001</distortionK1>
+          <distortionK2>0.00000001</distortionK2>
+          <distortionK3>0.00000001</distortionK3>
+          <distortionT1>0.00000001</distortionT1>
+          <distortionT2>0.00000001</distortionT2>
+          <CxPrime>0</CxPrime>
+          <Cx>0</Cx>
+          <Cy>0</Cy>
+          <focalLength>0</focalLength>
+          <hackBaseline>0</hackBaseline>	
       </plugin>
-    </sensor>
+ 
+     </sensor>
   </gazebo>
 </robot>
