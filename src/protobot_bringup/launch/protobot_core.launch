@@ -2,9 +2,5 @@
 	<include file="$(find protobot_description)/launch/view_model.launch"/>
 	<include file="$(find protobot_localization)/launch/protobot_localization.launch"/>
 	<include file="$(find protobot_teleop)/launch/protobot_teleop.launch"/>
-<<<<<<< HEAD
-	<!--<include file="$(find protobot_mapping)/launch/OdometryTransform.launch"/> -->
-=======
 	<include file="$(find protobot_mapping)/launch/OdometryTransform.launch"/>
->>>>>>> c420c46a82cb02729b62b96a2f3e6be0a0b03fec
 </launch>

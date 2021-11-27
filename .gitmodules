@@ -10,3 +10,18 @@
 [submodule "src/realsense-ros"]
 	path = src/realsense-ros
 	url = https://github.com/IntelRealSense/realsense-ros
+[submodule "src/elevation_mapping"]
+	path = src/elevation_mapping
+	url = https://github.com/ANYbotics/elevation_mapping
+[submodule "src/grid_map"]
+	path = src/grid_map
+	url = https://github.com/ANYbotics/grid_map
+[submodule "src/rtcm_msgs"]
+	path = src/rtcm_msgs
+	url = https://github.com/tilk/rtcm_msgs
+[submodule "src/kindr"]
+	path = src/kindr
+	url= https://github.com/ANYbotics/kindr
+[submodule "src/kindr_ros"]
+	path = src/kindr_ros
+	url = https://github.com/ANYbotics/kindr_ros
