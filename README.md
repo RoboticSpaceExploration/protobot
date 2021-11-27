@@ -6,6 +6,7 @@ Source code for Protobot. This directory is currently using ROS 1 (Noetic) tenta
      - libpcl-dev
      - libeigen3-dev
      - ros-noetic-costmap2d
+     - ros-noetic-ddynamic-reconfigure
 
 # Setup
 1. Go to src/ and run ```git submodule update --init --recursive```
