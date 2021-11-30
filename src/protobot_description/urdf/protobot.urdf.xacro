@@ -78,6 +78,9 @@
 <link name="camera_link">
 </link>
 
+<link name="camera_link_optical">
+</link>
+
 <link name="ir_link">
 </link>
 
@@ -91,8 +94,14 @@
 <joint name="camera_joint" type="fixed">
 	<parent link="base_link"/>
 	<child link="camera_link"/>
-	<origin xyz="0 0.5 0.5" rpy="0 0 0"/>
-		<!--<origin xyz="0 0.5 0.5" rpy="0 0 1.57"/>-->
+	<origin xyz="0 0.5 0.5" rpy="0 0 1.57"/>
+	<!--<origin xyz="0 0.5 0.5" rpy="0 0 1.57"/>-->
+</joint>
+
+<joint name="camera_optical_joint" type="fixed">
+	<parent link="camera_link"/>
+	<child link="camera_link_optical"/>
+	<origin xyz="0 0 0" rpy="1.57 3.14 1.57"/>
 </joint>
 
 
@@ -106,7 +115,7 @@
 <joint name="right_wheel_joint" type="continuous">
 	<parent link="base_link"/>
 	<child link="right_wheel_link"/>
-	<origin xyz="-0.6 0.0 0" rpy="0 1.57 0"/>
+	<origin xyz="-0.6 0.0 0" rpy="3.14 1.57 0"/>
 	<axis xyz="0 0 1"/>
 </joint>
 
@@ -114,7 +123,7 @@
 <joint name="left_wheel_joint" type="continuous">
 	<parent link = "base_link"/>
 	<child link = "left_wheel_link"/>
-	<origin xyz="0.6 0 0" rpy="0 1.57 0"/>
+	<origin xyz="0.6 0 0" rpy="3.14 1.57 0"/>
 	<axis xyz="0 0 1"/>
 </joint>
 
@@ -269,7 +278,7 @@
           <depthImageTopicName>camera_gazebo/depth/image_raw</depthImageTopicName>
           <depthImageInfoTopicName>camera_gazebo/depth/camera_info</depthImageInfoTopicName>
 	  <pointCloudTopicName>depth_camera/pointcloud</pointCloudTopicName>
-          <frameName>camera_link</frameName>
+          <frameName>camera_link_optical</frameName>
           <pointCloudCutoff>0.5</pointCloudCutoff>
           <pointCloudCutoffMax>3.0</pointCloudCutoffMax>
           <distortionK1>0.00000001</distortionK1>
