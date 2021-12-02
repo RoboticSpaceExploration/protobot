@@ -1,0 +1,12 @@
+length_in_x: 7.6
+length_in_y: 7.6
+position_x: 0.0
+position_y: 0.0
+resolution: 0.01
+min_variance: 0.000009
+max_variance: 100000
+mahalanobis_distance_threshold: 2.5
+multi_height_noise: 0.0000009
+fused_map_publishing_rate: 3
+
+
