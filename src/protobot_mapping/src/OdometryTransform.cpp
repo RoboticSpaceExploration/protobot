@@ -1,12 +1,12 @@
 #include <ros/ros.h>
 #include <nav_msgs/Odometry.h>
-#include <geometry_msgs/PoseWithCovariance.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <iomanip>
 
 class OdometryTransform{
 	public:
 	OdometryTransform() {
-		pub = nh.advertise<geometry_msgs::PoseWithCovariance>("pose", 50);
+		pub = nh.advertise<geometry_msgs::PoseWithCovarianceStamped>("pose", 50);
         	sub = nh.subscribe("nav_msgs/Odometry", 1000, &OdometryTransform::poseMessageRecieved, this);
 }
 	private:
@@ -16,8 +16,9 @@ class OdometryTransform{
 
 
 	void poseMessageRecieved(const nav_msgs::Odometry& msg) {
-		geometry_msgs::PoseWithCovariance pose2;
-		pose2 = msg.pose;
+		geometry_msgs::PoseWithCovarianceStamped pose2;
+		pose2.header = msg.header;
+		pose2.pose = msg.pose;
 		pub.publish(pose2);
 	}
 };

@@ -2,5 +2,5 @@
 	<include file="$(find protobot_description)/launch/view_model.launch"/>
 	<include file="$(find protobot_localization)/launch/protobot_localization.launch"/>
 	<include file="$(find protobot_teleop)/launch/protobot_teleop.launch"/>
-	<include file="$(find protobot_mapping)/launch/OdometryTransform.launch"/>
+	<include file="$(find protobot_mapping)/launch/protobot_mapping.launch"/>
 </launch>
