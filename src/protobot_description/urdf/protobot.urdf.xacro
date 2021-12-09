@@ -9,7 +9,7 @@
          <inertia ixx="1"  ixy="0"  ixz="0" iyy="1" iyz="0" izz="1" />
     </inertial>
     <visual>
-        <origin xyz="0 0 0.15"/>
+        <origin xyz="0 0 0"/>
 	<geometry>
 	    <box size="1.0 1.2 0.5"/>
 	</geometry>
@@ -94,14 +94,14 @@
 <joint name="camera_joint" type="fixed">
 	<parent link="base_link"/>
 	<child link="camera_link"/>
-	<origin xyz="0 0.5 0.5" rpy="0 0 1.57"/>
+	<origin xyz="0 -0.5 0.5" rpy="3.1415 3.1415 1.571"/>
 	<!--<origin xyz="0 0.5 0.5" rpy="0 0 1.57"/>-->
 </joint>
 
 <joint name="camera_optical_joint" type="fixed">
 	<parent link="camera_link"/>
 	<child link="camera_link_optical"/>
-	<origin xyz="0 0 0" rpy="1.57 3.14 1.57"/>
+	<origin xyz="0 0 0" rpy="1.571 3.14 1.571"/>
 </joint>
 
 
@@ -115,7 +115,7 @@
 <joint name="right_wheel_joint" type="continuous">
 	<parent link="base_link"/>
 	<child link="right_wheel_link"/>
-	<origin xyz="-0.6 0.0 0" rpy="3.14 1.57 0"/>
+	<origin xyz="-0.6 0.0 0" rpy="0 1.57 0"/>
 	<axis xyz="0 0 1"/>
 </joint>
 
@@ -123,7 +123,7 @@
 <joint name="left_wheel_joint" type="continuous">
 	<parent link = "base_link"/>
 	<child link = "left_wheel_link"/>
-	<origin xyz="0.6 0 0" rpy="3.14 1.57 0"/>
+	<origin xyz="0.6 0 0" rpy="0 1.57 0"/>
 	<axis xyz="0 0 1"/>
 </joint>
 
@@ -142,7 +142,7 @@
       <bodyName>gps_imu_link</bodyName>
       <topicName>imu/data</topicName>
       <serviceName>imu_service</serviceName>
-      <gaussianNoise>0.2</gaussianNoise>
+      <gaussianNoise>0</gaussianNoise>
       <updateRate>20.0</updateRate>
     </plugin>
 </gazebo>
@@ -179,7 +179,7 @@
     <wheelAcceleration>1.0</wheelAcceleration>
 
     <!-- Maximum torque which the wheels can produce, in Nm, defaults to 5 Nm -->
-    <wheelTorque>5</wheelTorque>
+    <wheelTorque>20</wheelTorque>
 
     <!-- Topic to receive geometry_msgs/Twist message commands, defaults to `cmd_vel` -->
     <commandTopic>cmd_vel</commandTopic>
@@ -195,8 +195,6 @@
 
     <!-- Odometry source, 0 for ENCODER, 1 for WORLD, defaults to WORLD -->
     <odometrySource>0</odometrySource>
-
-    <gaussianNoise>3</gaussianNoise>
 
     <!-- Set to true to publish transforms for the wheel links, defaults to false -->
     <publishWheelTF>false</publishWheelTF>
@@ -279,8 +277,8 @@
           <depthImageInfoTopicName>camera_gazebo/depth/camera_info</depthImageInfoTopicName>
 	  <pointCloudTopicName>depth_camera/pointcloud</pointCloudTopicName>
           <frameName>camera_link_optical</frameName>
-          <pointCloudCutoff>0.5</pointCloudCutoff>
-          <pointCloudCutoffMax>3.0</pointCloudCutoffMax>
+          <pointCloudCutoff>0.1</pointCloudCutoff>
+          <pointCloudCutoffMax>5</pointCloudCutoffMax>
           <distortionK1>0.00000001</distortionK1>
           <distortionK2>0.00000001</distortionK2>
           <distortionK3>0.00000001</distortionK3>

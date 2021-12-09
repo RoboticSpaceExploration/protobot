@@ -1,0 +1,30 @@
+map_frame_id: odom
+robot_base_frame_id: base_link
+robot_pose_with_covariance_topic: /localization/filtered/pose_local
+robot_pose_cache_size: 200
+track_point_frame_id: base_link
+track_point_x: 0.0
+track_point_y: 0.0
+track_point_z: 0.0
+point_cloud_topic: /camera/depth_camera/pointcloud
+sensor_frame_id: "camera_link_optical"
+
+input_sources:
+    front: # A name to identify the input source
+      type: pointcloud # Supported types: pointcloud
+      topic: /camera/depth_camera/pointcloud
+      queue_size: 1
+      publish_on_update: true # Wheter to publish the elevation map after a callback from this source.nput_sources:
+      sensor_processor:
+       ignore_points_above: .inf
+       ignore_points_below: -.inf 
+       type: structured_light
+       cutoff_min_depth: 0.1
+       cutoff_max_depth: 3.8
+       normal_factor_a: 0.001063
+       normal_factor_b:  0.003949
+       normal_factor_c: 0.0
+       normal_factor_d: 0.0008278
+       normal_factor_e: 1
+       lateral_factor: 0.01576 # approx 1 deg
+

@@ -6,10 +6,5 @@
 
 <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher"></node>
 
-<!-- <node pkg="tf" type="static_transform_publisher" name="world_publisher" args="0 0 0 0 0 0 1 map odom 100"/>
--->
-<!--<node pkg="tf" type="static_transform_publisher" name="odom_publisher" args="0 0 0 0 0 0 1 odom base_link 100"/>
--->
-<node name="rviz" pkg="rviz" type="rviz" args="-d $(find protobot_description)/rviz/default.rviz"/>
 
 </launch>
