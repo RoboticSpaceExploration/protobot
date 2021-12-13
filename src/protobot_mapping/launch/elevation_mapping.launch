@@ -1,0 +1,19 @@
+<launch>
+        <node pkg="elevation_mapping" type="elevation_mapping" name="elevation_mapping" output="screen">	
+		<rosparam command="load" file="$(find protobot_mapping)/config/robots/protobot.yaml" />
+		<rosparam command="load" file="$(find protobot_mapping)/config/elevation_maps/map.yaml"/>	
+		<rosparam command="load" file="$(find protobot_mapping)/config/postprocessing/postprocessor_pipeline.yaml" /> 
+	</node>
+
+  	<node pkg="grid_map_visualization" type="grid_map_visualization" name="elevation_map_fused_visualization" output="screen">
+   	    <param name="grid_map_topic" value="/elevation_mapping/elevation_map" />
+            <rosparam command="load" file="$(find protobot_mapping)/config/visualization/fused.yaml" />
+        </node>
+
+ 
+        <node pkg="grid_map_visualization" type="grid_map_visualization" name="elevation_map_raw_visualization" output="screen">
+   		<param name="grid_map_topic" value="/elevation_mapping/elevation_map_raw" />
+    		<rosparam command="load" file="$(find protobot_mapping)/config/visualization/raw.yaml" />
+  	</node>
+
+</launch>
