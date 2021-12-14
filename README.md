@@ -20,7 +20,7 @@ To run simulation
 1. Source project at root directory using ```. devel/setup.sh``` when first opening the shell. If you don't want to do this everytime, refer to #4
 2. To launch, ```roslaunch protobot_bringup protobot_simulation.launch```
 
-To run on live rover
+To run on live rover (Soon)
 1. On live rover, ssh into it and run ```roslaunch protobot_bringup protobot_onboard.launch``` (Autonomous) OR ```roslaunch protobot_bringup protobot_teleop.launch``` (Teleop Mode)
 1. On properly configured laptop (with correct ROS_IP and ROS_MASTER_URI pointing to own IPv4 address and rover's IPv4 address respectively), run ```roslaunch protobot_bringup protobot_remote.launch``` (Autonomous) OR ```roslaunch protobot_bringup protobot_remote_teleop.launch``` (Teleop)
 
