@@ -16,9 +16,13 @@ Source code for Protobot. This directory is currently using ROS 1 (Noetic) tenta
 4. It is recommended to automatically source the project inside of your ~/.bashrc file. Put the following at the end of ~/.bashrc: ```source <cloned directory root path>/devel/setup.sh ```
 
 # Launch 
-You can only run the simulation for now, to do that first
+To run simulation
 1. Source project at root directory using ```. devel/setup.sh``` when first opening the shell. If you don't want to do this everytime, refer to #4
 2. To launch, ```roslaunch protobot_bringup protobot_simulation.launch```
+
+To run on live rover
+1. On live rover, ssh into it and run ```roslaunch protobot_bringup protobot_onboard.launch``` (Autnomous) OR ```roslaunch protobot_bringup protobot_teleop.launch``` (Teleop Mode)
+1. On properly configured laptop (with correct ROS_IP and ROS_MASTER_URI pointing to own IPv4 address and rover's IPv4 address respectively), run ```roslaunch protobot_bringup protobot_remote.launch```
 
 # Guidelines for this repository
 1. Google C++ Style Guide (https://google.github.io/styleguide/cppguide.html)
