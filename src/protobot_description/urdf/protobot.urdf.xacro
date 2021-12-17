@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="https://www.ros.org/wiki/xacro" name="protobot">
 	
-<xacro:include filename="$(find protobot_description)/urdf/protobot.gazebo.xacro"/>
 
 <link name="base_link">
     <inertial>
