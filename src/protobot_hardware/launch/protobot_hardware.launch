@@ -1,7 +1,6 @@
 <launch>
         <remap from="/ublox_gps/fix" to="/gps/fix"/>
-        <remap from="/camera/depth/image_rect_raw" to="/camera/depth/pointcloud"/>
-
+	
 	<include file="$(find protobot_hardware)/launch/rs_d435_camera_with_model.launch"/>
 	<include file="$(find protobot_hardware)/launch/ublox_zed-f9p.launch"/>
 	<!--
