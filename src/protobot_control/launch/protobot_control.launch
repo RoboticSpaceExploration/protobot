@@ -1,0 +1,21 @@
+<launch>
+
+	<arg name="cmd_timeout" default="0.5"/>
+
+   <!-- Load the joint controllers. One of these publishes the joint states
+         to joint_states. -->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner"
+          args="$(find protobot_control)/config/protobot_joint_controller_params.yaml"/>
+
+    <!-- Control the steering, axle, and shock absorber joints. -->
+    <node name="ackermann_controller" pkg="protobot_control"
+          type="ackermann_controller.py">
+      <param name="cmd_timeout" value="$(arg cmd_timeout)"/>
+      <rosparam file="$(find protobot_control)/config/protobot_ackermann_controller_params.yaml" command="load"/>
+    </node>
+    
+    <node name="cmd_vel_to_ackermann_drive" pkg="protobot_control"
+          type="cmd_vel_to_ackermann_drive.py">
+    </node>
+
+</launch> 

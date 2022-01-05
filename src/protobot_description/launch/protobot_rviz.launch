@@ -1,3 +1,5 @@
 <launch>
+
 	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find protobot_description)/rviz/default.rviz"/>
+
 </launch>

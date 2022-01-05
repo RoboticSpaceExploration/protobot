@@ -1,12 +1,34 @@
 <launch>
-	<include file="$(find gazebo_ros)/launch/empty_world.launch">
-		<arg name="paused" value="false"/>
-		<arg name="use_sim_time" value="true"/>
-		<arg name ="world_name" value="$(find protobot_gazebo)/world/elevation_mapping"/> 
-		<arg name="gui" value="false"/>
-		<arg name="headless" value="false"/>
-		<arg name="debug" value="false"/>
-	</include>
-	<node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-file $(find protobot_description)/urdf/protobot.urdf.xacro -urdf -z 1 -model protobot"/>
+  <arg name="namespace" default="/"/>
+  <arg name="world_name" default="worlds/empty.world"/>
+  <arg name="cmd_timeout" default="0.5"/>
 
+  <!-- Vehicle pose -->
+  <arg name="x" default="0.0"/>
+  <arg name="y" default="0.0"/>
+  <arg name="z" default="0.1"/>
+  <arg name="roll" default="0.0"/>
+  <arg name="pitch" default="0.0"/>
+  <arg name="yaw" default="0.0"/>
+
+  <!--
+  <include file="$(find protobot_description)/launch/protobot_description.launch">
+    <arg name="namespace" value="$(arg namespace)"/>
+  </include>
+  -->
+
+  <group ns="$(arg namespace)">
+    <!-- Create the world. -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+      <arg name="world_name" value="$(arg world_name)"/>
+    </include>
+
+    <!-- Spawn the vehicle. -->
+    <node name="spawn_vehicle" pkg="gazebo_ros" type="spawn_model"
+          args="-urdf -param robot_description -model protobot
+          -gazebo_namespace /$(arg namespace)/gazebo
+                -x $(arg x) -y $(arg y) -z $(arg z)
+                -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)"/>
+                
+  </group>
 </launch>

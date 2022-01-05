@@ -6,10 +6,12 @@
     	<arg name="camera_info_topic" value="/camera/color/camera_info" />
     	<arg name="depth_topic"       value="/camera/depth/image_raw" />
     	<arg name="approx_rgbd_sync"  value="false" />
+    	<arg name="database_path"     value="" />
 	
 	<arg name="visual_odometry" value="false"/>
         <arg name="odom_topic" value="/localization/filtered/odom_local"/>
         <arg name="rtabmapviz" value="false"/>
         		
 	</include>
+	
 </launch>
