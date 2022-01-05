@@ -10,10 +10,12 @@
   <arg name="roll" default="0.0"/>
   <arg name="pitch" default="0.0"/>
   <arg name="yaw" default="0.0"/>
-  
+
+  <!--
   <include file="$(find protobot_description)/launch/protobot_description.launch">
     <arg name="namespace" value="$(arg namespace)"/>
   </include>
+  -->
 
   <group ns="$(arg namespace)">
     <!-- Create the world. -->

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>protobot_2dnav</name>
+  <name>protobot_planner</name>
   <version>0.0.0</version>
   <description>The protobot_2dnav package</description>
 

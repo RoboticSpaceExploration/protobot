@@ -31,9 +31,7 @@ You may obtain a copy of the License at
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied
 -->
 
 <robot name="protobot" xmlns:xacro="http://www.ros.org/wiki/xacro">
@@ -371,8 +369,8 @@ limitations under the License.
            <mass value="0.01"/>
            <inertia ixx="0.1"  ixy="0"  ixz="0" iyy="0.1" iyz="0" izz="0.1" />
     	</inertial>
-
-</link>
+  </link>
+  
 
   <!-- Chassis -->
   <link name="chassis">
@@ -445,7 +443,7 @@ limitations under the License.
 <link name="ir_link">
 </link>
 
-<joint name="caster_joint" type="continuous">
+<joint name="caster_joint" type="fixed">
 	<parent link="base_link"/>
 	<child link="caster_link"/>
 	<axis xyz="0 0 1"/>
@@ -455,7 +453,7 @@ limitations under the License.
 <joint name="camera_joint" type="fixed">
 	<parent link="base_link"/>
 	<child link="camera_link"/>
-	<origin xyz="0 -0.5 0.5" rpy="3.1415 3.1415 1.571"/>
+	<origin xyz="0 0 0.5" rpy="3.1415 3.1415 3.1415"/>
 	<!--<origin xyz="0 0.5 0.5" rpy="0 0 1.57"/>-->
 </joint>
 

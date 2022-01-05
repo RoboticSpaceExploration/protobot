@@ -4,3 +4,6 @@ global_costmap:
   update_frequency: 0.5
   publish_frequency: 0.5
   static_map: true
+  origin_x: -2.0
+  origin_y: -2.0
+
