@@ -53,7 +53,7 @@
 		<param name="base_link_frame" value="base_link"/>
 		<param name="world_frame" value="odom"/> 
 	
-		<param name="odom0" value="localization/unfiltered/wheel_odom"/>
+		<param name="odom0" value="localization/unfiltered/gps_odom"/>
 	        <param name="imu0" value="imu/data"/>
 		<rosparam param="odom0_config">[true, true, true,
                                 false, false, true,
