@@ -19,8 +19,11 @@
 
   <group ns="$(arg namespace)">
     <!-- Create the world. -->
+
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
-      <arg name="world_name" value="$(arg world_name)"/>
+       <arg name="world_name" value="$(arg world_name)"/>
+       <arg name="gui" value="false"/>
+       <!--<arg name="world_name" value=""/>-->
     </include>
 
     <!-- Spawn the vehicle. -->
@@ -28,7 +31,7 @@
           args="-urdf -param robot_description -model protobot
           -gazebo_namespace /$(arg namespace)/gazebo
                 -x $(arg x) -y $(arg y) -z $(arg z)
-                -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)"/>
+                -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)"/> 
                 
   </group>
 </launch>
