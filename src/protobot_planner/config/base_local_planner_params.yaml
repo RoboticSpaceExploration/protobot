@@ -1,30 +1,55 @@
-TrajectoryPlannerROS:
+DWAPlannerROS:
 
-  # Current limits based on AZ3 standalone configuration.
-  acc_lim_x:  0.75
-  acc_lim_y:  0.75
-  acc_lim_theta: 4.00
-  max_vel_x:  0.500
-  min_vel_x:  0.212
-  max_rotational_vel: 0.550
-  min_in_place_vel_theta: 0.15
-  escape_vel: -0.10
-  holonomic_robot: false
+  use_dwa: true
+  # Robot Configuration Parameters
+  acc_lim_x: 20.0
+  acc_lim_y: 0.0
+  acc_lim_theta: 10.0
+  acc_limit_trans: 0.1
 
-  xy_goal_tolerance:  0.20
-  yaw_goal_tolerance: 0.20
+  max_trans_vel: 0.55
+  min_trans_vel: 0.01 
+  trans_stopped_vel: 0.01
+  rot_stopped_vel: 0.01
 
-  sim_time: 1.7
-  sim_granularity: 0.025
-  vx_samples: 3
-  vtheta_samples: 3
+  max_vel_x: 0.55
+  min_vel_x: -0.55
+
+  max_vel_y: 0.0
+  min_vel_y: 0.0
+
+  max_rot_vel: 1.5
+  min_rot_vel: 0.02
+
+  # Goal Tolerance Parameters
+  yaw_goal_tolerance: 0.03
+  xy_goal_tolerance: 0.06
+  latch_xy_goal_tolerance: false
+
+  # Forward Simulation Parameters
+  sim_time: 1.0
+  sim_granularity: 0.1
+  vx_samples: 15
+  vy_samples: 10
   vtheta_samples: 20
+  controller_frequency: 10.0
 
-  goal_distance_bias: 0.8
-  path_distance_bias: 0.6
-  occdist_scale: 0.01
-  heading_lookahead: 0.325
-  dwa: true
+  # Trajectory Scoring Parameters
+  path_distance_bias: 0.0  #32.0
+  goal_distance_bias: 24.0 
+  occdist_scale: 0.01 
+  forward_point_distance: 0.0 # 2.0 # 0.325 
+  stop_time_buffer: 0.2 
+  scaling_speed: 0.25 
+  max_scaling_factor: 0.2 
 
-  oscillation_reset_dist: 0.05
-  meter_scoring: true
+  #Oscillation Prevention Parameters
+  oscillation_reset_dist: 0.05 
+  oscillation_reset_angle: 0.2
+  prune_plan: false
+
+TrajectoryPlannerROS: # For RotateRecovery
+  yaw_goal_tolerance: 0.03
+  acc_lim_th: 10.0
+  max_rotational_vel: 1.0
+  min_in_place_rotational_vel: -1.0
