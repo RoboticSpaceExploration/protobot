@@ -3,7 +3,7 @@ local_costmap:
   robot_base_frame: base_link
   update_frequency: 10
   publish_frequency: 10
-  static_map: true
+  static_map: false
   rolling_window: false
   width: 4.0
   height: 4.0
@@ -27,7 +27,7 @@ obstacle_layer:
 
 inflater_layer:
   inflation_radius: 0.05
-  cost_scaling_factor: 0.5
+  cost_scaling_factor: 0.2
   
 plugins:
    - {name: obstacle_layer, type: "costmap_2d::ObstacleLayer"}
