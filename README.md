@@ -1,9 +1,8 @@
 Source code for Protobot. This directory is currently using ROS 1 (Noetic) tentatively
 
 # Dependencies
-1. Install _DEPENDENCIES_ for ORB_SLAM2 https://github.com/appliedAI-Initiative/orb_slam_2_ros/tree/master/orb_slam2
-2. Install librealsense2 with dev and dbg distribution included https://github.com/IntelRealSense/librealsense/blob/master/doc/distribution_linux.md#installing-the-packages
-3. Also ensure that you have the following(Install with ```sudo apt-get install```): 
+1. Install librealsense2 with dev and dbg distribution included https://github.com/IntelRealSense/librealsense/blob/master/doc/distribution_linux.md#installing-the-packages
+2. Also ensure that you have the following(Install with ```sudo apt-get install```): 
      - libpcl-dev
      - libeigen3-dev
      - ros-noetic-costmap2d
