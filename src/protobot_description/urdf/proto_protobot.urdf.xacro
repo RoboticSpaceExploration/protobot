@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+
+<robot name="six_wheeled_rover" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- Define Macros -->
+
+    <xacro:property name="PI" value="3.1415926535897931"/>
+    <xacro:property name="box_len" value="0.365"/>
+    <xacro:property name="box_width" value="0.28"/>
+    <xacro:property name="box_height" value="0.145"/>
+    <xacro:property name="chassis_mass" value="1"/>
+
+    <xacro:macro name="box_inertia" params="m x y z">
+        <inertia  ixx="${m*(y*y+z*z)/12}" ixy = "0" ixz = "0"
+                  iyy="${m*(x*x+z*z)/12}" iyz = "0"
+                  izz="${m*(x*x+z*z)/12}" />
+    </xacro:macro>
+
+    <!-- Links -->
+
+    <!-- dummy link -->
+
+    <link name="base_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="${box_len} ${box_width} ${box_height}"/>
+            </geometry>
+        </visual>
+    </link>
+
+    <link name="chassis_link"/>
+    <link name="gps_link"/>
+    <link name="d435i_link"/>
+    <link name="t265_link"/>
+    <link name="gps_antenna_link"/>
+
+    <!-- Joints -->
+
+    <joint name="chassis_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="chassis_link"/>
+        <origin xyz="0 0 ${box_height/2}" rpy="0 0 0"/>
+    </joint>
+
+    <joint name="imu_joint" type="fixed">
+        <parent link="chassis_link"/>
+        <child link="gps_link"/>
+        <origin xyz="0 -0.06 0" rpy="0 0 0"/>
+    </joint>
+
+    <joint name="d435i_joint" type="fixed">
+        <parent link="chassis_link"/>
+        <child link="d435i_link"/>
+        <origin xyz="${box_len/2} 0 0.045" rpy="0 0 0"/>
+    </joint>
+
+    <joint name="t265_joint" type="fixed">
+        <parent link="chassis_link"/>
+        <child link="t265_link"/>
+        <origin xyz="${box_len/2} 0 0.015" rpy="0 0 0"/>
+    </joint>
+
+    <joint name="gps_antenna_joint" type="fixed">
+        <parent link="chassis_link"/>
+        <child link="gps_antenna_link"/>
+        <origin xyz="${-box_len/2+0.01} 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <!-- physical and color parameters in gazebo -->
+
+    <gazebo reference="base_link">
+        <material>Gazebo/Orange</material>
+    </gazebo>
+
+</robot>
