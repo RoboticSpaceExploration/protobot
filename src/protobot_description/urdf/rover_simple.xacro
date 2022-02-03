@@ -23,7 +23,7 @@
 
   <link name="right_front_wheel"><xacro:wheel_visual_collision_inertia/></link>
 
-  <joint name="right_front_wheel_pivot" type="fixed">
+  <joint name="right_front_wheel_pivot" type="continuous">
     <parent link="base_link"/>
     <child link="right_front_wheel"/>
     <origin xyz="${front_wheel_forward} -${front_wheel_out} -${wheel_height}"/>
@@ -31,7 +31,7 @@
 
   <link name="right_mid_wheel"><xacro:wheel_visual_collision_inertia/></link>
 
-  <joint name="right_mid_wheel_pivot" type="fixed">
+  <joint name="right_mid_wheel_pivot" type="continuous">
     <parent link="base_link"/>
     <child link="right_mid_wheel"/>
     <origin xyz="0 -${mid_wheel_out} -${wheel_height}"/>
@@ -39,7 +39,7 @@
 
   <link name="right_back_wheel"><xacro:wheel_visual_collision_inertia/></link>
 
-  <joint name="right_back_wheel_pivot" type="fixed">
+  <joint name="right_back_wheel_pivot" type="continuous">
     <parent link="base_link"/>
     <child link="right_back_wheel"/>
     <origin xyz="-${rear_wheel_back} -${rear_wheel_out} -${wheel_height}"/>
@@ -47,7 +47,7 @@
 
   <link name="left_front_wheel"><xacro:wheel_visual_collision_inertia/></link>
 
-  <joint name="left_front_wheel_pivot" type="fixed">
+  <joint name="left_front_wheel_pivot" type="continuous">
     <parent link="base_link"/>
     <child link="left_front_wheel"/>
     <origin xyz="${front_wheel_forward} ${front_wheel_out} -${wheel_height}"/>
@@ -55,7 +55,7 @@
 
   <link name="left_mid_wheel"><xacro:wheel_visual_collision_inertia/></link>
 
-  <joint name="left_mid_wheel_pivot" type="fixed">
+  <joint name="left_mid_wheel_pivot" type="continuous">
     <parent link="base_link"/>
     <child link="left_mid_wheel"/>
     <origin xyz="0 ${mid_wheel_out} -${wheel_height}"/>
@@ -63,7 +63,7 @@
 
   <link name="left_back_wheel"><xacro:wheel_visual_collision_inertia/></link>
 
-  <joint name="left_back_wheel_pivot" type="fixed">
+  <joint name="left_back_wheel_pivot" type="continuous">
     <parent link="base_link"/>
     <child link="left_back_wheel"/>
     <origin xyz="-${rear_wheel_back} ${rear_wheel_out} -${wheel_height}"/>

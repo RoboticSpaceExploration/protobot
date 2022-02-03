@@ -8,5 +8,6 @@
           type="robot_state_publisher">
       <param name="publish_frequency" value="30.0"/>
     </node>
+    
 
 </launch>
