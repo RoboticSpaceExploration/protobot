@@ -1,5 +1,16 @@
 <launch>
 
-	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find protobot_description)/rviz/default.rviz"/>
+	<!--node name="rviz" pkg="rviz" type="rviz" args="-d $(find protobot_description)/rviz/default.rviz"/-->
+
+	<arg name="model" default="$(find protobot_description)/urdf/proto_protobot.urdf.xacro"/>
+	<arg name="gui" default="true" />
+	<arg name="rvizconfig" default="$(find protobot_description)/rviz/default.rviz"/>
+
+	<!-- load model into parameter server -->
+
+	<param name="robot_description" command="$(find xacro)/xacro '$(find protobot_description)/urdf/proto_protobot.urdf.xacro'"/>
+
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true"/>
 
 </launch>
