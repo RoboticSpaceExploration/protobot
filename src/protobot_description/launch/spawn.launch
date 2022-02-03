@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <!-- load model into parameter server -->
+
+    <param name="robot_description" command="$(find xacro)/xacro '$(find protobot_description)/urdf/rover_simple.xacro'"/>
+    
+    <include file="$(find gazebo_ros)/launch/empty_world.launch"/>
+    
+    <!-- coordinates to spawn model -->
+
+    <arg name="x" default="0"/>
+    <arg name="y" default="0"/>
+    <arg name="z" default="2"/>
+
+    <node name="robot_spawn" pkg="gazebo_ros" type="spawn_model" output="screen"
+          args="-urdf -param robot_description -model rover -x $(arg x) -y $(arg y) -z $(arg z)"/>
+
+    <!--node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /-->
+
+</launch>
+

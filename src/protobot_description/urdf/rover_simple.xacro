@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="rover">
+
+  <xacro:include filename="$(find protobot_description)/urdf/macro.xacro"/>
+
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="${body_length} ${body_width} ${body_height}"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="${body_length} ${body_width} ${body_height}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="${body_mass}"/>
+      <xacro:box_inertia m="${body_mass}" x="${body_length}" y="${body_width}" z="${body_height}"/>
+    </inertial>
+  </link>
+
+  <link name="right_front_wheel"><xacro:wheel_visual_collision_inertia/></link>
+
+  <joint name="right_front_wheel_pivot" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_front_wheel"/>
+    <origin xyz="${front_wheel_forward} -${front_wheel_out} -${wheel_height}"/>
+  </joint>
+
+  <link name="right_mid_wheel"><xacro:wheel_visual_collision_inertia/></link>
+
+  <joint name="right_mid_wheel_pivot" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_mid_wheel"/>
+    <origin xyz="0 -${mid_wheel_out} -${wheel_height}"/>
+  </joint>
+
+  <link name="right_back_wheel"><xacro:wheel_visual_collision_inertia/></link>
+
+  <joint name="right_back_wheel_pivot" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_back_wheel"/>
+    <origin xyz="-${rear_wheel_back} -${rear_wheel_out} -${wheel_height}"/>
+  </joint>
+
+  <link name="left_front_wheel"><xacro:wheel_visual_collision_inertia/></link>
+
+  <joint name="left_front_wheel_pivot" type="fixed">
+    <parent link="base_link"/>
+    <child link="left_front_wheel"/>
+    <origin xyz="${front_wheel_forward} ${front_wheel_out} -${wheel_height}"/>
+  </joint>
+
+  <link name="left_mid_wheel"><xacro:wheel_visual_collision_inertia/></link>
+
+  <joint name="left_mid_wheel_pivot" type="fixed">
+    <parent link="base_link"/>
+    <child link="left_mid_wheel"/>
+    <origin xyz="0 ${mid_wheel_out} -${wheel_height}"/>
+  </joint>
+
+  <link name="left_back_wheel"><xacro:wheel_visual_collision_inertia/></link>
+
+  <joint name="left_back_wheel_pivot" type="fixed">
+    <parent link="base_link"/>
+    <child link="left_back_wheel"/>
+    <origin xyz="-${rear_wheel_back} ${rear_wheel_out} -${wheel_height}"/>
+  </joint>
+
+  <gazebo reference="base_link">
+    <material>Gazebo/Orange</material>
+  </gazebo>
+
+</robot>
