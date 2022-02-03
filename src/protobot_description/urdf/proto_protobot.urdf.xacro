@@ -21,12 +21,21 @@
     <!-- dummy link -->
 
     <link name="base_link">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
         <visual>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry>
                 <box size="${box_len} ${box_width} ${box_height}"/>
             </geometry>
         </visual>
+        <collision>
+            <geometry>
+                <box size="${box_len} ${box_width} ${box_height}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${chassis_mass}"/>
+            <xacro:box_inertia m="${chassis_mass}" x="${box_len}" y="${box_width}" z="${box_height}"/>
+        </inertial>
     </link>
 
     <link name="chassis_link"/>
@@ -43,7 +52,7 @@
         <origin xyz="0 0 ${box_height/2}" rpy="0 0 0"/>
     </joint>
 
-    <joint name="gps_joint" type="fixed">
+    <joint name="imu_joint" type="fixed">
         <parent link="chassis_link"/>
         <child link="gps_link"/>
         <origin xyz="0 -0.06 0" rpy="0 0 0"/>
@@ -67,16 +76,22 @@
         <origin xyz="${-box_len/2+0.01} 0 0" rpy="0 0 0"/>
     </joint>
 
-    <!-- physical and color parameters in gazebo -->
+    <!-- T265 gazebo plugin -->
 
-    <gazebo reference="base_link">
-        <material>Gazebo/Orange</material>
-    </gazebo>
+    <xacro:include filename="$(find realsense_ros_gazebo)/xacro/tracker.xacro"/>
+
+    <xacro:realsense_T265 sensor_name="t265_camera" parent_link="t265_link" rate="30.0">
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </xacro:realsense_T265>
+
+    <!-- D435i gazebo plugin -->
+
+    <!--xacro:include filename="$(find realsense2_description)/urdf/_d435i.urdf.xacro"/-->
 
     <gazebo>
         <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
             <alwaysOn>true</alwaysOn>
-            <bodyName>gps_imu_link</bodyName>
+            <bodyName>d435i_link</bodyName>
             <topicName>imu/data</topicName>
             <serviceName>imu_service</serviceName>
             <gaussianNoise>0</gaussianNoise>
@@ -123,5 +138,10 @@
         </sensor>
     </gazebo>
 
-    <!-- Implement t265_link -->
+    <!-- physical and color parameters in gazebo -->
+
+    <gazebo reference="base_link">
+        <material>Gazebo/Orange</material>
+    </gazebo>
+
 </robot>
