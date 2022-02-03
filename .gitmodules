@@ -25,3 +25,6 @@
 [submodule "src/kindr_ros"]
 	path = src/kindr_ros
 	url = https://github.com/ANYbotics/kindr_ros
+[submodule "src/protobot_description/urdf/realsense_ros_gazebo"]
+	path = src/protobot_description/urdf/realsense_ros_gazebo
+	url = https://github.com/nilseuropa/realsense_ros_gazebo.git
