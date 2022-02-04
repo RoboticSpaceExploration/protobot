@@ -24,25 +24,31 @@
   <link name="right_front_wheel"><xacro:wheel_visual_collision_inertia/></link>
 
   <joint name="right_front_wheel_pivot" type="continuous">
+    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
     <parent link="base_link"/>
     <child link="right_front_wheel"/>
     <origin xyz="${front_wheel_forward} -${front_wheel_out} -${wheel_height}"/>
+    <axis xyz="0 1 0" />
   </joint>
 
   <link name="right_mid_wheel"><xacro:wheel_visual_collision_inertia/></link>
 
   <joint name="right_mid_wheel_pivot" type="continuous">
+    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
     <parent link="base_link"/>
     <child link="right_mid_wheel"/>
     <origin xyz="0 -${mid_wheel_out} -${wheel_height}"/>
+    <axis xyz="0 1 0" />
   </joint>
 
   <link name="right_back_wheel"><xacro:wheel_visual_collision_inertia/></link>
 
   <joint name="right_back_wheel_pivot" type="continuous">
+    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
     <parent link="base_link"/>
     <child link="right_back_wheel"/>
     <origin xyz="-${rear_wheel_back} -${rear_wheel_out} -${wheel_height}"/>
+    <axis xyz="0 1 0" />
   </joint>
 
   <link name="left_front_wheel"><xacro:wheel_visual_collision_inertia/></link>
@@ -51,26 +57,100 @@
     <parent link="base_link"/>
     <child link="left_front_wheel"/>
     <origin xyz="${front_wheel_forward} ${front_wheel_out} -${wheel_height}"/>
+    <axis xyz="0 1 0" />
   </joint>
 
   <link name="left_mid_wheel"><xacro:wheel_visual_collision_inertia/></link>
 
   <joint name="left_mid_wheel_pivot" type="continuous">
+    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
     <parent link="base_link"/>
     <child link="left_mid_wheel"/>
     <origin xyz="0 ${mid_wheel_out} -${wheel_height}"/>
+    <axis xyz="0 1 0" />
   </joint>
 
   <link name="left_back_wheel"><xacro:wheel_visual_collision_inertia/></link>
 
   <joint name="left_back_wheel_pivot" type="continuous">
+    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
     <parent link="base_link"/>
     <child link="left_back_wheel"/>
     <origin xyz="-${rear_wheel_back} ${rear_wheel_out} -${wheel_height}"/>
+    <axis xyz="0 1 0" />
   </joint>
 
   <gazebo reference="base_link">
     <material>Gazebo/Orange</material>
   </gazebo>
+  
+  <gazebo>
+    <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+    </plugin>
+  </gazebo>
+  
+  <transmission name="left_front_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="motor1">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="left_front_wheel_pivot">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+  
+  <transmission name="left_middle_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="motor1">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="left_mid_wheel_pivot">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+  
+  <transmission name="left_back_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="motor1">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="left_back_wheel_pivot">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+  
+  <transmission name="right_front_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="motor1">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="right_front_wheel_pivot">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+  
+  <transmission name="right_middle_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="motor1">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="right_mid_wheel_pivot">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+  
+  <transmission name="right_back_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="motor1">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="right_back_wheel_pivot">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+
+
 
 </robot>

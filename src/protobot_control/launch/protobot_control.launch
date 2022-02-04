@@ -1,10 +1,7 @@
 <launch>
 
-	<!-- Load controller configuration -->
-	<rosparam command="load" file="$(find protobot_control)/config/control.yaml" />
-	
-	<!-- Spawn controllers -->
-	<node name="base_controller_spawner" pkg="controller_manager" type="spawner"
-		args="protobot_joint_publisher protobot_velocity_controller"/>
+	<rosparam command="load" file="$(find protobot_control)/config/control.yaml" /> 
+
+	<node name="controller_manager_node"  pkg="controller_manager" type="spawner" output="screen" args="protobot_joint_publisher protobot_velocity_controller"/>
 
 </launch> 
