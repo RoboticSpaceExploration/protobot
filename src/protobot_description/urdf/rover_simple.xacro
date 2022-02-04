@@ -72,6 +72,7 @@
 
   <link name="left_back_wheel"><xacro:wheel_visual_collision_inertia/></link>
 
+\
   <joint name="left_back_wheel_pivot" type="continuous">
     <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
     <parent link="base_link"/>
@@ -149,8 +150,5 @@
       <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
     </joint>
   </transmission>
-
-
-
 
 </robot>
