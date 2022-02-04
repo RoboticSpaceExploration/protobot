@@ -1,5 +1,4 @@
 <launch>
-  <remap from="/camera/color/image_raw/compressed" to="/camera/compressed"/>
   <arg name="serial_no"           default=""/>
   <arg name="json_file_path"      default=""/>
   <arg name="camera"              default="camera"/>
