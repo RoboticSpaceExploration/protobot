@@ -40,20 +40,12 @@
     <geometry>
       <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
     </geometry>   
-    <origin rpy="${pi/2} 0 0"/>   
+    <origin rpy="${pi/2} 0 0"/>
   </collision>
   <inertial>
     <mass value="${wheel_mass}"/>
     <xacro:cylinder_inertia m="${wheel_mass}" r="${wheel_radius}" h="${wheel_height}"/>
   </inertial>
 </xacro:macro>
-
-<!--xacro:macro name="create_joints" args="prefix x y z">
-  <joint name="${prefix}_wheel_pivot" type="fixed">
-    <parent link="base_link"/>
-    <child link="${prefix}_wheel"/>
-    <origin xyz="${x} ${y} ${z}"/>
-  </joint>
-</xacro:macro-->
 
 </robot>
