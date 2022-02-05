@@ -7,6 +7,7 @@
     <rosparam file="$(find protobot_planner)/config/local_costmap_params.yaml" command="load" />
     <rosparam file="$(find protobot_planner)/config/global_costmap_params.yaml" command="load" /> 
     <rosparam file="$(find protobot_planner)/config/base_local_planner_params.yaml" command="load" />
+    <remap from="/cmd_vel" to="/protobot_velocity_controller/cmd_vel"/>
  </node>
 
 </launch> 
