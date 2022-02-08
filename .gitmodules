@@ -11,5 +11,5 @@
 	path = src/rtcm_msgs
 	url = https://github.com/tilk/rtcm_msgs
 [submodule "src/protobot_description/urdf/realsense_ros_gazebo"]
-	path = src/protobot_description/urdf/realsense_ros_gazebo
+	path = src/realsense_ros_gazebo
 	url = https://github.com/nilseuropa/realsense_ros_gazebo.git

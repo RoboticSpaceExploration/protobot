@@ -87,11 +87,7 @@
   <link name="gps_imu_link">
   </link>
   
-  <link name="camera_link">
-  </link>
 
-  <link name="camera_link_optical">
-  </link>
   
   <joint name="gps_imu_joint" type="fixed">
 	  <parent link="base_link"/>
@@ -99,19 +95,21 @@
 	  <origin xyz="0 0 0.5"/>
   </joint>
   
-  <joint name="camera_joint" type="fixed">
-	  <parent link="base_link"/>
-	  <child link="camera_link"/>
-	  <origin xyz="0 -0.5 0.5" rpy="3.1415 3.1415 1.571"/>
-	  <!--<origin xyz="0 0.5 0.5" rpy="0 0 1.57"/>-->
-  </joint>
 
-  <joint name="camera_optical_joint" type="fixed">
-	  <parent link="camera_link"/>
-	  <child link="camera_link_optical"/>
-	  <origin xyz="0 0 0" rpy="1.571 3.14 1.571"/>
-  </joint>
-  
+  <xacro:include filename="$(find realsense_ros_gazebo)/xacro/tracker.xacro"/>
+
+  <xacro:realsense_T265 sensor_name="camera" parent_link="base_link" rate="30.0">
+    <origin rpy="0 0 0" xyz="0 0 0.5"/>
+  </xacro:realsense_T265>
+
+
+  <xacro:include filename="$(find realsense_ros_gazebo)/xacro/depthcam.xacro"/>
+
+  <xacro:realsense_d435 sensor_name="d435" parent_link="base_link" rate="10">
+    <origin rpy="0 0 0 " xyz="0 0 0.5"/>
+  </xacro:realsense_d435>
+
+
   <gazebo>
     <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
       <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
