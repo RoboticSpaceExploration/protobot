@@ -247,6 +247,7 @@ void roboclaw::DriveForwardM1(uint8_t address, uint32_t speed) {
 
     /*
      * 32 bits (send high byte first)
+     * I fucking hope this is in the right order
      * speed
      * speed >> 8
      * speed >> 16
@@ -304,6 +305,8 @@ void roboclaw::ReadEncoderSpeedM2(uint8_t address) {
     int cmdFlag = SendCommands(data, 2, 7);
 }
 
+/* Doesn't do anything at the moment */
+
 void roboclaw::Read() {
 
     ReadEncoderSpeedM1(0x80);
@@ -314,6 +317,8 @@ void roboclaw::Read() {
     ReadEncoderSpeedM2(0x81);
     ReadEncoderSpeedM2(0x82);
 }
+
+/* Doesn't do anything at the moment */
 
 void roboclaw::Write() {
 

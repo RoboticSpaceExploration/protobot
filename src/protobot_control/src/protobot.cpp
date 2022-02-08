@@ -14,20 +14,44 @@ protobot::protobot()
 }
 
 void protobot::registerStateHandlers() {
-    hardware_interface::JointStateHandle state_handle_a("right_wheel_joint", &pos[0], &vel[0], &eff[0]);
+    hardware_interface::JointStateHandle state_handle_a("right_front_wheel_pivot", &pos[0], &vel[0], &eff[0]);
     jnt_state_interface.registerHandle(state_handle_a);
 
-    hardware_interface::JointStateHandle state_handle_b("left_wheel_joint", &pos[1], &vel[1], &eff[1]);
+    hardware_interface::JointStateHandle state_handle_b("right_mid_wheel_pivot", &pos[1], &vel[1], &eff[1]);
+    jnt_state_interface.registerHandle(state_handle_b);
+
+    hardware_interface::JointStateHandle state_handle_b("right_back_wheel_pivot", &pos[2], &vel[2], &eff[2]);
+    jnt_state_interface.registerHandle(state_handle_b);
+
+    hardware_interface::JointStateHandle state_handle_b("left_front_wheel_pivot", &pos[3], &vel[3], &eff[3]);
+    jnt_state_interface.registerHandle(state_handle_b);
+
+    hardware_interface::JointStateHandle state_handle_b("left_mid_wheel_pivot", &pos[4], &vel[4], &eff[4]);
+    jnt_state_interface.registerHandle(state_handle_b);
+
+    hardware_interface::JointStateHandle state_handle_b("left_back_wheel_pivot", &pos[5], &vel[5], &eff[5]);
     jnt_state_interface.registerHandle(state_handle_b);
 
     registerInterface(&jnt_state_interface);
 }
 
 void protobot::registerJointVelocityHandlers() {
-    hardware_interface::JointHandle vel_handle_a(jnt_state_interface.getHandle("right_wheel_joint"), &cmd[0]);
+    hardware_interface::JointHandle vel_handle_a(jnt_state_interface.getHandle("right_front_wheel_pivot"), &cmd[0]);
     jnt_vel_interface.registerHandle(vel_handle_a);
 
-    hardware_interface::JointHandle vel_handle_b(jnt_state_interface.getHandle("left_wheel_joint"), &cmd[1]);
+    hardware_interface::JointHandle vel_handle_b(jnt_state_interface.getHandle("right_mid_wheel_pivot"), &cmd[1]);
+    jnt_vel_interface.registerHandle(vel_handle_b);
+
+    hardware_interface::JointHandle vel_handle_b(jnt_state_interface.getHandle("right_back_wheel_pivot"), &cmd[2]);
+    jnt_vel_interface.registerHandle(vel_handle_b);
+
+    hardware_interface::JointHandle vel_handle_b(jnt_state_interface.getHandle("left_front_wheel_pivot"), &cmd[3]);
+    jnt_vel_interface.registerHandle(vel_handle_b);
+
+    hardware_interface::JointHandle vel_handle_b(jnt_state_interface.getHandle("left_mid_wheel_pivot"), &cmd[4]);
+    jnt_vel_interface.registerHandle(vel_handle_b);
+
+    hardware_interface::JointHandle vel_handle_b(jnt_state_interface.getHandle("left_back_wheel_pivot"), &cmd[5]);
     jnt_vel_interface.registerHandle(vel_handle_b);
 
     registerInterface(&jnt_vel_interface);
