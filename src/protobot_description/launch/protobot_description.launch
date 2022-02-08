@@ -7,4 +7,5 @@
     
     <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" ></node>
     <node pkg="tf" type="static_transform_publisher" name="world_link_broadcaster" args="0 0 0 0 0 0 1 world map 5" />
+    <node pkg="protobot_description" type="odom_to_tf_node" name="odom_to_tf_node"/>
 </launch>
