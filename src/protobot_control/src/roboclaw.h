@@ -18,14 +18,14 @@
 #include<assert.h>
 #include "protobot.h"
 
-class roboclaw : public protobot {
+class roboclaw {
 
 public:
     roboclaw();
     void SetupEncoders();                                                    // setup motor encoders
     void CloseEncoders();                                                    // close encoder connection
-    void Read();                                                             // inherited from protobot.h
-    void Write();                                                            // inherited from protobot.h
+    void SendCommandToWheels(double* cmd);
+    void GetVelocityFromWheels(double* vel);
 
 private:
     int ClearIOBuffers();                                                    // flush I/O buffers

@@ -3,15 +3,26 @@
 //
 
 #include "protobot.h"
+#include "roboclaw.h"
 
-protobot::protobot()
+protobot::protobot(roboclaw *rb)
 {
     ROS_INFO("Registering ros_control handlers");
     registerStateHandlers();
     registerJointVelocityHandlers();
 
+    ROS_INFO("Initializing roboclaw motor encoders");
+    rb->SetupEncoders();
+
     clock_gettime(CLOCK_MONOTONIC, &last_time);
 }
+
+protobot::~protobot(roboclaw *rb) {
+
+    ROS_INFO("Shutting down roboclaw motor encoders");
+    rb->CloseEncoders(); // close roboclaw encoder serial port upon failure
+}
+
 
 void protobot::registerStateHandlers() {
     hardware_interface::JointStateHandle state_handle_a("right_front_wheel_pivot", &pos[0], &vel[0], &eff[0]);
@@ -56,27 +67,37 @@ void protobot::registerJointVelocityHandlers() {
 
     registerInterface(&jnt_vel_interface);
 }
-/*
-void protobot::read()
-{
-//      if(fabs(cmd[0]) > 0.005f || fabs(cmd[1]) > 0.005f)
-//      {
-//        ROS_INFO_STREAM("READING");
-//        ROS_INFO("CMD TO RIGHT_WHEEL_JOINT %f", cmd[0]);
-//        ROS_INFO("CMD TO LEFT_WHEEL_JOINT %f", cmd[1]);
-//      }
-    double right_vel = cmd[0];
-    double left_vel = cmd[1];
-}
-*/
 
-/*
-void protobot::write()
+
+void protobot::Read(roboclaw *rb)
+{
+      if(fabs(cmd[0]) > 0.005f || fabs(cmd[1]) > 0.005f)
+      {
+        ROS_INFO_STREAM("READING JOINT STATES");
+        ROS_INFO("CMD TO RIGHT_FRONT_WHEEL_JOINT %f", cmd[0]);
+        ROS_INFO("CMD TO RIGHT_MIDDLE_WHEEL_JOINT %f", cmd[1]);
+        ROS_INFO("CMD TO RIGHT_BACK_WHEEL_JOINT %f", cmd[2]);
+        ROS_INFO("CMD TO LEFT_FRONT_WHEEL_JOINT %f", cmd[3]);
+        ROS_INFO("CMD TO RIGHT_MIDDLE_WHEEL_JOINT %f", cmd[4]);
+        ROS_INFO("CMD TO LEFT_BACK_WHEEL_JOINT %f", cmd[5]);
+      }
+
+    rb->GetVelocityFromWheels(&vel);
+}
+
+
+void protobot::Write(roboclaw *rb)
 {
     vel[0] = cmd[0];
     vel[1] = cmd[1];
+    vel[2] = cmd[2];
+    vel[3] = cmd[3];
+    vel[4] = cmd[4];
+    vel[5] = cmd[5];
+
+    rb->SendCommandToWheels(&cmd);
 }
-*/
+
 
 ros::Time protobot::get_time()
 {
@@ -104,18 +125,19 @@ int main(int argc, char** argv)
 
     ROS_INFO_STREAM("Loading protobot_control_node");
 
-    protobot robot;
+    roboclaw rb;
+    protobot robot(&rb);
     controller_manager::ControllerManager cm(&robot);
-
 
     // Control loop here
     ros::Rate rate(hz);
     while (ros::ok())
     {
-        robot.read();
+        robot.Read(&rb);
         cm.update(robot.get_time(), robot.get_period());
-        robot.write();
+        robot.Write(&rb);
         rate.sleep();
     }
 
+    return 0;
 }

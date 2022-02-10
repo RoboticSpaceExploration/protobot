@@ -12,13 +12,15 @@
 #include <hardware_interface/joint_command_interface.h>
 #include <controller_manager/controller_manager.h>
 #include <ros/ros.h>
+#include "roboclaw.h"
 
 class protobot : public hardware_interface::RobotHW {
 
 public:
-    protobot();
-    virtual void Read() = 0;    // changed to capital, unistd.h has read()
-    virtual void Write() = 0;   // changed to capital, unistd.h has write()
+    protobot(roboclaw *rb);
+    ~protobot(roboclaw *rb);
+    void Read(roboclaw *rb);    // changed to capital, unistd.h has read()
+    void Write(roboclaw *rb);   // changed to capital, unistd.h has write()
     ros::Time get_time();
     ros::Duration get_period();
 private:

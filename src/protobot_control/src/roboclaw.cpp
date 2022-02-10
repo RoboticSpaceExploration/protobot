@@ -259,11 +259,11 @@ void roboclaw::DriveForwardM1(uint8_t address, uint32_t speed) {
 
     uint16_t crc = ValidateChecksum(get_crc, 6);
 
-    for(int i=0; i<6; i++)
+    for(int i=0; i<5; i++)
         data[i] = get_crc[i];
 
-    data[7] = crc >> 8;
-    data[8] = crc;
+    data[6] = crc >> 8;
+    data[7] = crc;
 
     int cmdFlag = SendCommands(data, 8, 1);
 }
@@ -275,11 +275,11 @@ void roboclaw::DriveForwardM2(uint8_t address, uint32_t speed) {
 
     uint16_t crc = ValidateChecksum(get_crc, 6);
 
-    for(int i=0; i<6; i++)
+    for(int i=0; i<5; i++)
         data[i] = get_crc[i];
 
-    data[7] = crc >> 8;
-    data[8] = crc;
+    data[6] = crc >> 8;
+    data[7] = crc;
 
     int cmdFlag = SendCommands(data, 8, 1);
 }
@@ -305,22 +305,33 @@ void roboclaw::ReadEncoderSpeedM2(uint8_t address) {
     int cmdFlag = SendCommands(data, 2, 7);
 }
 
-/* Doesn't do anything at the moment */
+void roboclaw::SendCommandToWheels(double* cmd) {
 
-void roboclaw::Read() {
+    DriveForwardM1(0x80, (uint32_t)cmd[0]);
+    DriveForwardM1(0x81, (uint32_t)cmd[1]);
+    DriveForwardM1(0x82, (uint32_t)cmd[2]);
+
+    DriveForwardM2(0x80, (uint32_t)cmd[3]);
+    DriveForwardM2(0x81, (uint32_t)cmd[4]);
+    DriveForwardM2(0x82, (uint32_t)cmd[5]);
+}
+void roboclaw::GetVelocityFromWheels(double* vel) {
 
     ReadEncoderSpeedM1(0x80);
+    vel[0] = (double)(buf[3] >> 24 | buf[2] >> 16 | buf[1] >> 8 | buf[0]);
+
     ReadEncoderSpeedM1(0x81);
+    vel[1] = (double)(buf[3] >> 24 | buf[2] >> 16 | buf[1] >> 8 | buf[0]);
+
     ReadEncoderSpeedM1(0x82);
+    vel[2] = (double)(buf[3] >> 24 | buf[2] >> 16 | buf[1] >> 8 | buf[0]);
 
     ReadEncoderSpeedM2(0x80);
+    vel[3] = (double)(buf[3] >> 24 | buf[2] >> 16 | buf[1] >> 8 | buf[0]);
+
     ReadEncoderSpeedM2(0x81);
+    vel[4] = (double)(buf[3] >> 24 | buf[2] >> 16 | buf[1] >> 8 | buf[0]);
+
     ReadEncoderSpeedM2(0x82);
-}
-
-/* Doesn't do anything at the moment */
-
-void roboclaw::Write() {
-
-
+    vel[5] = (double)(buf[3] >> 24 | buf[2] >> 16 | buf[1] >> 8 | buf[0]);
 }
