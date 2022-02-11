@@ -2,6 +2,16 @@
 // Created by jacob on 2/7/22.
 //
 
+#include<iostream>
+#include<cstdlib>
+#include<cstring>
+#include<fcntl.h>
+#include<errno.h>
+#include<termios.h>
+#include<unistd.h> // serial read() and write() defined here
+#include<sys/ioctl.h>
+#include<sys/time.h>
+#include<assert.h>
 #include "roboclaw.h"
 #include "macros.h"
 

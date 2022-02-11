@@ -17,12 +17,13 @@ pb::protobot::protobot(roboclaw *rb)
     clock_gettime(CLOCK_MONOTONIC, &last_time);
 }
 
+/*
 pb::protobot::~protobot(roboclaw *rb) {
 
     ROS_INFO("Shutting down roboclaw motor encoders");
     rb->CloseEncoders(); // close roboclaw encoder serial port upon failure
 }
-
+*/
 
 void pb::protobot::registerStateHandlers() {
     hardware_interface::JointStateHandle state_handle_a("right_front_wheel_pivot", &pos[0], &vel[0], &eff[0]);
@@ -31,17 +32,17 @@ void pb::protobot::registerStateHandlers() {
     hardware_interface::JointStateHandle state_handle_b("right_mid_wheel_pivot", &pos[1], &vel[1], &eff[1]);
     jnt_state_interface.registerHandle(state_handle_b);
 
-    hardware_interface::JointStateHandle state_handle_b("right_back_wheel_pivot", &pos[2], &vel[2], &eff[2]);
-    jnt_state_interface.registerHandle(state_handle_b);
+    hardware_interface::JointStateHandle state_handle_c("right_back_wheel_pivot", &pos[2], &vel[2], &eff[2]);
+    jnt_state_interface.registerHandle(state_handle_c);
 
-    hardware_interface::JointStateHandle state_handle_b("left_front_wheel_pivot", &pos[3], &vel[3], &eff[3]);
-    jnt_state_interface.registerHandle(state_handle_b);
+    hardware_interface::JointStateHandle state_handle_d("left_front_wheel_pivot", &pos[3], &vel[3], &eff[3]);
+    jnt_state_interface.registerHandle(state_handle_d);
 
-    hardware_interface::JointStateHandle state_handle_b("left_mid_wheel_pivot", &pos[4], &vel[4], &eff[4]);
-    jnt_state_interface.registerHandle(state_handle_b);
+    hardware_interface::JointStateHandle state_handle_e("left_mid_wheel_pivot", &pos[4], &vel[4], &eff[4]);
+    jnt_state_interface.registerHandle(state_handle_e);
 
-    hardware_interface::JointStateHandle state_handle_b("left_back_wheel_pivot", &pos[5], &vel[5], &eff[5]);
-    jnt_state_interface.registerHandle(state_handle_b);
+    hardware_interface::JointStateHandle state_handle_f("left_back_wheel_pivot", &pos[5], &vel[5], &eff[5]);
+    jnt_state_interface.registerHandle(state_handle_f);
 
     registerInterface(&jnt_state_interface);
 }
@@ -53,17 +54,17 @@ void pb::protobot::registerJointVelocityHandlers() {
     hardware_interface::JointHandle vel_handle_b(jnt_state_interface.getHandle("right_mid_wheel_pivot"), &cmd[1]);
     jnt_vel_interface.registerHandle(vel_handle_b);
 
-    hardware_interface::JointHandle vel_handle_b(jnt_state_interface.getHandle("right_back_wheel_pivot"), &cmd[2]);
-    jnt_vel_interface.registerHandle(vel_handle_b);
+    hardware_interface::JointHandle vel_handle_c(jnt_state_interface.getHandle("right_back_wheel_pivot"), &cmd[2]);
+    jnt_vel_interface.registerHandle(vel_handle_c);
 
-    hardware_interface::JointHandle vel_handle_b(jnt_state_interface.getHandle("left_front_wheel_pivot"), &cmd[3]);
-    jnt_vel_interface.registerHandle(vel_handle_b);
+    hardware_interface::JointHandle vel_handle_d(jnt_state_interface.getHandle("left_front_wheel_pivot"), &cmd[3]);
+    jnt_vel_interface.registerHandle(vel_handle_d);
 
-    hardware_interface::JointHandle vel_handle_b(jnt_state_interface.getHandle("left_mid_wheel_pivot"), &cmd[4]);
-    jnt_vel_interface.registerHandle(vel_handle_b);
+    hardware_interface::JointHandle vel_handle_e(jnt_state_interface.getHandle("left_mid_wheel_pivot"), &cmd[4]);
+    jnt_vel_interface.registerHandle(vel_handle_e);
 
-    hardware_interface::JointHandle vel_handle_b(jnt_state_interface.getHandle("left_back_wheel_pivot"), &cmd[5]);
-    jnt_vel_interface.registerHandle(vel_handle_b);
+    hardware_interface::JointHandle vel_handle_f(jnt_state_interface.getHandle("left_back_wheel_pivot"), &cmd[5]);
+    jnt_vel_interface.registerHandle(vel_handle_f);
 
     registerInterface(&jnt_vel_interface);
 }
@@ -82,7 +83,7 @@ void pb::protobot::read(roboclaw *rb)
         ROS_INFO("CMD TO LEFT_BACK_WHEEL_JOINT %f", cmd[5]);
       }
 
-    rb->GetVelocityFromWheels(&vel);
+    rb->GetVelocityFromWheels(vel);
 }
 
 
@@ -95,7 +96,7 @@ void pb::protobot::write(roboclaw *rb)
     vel[4] = cmd[4];
     vel[5] = cmd[5];
 
-    rb->SendCommandToWheels(&cmd);
+    rb->SendCommandToWheels(cmd);
 }
 
 
@@ -133,10 +134,9 @@ int main(int argc, char** argv)
     ros::Rate rate(hz);
     while (ros::ok())
     {
-        // maybe implement tick function?
-        robot.Read(&rb);
+        robot.read(&rb);
         cm.update(robot.get_time(), robot.get_period());
-        robot.Write(&rb);
+        robot.write(&rb);
         rate.sleep();
     }
 

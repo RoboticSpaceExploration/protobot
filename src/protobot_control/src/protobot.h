@@ -5,8 +5,6 @@
 #ifndef PROTOBOT_PROTOBOT_H
 #define PROTOBOT_PROTOBOT_H
 
-#endif //PROTOBOT_PROTOBOT_H
-
 #include <hardware_interface/robot_hw.h>
 #include <hardware_interface/joint_state_interface.h>
 #include <hardware_interface/joint_command_interface.h>
@@ -18,11 +16,11 @@ namespace pb {
     class protobot : public hardware_interface::RobotHW {
 
     public:
-        protobot(roboclaw *rb);
-        ~protobot(roboclaw *rb);
+        protobot(roboclaw* rb);
+        //~protobot(roboclaw* rb);
 
-        void read(roboclaw *rb);
-        void write(roboclaw *rb);
+        void read(roboclaw* rb);
+        void write(roboclaw* rb);
 
         ros::Time get_time();
         ros::Duration get_period();
@@ -33,16 +31,16 @@ namespace pb {
         hardware_interface::VelocityJointInterface jnt_vel_interface;
 
         void registerStateHandlers();
-
         void registerJointVelocityHandlers();
 
         ros::Duration elapsed_time;
         struct timespec last_time;
         struct timespec current_time;
-    protected:
         double cmd[6];
         double pos[6];
         double vel[6];
         double eff[6];
     };
 }
+
+#endif //PROTOBOT_PROTOBOT_H

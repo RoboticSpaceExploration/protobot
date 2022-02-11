@@ -5,6 +5,7 @@
 #ifndef PROTOBOT_ROBOCLAW_H
 #define PROTOBOT_ROBOCLAW_H
 
+/*
 #include<iostream>
 #include<cstdlib>
 #include<cstring>
@@ -17,6 +18,10 @@
 #include<sys/time.h>
 #include<assert.h>
 #include "protobot.h"
+*/
+
+#include<stdint.h>
+#include<termios.h>
 
 class roboclaw {
 
@@ -24,8 +29,8 @@ public:
     roboclaw();
     void SetupEncoders();                                                    // setup motor encoders
     void CloseEncoders();                                                    // close encoder connection
-    void SendCommandToWheels(double* cmd);
-    void GetVelocityFromWheels(double* vel);
+    void SendCommandToWheels(double* cmd);                                   // send cmd_vel to wheels
+    void GetVelocityFromWheels(double* vel);                                 // get joint state status
 
 private:
     int ClearIOBuffers();                                                    // flush I/O buffers
