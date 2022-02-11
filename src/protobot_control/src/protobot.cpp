@@ -89,12 +89,6 @@ void pb::protobot::read(roboclaw *rb)
 
 void pb::protobot::write(roboclaw *rb)
 {
-    vel[0] = cmd[0];
-    vel[1] = cmd[1];
-    vel[2] = cmd[2];
-    vel[3] = cmd[3];
-    vel[4] = cmd[4];
-    vel[5] = cmd[5];
 
     rb->SendCommandToWheels(cmd);
 }
