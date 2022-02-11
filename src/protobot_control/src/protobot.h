@@ -14,27 +14,35 @@
 #include <ros/ros.h>
 #include "roboclaw.h"
 
-class protobot : public hardware_interface::RobotHW {
+namespace pb {
+    class protobot : public hardware_interface::RobotHW {
 
-public:
-    protobot(roboclaw *rb);
-    ~protobot(roboclaw *rb);
-    void Read(roboclaw *rb);    // changed to capital, unistd.h has read()
-    void Write(roboclaw *rb);   // changed to capital, unistd.h has write()
-    ros::Time get_time();
-    ros::Duration get_period();
-private:
-    static constexpr double BILLION = 1000000000.0;
-    hardware_interface::JointStateInterface jnt_state_interface;
-    hardware_interface::VelocityJointInterface jnt_vel_interface;
-    void registerStateHandlers();
-    void registerJointVelocityHandlers();
-    ros::Duration elapsed_time;
-    struct timespec last_time;
-    struct timespec current_time;
-protected:
-    double cmd[6];
-    double pos[6];
-    double vel[6];
-    double eff[6];
-};
+    public:
+        protobot(roboclaw *rb);
+        ~protobot(roboclaw *rb);
+
+        void read(roboclaw *rb);
+        void write(roboclaw *rb);
+
+        ros::Time get_time();
+        ros::Duration get_period();
+
+    private:
+        static constexpr double BILLION = 1000000000.0;
+        hardware_interface::JointStateInterface jnt_state_interface;
+        hardware_interface::VelocityJointInterface jnt_vel_interface;
+
+        void registerStateHandlers();
+
+        void registerJointVelocityHandlers();
+
+        ros::Duration elapsed_time;
+        struct timespec last_time;
+        struct timespec current_time;
+    protected:
+        double cmd[6];
+        double pos[6];
+        double vel[6];
+        double eff[6];
+    };
+}

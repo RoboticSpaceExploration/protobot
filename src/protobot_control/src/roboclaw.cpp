@@ -247,7 +247,6 @@ void roboclaw::DriveForwardM1(uint8_t address, uint32_t speed) {
 
     /*
      * 32 bits (send high byte first)
-     * I fucking hope this is in the right order
      * speed
      * speed >> 8
      * speed >> 16

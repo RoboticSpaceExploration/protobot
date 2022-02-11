@@ -5,7 +5,7 @@
 #include "protobot.h"
 #include "roboclaw.h"
 
-protobot::protobot(roboclaw *rb)
+pb::protobot::protobot(roboclaw *rb)
 {
     ROS_INFO("Registering ros_control handlers");
     registerStateHandlers();
@@ -17,14 +17,14 @@ protobot::protobot(roboclaw *rb)
     clock_gettime(CLOCK_MONOTONIC, &last_time);
 }
 
-protobot::~protobot(roboclaw *rb) {
+pb::protobot::~protobot(roboclaw *rb) {
 
     ROS_INFO("Shutting down roboclaw motor encoders");
     rb->CloseEncoders(); // close roboclaw encoder serial port upon failure
 }
 
 
-void protobot::registerStateHandlers() {
+void pb::protobot::registerStateHandlers() {
     hardware_interface::JointStateHandle state_handle_a("right_front_wheel_pivot", &pos[0], &vel[0], &eff[0]);
     jnt_state_interface.registerHandle(state_handle_a);
 
@@ -46,7 +46,7 @@ void protobot::registerStateHandlers() {
     registerInterface(&jnt_state_interface);
 }
 
-void protobot::registerJointVelocityHandlers() {
+void pb::protobot::registerJointVelocityHandlers() {
     hardware_interface::JointHandle vel_handle_a(jnt_state_interface.getHandle("right_front_wheel_pivot"), &cmd[0]);
     jnt_vel_interface.registerHandle(vel_handle_a);
 
@@ -69,7 +69,7 @@ void protobot::registerJointVelocityHandlers() {
 }
 
 
-void protobot::Read(roboclaw *rb)
+void pb::protobot::read(roboclaw *rb)
 {
       if(fabs(cmd[0]) > 0.005f || fabs(cmd[1]) > 0.005f)
       {
@@ -86,7 +86,7 @@ void protobot::Read(roboclaw *rb)
 }
 
 
-void protobot::Write(roboclaw *rb)
+void pb::protobot::write(roboclaw *rb)
 {
     vel[0] = cmd[0];
     vel[1] = cmd[1];
@@ -99,12 +99,12 @@ void protobot::Write(roboclaw *rb)
 }
 
 
-ros::Time protobot::get_time()
+ros::Time pb::protobot::get_time()
 {
     return ros::Time::now();
 }
 
-ros::Duration protobot::get_period()
+ros::Duration pb::protobot::get_period()
 {
     clock_gettime(CLOCK_MONOTONIC, &current_time);
     elapsed_time =
@@ -126,13 +126,14 @@ int main(int argc, char** argv)
     ROS_INFO_STREAM("Loading protobot_control_node");
 
     roboclaw rb;
-    protobot robot(&rb);
+    pb::protobot robot(&rb);
     controller_manager::ControllerManager cm(&robot);
 
     // Control loop here
     ros::Rate rate(hz);
     while (ros::ok())
     {
+        // maybe implement tick function?
         robot.Read(&rb);
         cm.update(robot.get_time(), robot.get_period());
         robot.Write(&rb);
