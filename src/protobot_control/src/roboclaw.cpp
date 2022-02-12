@@ -344,11 +344,11 @@ void roboclaw::GetVelocityFromWheels(double* vel) {
     vel[5] = (double)(buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]);
 }
 
-// only for positive commands right now
+// only for positive commands right now, 0 - 2m/s
 
 uint8_t roboclaw::ScaleCommand(double cmd) {
 
-    uint8_t res = (cmd/2.0)*127;
+    uint8_t res = (cmd/(2.0/0.127))*127;
 
     return res;
 }
