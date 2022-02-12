@@ -38,12 +38,13 @@ private:
     int WaitReadStatus(int nBytes, int timeout_ms);                          // wait for encoders to fill reply data to buffer, returns 1 on success
     int ReadFromEncoders(int nBytes);                                        // read data from encoders buffer
     int SendCommands(uint8_t* data, int writeBytes, int readBytes);          // send specified commands to encoders
+    uint8_t ScaleCommand(double cmd);
     uint32_t ValidateChecksum(uint8_t* packet, int nBytes);                  // get cyclic redundancy checksum (crc), used to validate
 
     void ForwardM1(uint8_t address, uint8_t value);                          // move M1 Motors
     void ForwardM2(uint8_t address, uint8_t value);                          // move M2 Motors
-    void DriveForwardM1(uint8_t address, uint32_t speed);                    // move M1 motors signed speed
-    void DriveForwardM2(uint8_t address, uint32_t speed);                    // move M2 motors signed speed
+    void BackwardM1(uint8_t address, uint8_t value);
+    void BackwardM2(uint8_t address, uint8_t value);
     void ReadEncoderSpeedM1(uint8_t address);                                // read M1 encoder speed
     void ReadEncoderSpeedM2(uint8_t address);                                // read M2 encoder speed
 

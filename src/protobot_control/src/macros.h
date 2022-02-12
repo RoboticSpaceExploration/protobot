@@ -12,6 +12,8 @@
 #define RETRIES      3              // number of retries
 #define M1FORWARD    0              // M1 Forward command
 #define M2FORWARD    4              // M2 Forward command
+#define M1BACKWARD   1
+#define M2BACKWARD   5
 #define M1DRIVE      35             // drive M1 with signed speed
 #define M2DRIVE      36             // drive M2 with signed speed
 #define M1_READ_ENCODER_SPEED 18    // read M1 encoder speed

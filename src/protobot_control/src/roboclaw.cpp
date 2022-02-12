@@ -234,6 +234,22 @@ void roboclaw::ForwardM1(uint8_t address, uint8_t value) {
     int cmdFlag = SendCommands(data, 5, 1);
 }
 
+void roboclaw::BackwardM1(uint8_t address, uint8_t value) {
+
+    uint8_t get_crc[3] = {address, M1BACKWARD, value};
+    uint8_t data[5];
+
+    uint16_t crc = ValidateChecksum(get_crc, 3);
+
+    for(int i=0; i<3; i++)
+        data[i] = get_crc[i];
+
+    data[3] = crc >> 8;
+    data[4] = crc;
+
+    int cmdFlag = SendCommands(data, 5, 1);
+}
+
 /* Move M2 motors. specify the motor address and desired speed value (0-127), then get checksum. Set commands
    and checksum in an array, send commands to be executed. */
 
@@ -253,44 +269,20 @@ void roboclaw::ForwardM2(uint8_t address, uint8_t value) {
     int cmdFlag = SendCommands(data, 5, 1);
 }
 
-void roboclaw::DriveForwardM1(uint8_t address, uint32_t speed) {
+void roboclaw::BackwardM2(uint8_t address, uint8_t value) {
 
-    /*
-     * 32 bits (send high byte first)
-     * speed
-     * speed >> 8
-     * speed >> 16
-     * speed >> 24
-     */
+    uint8_t get_crc[3] = {address, M2BACKWARD, value};
+    uint8_t data[5];
 
-    uint8_t get_crc[6] = {address, M1DRIVE, speed, speed>>8, speed>>16, speed>>24};
-    uint8_t data[8];
+    uint16_t crc = ValidateChecksum(get_crc, 3);
 
-    uint16_t crc = ValidateChecksum(get_crc, 6);
-
-    for(int i=0; i<5; i++)
+    for(int i=0; i<3; i++)
         data[i] = get_crc[i];
 
-    data[6] = crc >> 8;
-    data[7] = crc;
+    data[3] = crc >> 8;
+    data[4] = crc;
 
-    int cmdFlag = SendCommands(data, 8, 1);
-}
-
-void roboclaw::DriveForwardM2(uint8_t address, uint32_t speed) {
-
-    uint8_t get_crc[6] = {address, M2DRIVE, speed, speed>>8, speed>>16, speed>>24};
-    uint8_t data[8];
-
-    uint16_t crc = ValidateChecksum(get_crc, 6);
-
-    for(int i=0; i<5; i++)
-        data[i] = get_crc[i];
-
-    data[6] = crc >> 8;
-    data[7] = crc;
-
-    int cmdFlag = SendCommands(data, 8, 1);
+    int cmdFlag = SendCommands(data, 5, 1);
 }
 
 void roboclaw::ReadEncoderSpeedM1(uint8_t address) {
@@ -316,31 +308,47 @@ void roboclaw::ReadEncoderSpeedM2(uint8_t address) {
 
 void roboclaw::SendCommandToWheels(double* cmd) {
 
-    DriveForwardM1(0x80, (uint32_t)cmd[0]);
-    DriveForwardM1(0x81, (uint32_t)cmd[1]);
-    DriveForwardM1(0x82, (uint32_t)cmd[2]);
+    uint8_t cmd_send[6] = {0};
 
-    DriveForwardM2(0x80, (uint32_t)cmd[3]);
-    DriveForwardM2(0x81, (uint32_t)cmd[4]);
-    DriveForwardM2(0x82, (uint32_t)cmd[5]);
+    // convert cmd_vel to a usable command between 0-127
+
+    for(int i=0; i<5; i++)
+        cmd_send[i] = ScaleCommand(cmd[i]);
+
+    ForwardM1(0x80, cmd_send[0]);
+    ForwardM1(0x81, cmd_send[1]);
+    ForwardM1(0x82, cmd_send[2]);
+
+    ForwardM2(0x80, cmd_send[3]);
+    ForwardM2(0x81, cmd_send[4]);
+    ForwardM2(0x82, cmd_send[5]);
 }
 void roboclaw::GetVelocityFromWheels(double* vel) {
 
     ReadEncoderSpeedM1(0x80);
-    vel[0] = (double)(buf[3] >> 24 | buf[2] >> 16 | buf[1] >> 8 | buf[0]);
+    vel[0] = (double)(buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]);
 
     ReadEncoderSpeedM1(0x81);
-    vel[1] = (double)(buf[3] >> 24 | buf[2] >> 16 | buf[1] >> 8 | buf[0]);
+    vel[1] = (double)(buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]);
 
     ReadEncoderSpeedM1(0x82);
-    vel[2] = (double)(buf[3] >> 24 | buf[2] >> 16 | buf[1] >> 8 | buf[0]);
+    vel[2] = (double)(buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]);
 
     ReadEncoderSpeedM2(0x80);
-    vel[3] = (double)(buf[3] >> 24 | buf[2] >> 16 | buf[1] >> 8 | buf[0]);
+    vel[3] = (double)(buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]);
 
     ReadEncoderSpeedM2(0x81);
-    vel[4] = (double)(buf[3] >> 24 | buf[2] >> 16 | buf[1] >> 8 | buf[0]);
+    vel[4] = (double)(buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]);
 
     ReadEncoderSpeedM2(0x82);
-    vel[5] = (double)(buf[3] >> 24 | buf[2] >> 16 | buf[1] >> 8 | buf[0]);
+    vel[5] = (double)(buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]);
+}
+
+// only for positive commands right now
+
+uint8_t roboclaw::ScaleCommand(double cmd) {
+
+    uint8_t res = (cmd/2.0)*127;
+
+    return res;
 }
