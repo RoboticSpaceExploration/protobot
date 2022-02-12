@@ -70,11 +70,11 @@ void pb::protobot::registerJointVelocityHandlers() {
 }
 
 
-void pb::protobot::read(roboclaw *rb)
+void pb::protobot::read()
 {
       if(fabs(cmd[0]) > 0.005f || fabs(cmd[1]) > 0.005f)
       {
-        ROS_INFO_STREAM("READING JOINT STATES");
+        ROS_INFO_STREAM("READING JOINT STATES FROM ROS");
         ROS_INFO("CMD TO RIGHT_FRONT_WHEEL_JOINT %f", cmd[0]);
         ROS_INFO("CMD TO RIGHT_MIDDLE_WHEEL_JOINT %f", cmd[1]);
         ROS_INFO("CMD TO RIGHT_BACK_WHEEL_JOINT %f", cmd[2]);
@@ -82,8 +82,6 @@ void pb::protobot::read(roboclaw *rb)
         ROS_INFO("CMD TO RIGHT_MIDDLE_WHEEL_JOINT %f", cmd[4]);
         ROS_INFO("CMD TO LEFT_BACK_WHEEL_JOINT %f", cmd[5]);
       }
-
-    rb->GetVelocityFromWheels(vel);
 }
 
 
@@ -91,6 +89,15 @@ void pb::protobot::write(roboclaw *rb)
 {
 
     rb->SendCommandToWheels(cmd);
+    rb->GetVelocityFromWheels(vel);
+
+    ROS_INFO_STREAM("READING JOINT STATES FROM MOTOR ENCODERS");
+    ROS_INFO("CMD TO RIGHT_FRONT_WHEEL_JOINT %f", vel[0]);
+    ROS_INFO("CMD TO RIGHT_MIDDLE_WHEEL_JOINT %f", vel[1]);
+    ROS_INFO("CMD TO RIGHT_BACK_WHEEL_JOINT %f", vel[2]);
+    ROS_INFO("CMD TO LEFT_FRONT_WHEEL_JOINT %f", vel[3]);
+    ROS_INFO("CMD TO RIGHT_MIDDLE_WHEEL_JOINT %f", vel[4]);
+    ROS_INFO("CMD TO LEFT_BACK_WHEEL_JOINT %f", vel[5]);
 }
 
 
@@ -128,7 +135,7 @@ int main(int argc, char** argv)
     ros::Rate rate(hz);
     while (ros::ok())
     {
-        robot.read(&rb);
+        robot.read();
         cm.update(robot.get_time(), robot.get_period());
         robot.write(&rb);
         rate.sleep();

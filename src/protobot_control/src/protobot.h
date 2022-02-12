@@ -19,7 +19,7 @@ namespace pb {
         protobot(roboclaw* rb);
         //~protobot(roboclaw* rb);
 
-        void read(roboclaw* rb);
+        void read();
         void write(roboclaw* rb);
 
         ros::Time get_time();
