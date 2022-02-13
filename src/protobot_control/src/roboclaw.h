@@ -20,8 +20,9 @@
 #include "protobot.h"
 */
 
-#include<stdint.h>
-#include<termios.h>
+#include <stdint.h>
+#include <termios.h>
+#include "macros.h"
 
 class roboclaw {
 
@@ -39,18 +40,20 @@ private:
     int ReadFromEncoders(int nBytes);                                        // read data from encoders buffer
     int SendCommands(uint8_t* data, int writeBytes, int readBytes);          // send specified commands to encoders
     uint8_t ScaleCommand(double cmd);
+    double ConvertPulsesToRadians(double vel);
     uint32_t ValidateChecksum(uint8_t* packet, int nBytes);                  // get cyclic redundancy checksum (crc), used to validate
 
-    void ForwardM1(uint8_t address, uint8_t value);                          // move M1 Motors
-    void ForwardM2(uint8_t address, uint8_t value);                          // move M2 Motors
-    void BackwardM1(uint8_t address, uint8_t value);
-    void BackwardM2(uint8_t address, uint8_t value);
+    void ForwardM1(uint8_t address, uint8_t value);                          // move M1 Motors forward
+    void ForwardM2(uint8_t address, uint8_t value);                          // move M2 Motors forward
+    void BackwardM1(uint8_t address, uint8_t value);                         // move M1 Motors backward
+    void BackwardM2(uint8_t address, uint8_t value);                         // move M2 motors backward
     void ReadEncoderSpeedM1(uint8_t address);                                // read M1 encoder speed
     void ReadEncoderSpeedM2(uint8_t address);                                // read M2 encoder speed
 
     struct termios tty;                                                      // declare serial termios struct, used to configure serial port
     int serialPort;                                                          // roboclaw serial port file descriptor
-    uint8_t buf[100];                                                        // temp buffer
+    uint8_t buf[MAX_BUF];                                                    // temp buffer
+    uint8_t motorAddr[6] = {0x80, 0x81, 0x82, 0x80, 0x81, 0x82}; // for M1 & M2
 
 };
 

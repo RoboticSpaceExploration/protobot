@@ -21,5 +21,6 @@
 #define ROBOCLAW_ACK_BYTES 1        // number of acknowledgement bytes
 #define ROBOCLAW_ACK_BYTE  0xFF     // roboclaw acknowledgement byte upon successful command
 #define DEBUG                       // debug mode
+#define MAX_BUF      100
 
 #endif //PROTOBOT_MACROS_H

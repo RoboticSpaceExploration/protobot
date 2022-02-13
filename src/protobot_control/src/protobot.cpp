@@ -17,14 +17,6 @@ pb::protobot::protobot(roboclaw *rb)
     clock_gettime(CLOCK_MONOTONIC, &last_time);
 }
 
-/*
-pb::protobot::~protobot(roboclaw *rb) {
-
-    ROS_INFO("Shutting down roboclaw motor encoders");
-    rb->CloseEncoders(); // close roboclaw encoder serial port upon failure
-}
-*/
-
 void pb::protobot::registerStateHandlers() {
     hardware_interface::JointStateHandle state_handle_a("right_front_wheel_pivot", &pos[0], &vel[0], &eff[0]);
     jnt_state_interface.registerHandle(state_handle_a);
@@ -70,34 +62,43 @@ void pb::protobot::registerJointVelocityHandlers() {
 }
 
 
-void pb::protobot::read()
+void pb::protobot::readCmdVelFromTopic()
 {
       if(fabs(cmd[0]) > 0.005f || fabs(cmd[1]) > 0.005f)
       {
         ROS_INFO_STREAM("READING JOINT STATES FROM ROS");
-        ROS_INFO("CMD TO RIGHT_FRONT_WHEEL_JOINT %f", cmd[0]);
-        ROS_INFO("CMD TO RIGHT_MIDDLE_WHEEL_JOINT %f", cmd[1]);
-        ROS_INFO("CMD TO RIGHT_BACK_WHEEL_JOINT %f", cmd[2]);
-        ROS_INFO("CMD TO LEFT_FRONT_WHEEL_JOINT %f", cmd[3]);
-        ROS_INFO("CMD TO RIGHT_MIDDLE_WHEEL_JOINT %f", cmd[4]);
-        ROS_INFO("CMD TO LEFT_BACK_WHEEL_JOINT %f", cmd[5]);
+        ROS_INFO("CMD_VEL RIGHT_FRONT_WHEEL_JOINT %f", cmd[0]);
+        ROS_INFO("CMD_VEL RIGHT_MIDDLE_WHEEL_JOINT %f", cmd[1]);
+        ROS_INFO("CMD_VEL RIGHT_BACK_WHEEL_JOINT %f", cmd[2]);
+        ROS_INFO("CMD_VEL LEFT_FRONT_WHEEL_JOINT %f", cmd[3]);
+        ROS_INFO("CMD_VEL RIGHT_MIDDLE_WHEEL_JOINT %f", cmd[4]);
+        ROS_INFO("CMD_VEL LEFT_BACK_WHEEL_JOINT %f", cmd[5]);
       }
 }
 
 
-void pb::protobot::write(roboclaw *rb)
+void pb::protobot::writeAndReadFromEncoders(roboclaw *rb)
 {
 
+    ROS_INFO_STREAM("SENDING COMMANDS TO WHEELS");
+    ROS_INFO("CMD TO RIGHT_FRONT_WHEEL_JOINT %f", cmd[0]);
+    ROS_INFO("CMD TO RIGHT_MIDDLE_WHEEL_JOINT %f", cmd[1]);
+    ROS_INFO("CMD TO RIGHT_BACK_WHEEL_JOINT %f", cmd[2]);
+    ROS_INFO("CMD TO LEFT_FRONT_WHEEL_JOINT %f", cmd[3]);
+    ROS_INFO("CMD TO RIGHT_MIDDLE_WHEEL_JOINT %f", cmd[4]);
+    ROS_INFO("CMD TO LEFT_BACK_WHEEL_JOINT %f", cmd[5]);
+
     rb->SendCommandToWheels(cmd);
+
     rb->GetVelocityFromWheels(vel);
 
     ROS_INFO_STREAM("READING JOINT STATES FROM MOTOR ENCODERS");
-    ROS_INFO("CMD TO RIGHT_FRONT_WHEEL_JOINT %f", vel[0]);
-    ROS_INFO("CMD TO RIGHT_MIDDLE_WHEEL_JOINT %f", vel[1]);
-    ROS_INFO("CMD TO RIGHT_BACK_WHEEL_JOINT %f", vel[2]);
-    ROS_INFO("CMD TO LEFT_FRONT_WHEEL_JOINT %f", vel[3]);
-    ROS_INFO("CMD TO RIGHT_MIDDLE_WHEEL_JOINT %f", vel[4]);
-    ROS_INFO("CMD TO LEFT_BACK_WHEEL_JOINT %f", vel[5]);
+    ROS_INFO("VEL FROM RIGHT_FRONT_WHEEL_JOINT %f", vel[0]);
+    ROS_INFO("VEL FROM RIGHT_MIDDLE_WHEEL_JOINT %f", vel[1]);
+    ROS_INFO("VEL FROM RIGHT_BACK_WHEEL_JOINT %f", vel[2]);
+    ROS_INFO("VEL FROM LEFT_FRONT_WHEEL_JOINT %f", vel[3]);
+    ROS_INFO("VEL FROM RIGHT_MIDDLE_WHEEL_JOINT %f", vel[4]);
+    ROS_INFO("VEL FROM LEFT_BACK_WHEEL_JOINT %f", vel[5]);
 }
 
 
@@ -121,7 +122,7 @@ int main(int argc, char** argv)
     double hz = 20;
     double period = 1 / hz;
     ros::init(argc,argv,"handle");
-    ros::NodeHandle nh;
+    //ros::NodeHandle nh;
     ros::AsyncSpinner spinner(3);
     spinner.start();
 
@@ -135,9 +136,9 @@ int main(int argc, char** argv)
     ros::Rate rate(hz);
     while (ros::ok())
     {
-        robot.read();
+        robot.readCmdVelFromTopic();
         cm.update(robot.get_time(), robot.get_period());
-        robot.write(&rb);
+        robot.writeAndReadFromEncoders(&rb);
         rate.sleep();
     }
 

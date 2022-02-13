@@ -9,7 +9,6 @@
 #include<errno.h>
 #include<termios.h>
 #include<unistd.h> // serial read() and write() defined here
-#include<sys/ioctl.h>
 #include<sys/time.h>
 #include<assert.h>
 #include "roboclaw.h"
@@ -176,9 +175,7 @@ int roboclaw::WaitReadStatus(int nBytes, int timeout_ms) {
 
 int roboclaw::ReadFromEncoders(int nBytes) {
 
-    //uint8_t buf[nBytes];            // declare buffer size
-
-    for(int i=0; i<nBytes; i++)     // initialize buffer
+    for(int i=0; i<MAX_BUF; i++)     // initialize buffer
         buf[i] = 0x00;
 
     int readFlag = read(serialPort, &buf, nBytes);
@@ -295,6 +292,7 @@ void roboclaw::ReadEncoderSpeedM1(uint8_t address) {
 
     int cmdFlag = SendCommands(data, 2, 7);
 }
+
 void roboclaw::ReadEncoderSpeedM2(uint8_t address) {
 
     uint8_t get_crc[2] = {address, M2_READ_ENCODER_SPEED};
@@ -312,43 +310,38 @@ void roboclaw::SendCommandToWheels(double* cmd) {
 
     // convert cmd_vel to a usable command between 0-127
 
-    for(int i=0; i<5; i++)
+    for(int i=0; i<5; i++) {
+
         cmd_send[i] = ScaleCommand(cmd[i]);
 
-    ForwardM1(0x80, cmd_send[0]);
-    ForwardM1(0x81, cmd_send[1]);
-    ForwardM1(0x82, cmd_send[2]);
-
-    ForwardM2(0x80, cmd_send[3]);
-    ForwardM2(0x81, cmd_send[4]);
-    ForwardM2(0x82, cmd_send[5]);
+        if(i <= 2)
+            ForwardM1(motorAddr[i], cmd_send[i]);
+        else
+            ForwardM2(motorAddr[i], cmd_send[i]);
+    }
 }
 void roboclaw::GetVelocityFromWheels(double* vel) {
 
-    ReadEncoderSpeedM1(0x80);
-    vel[0] = (double)(buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]);
+    for(int i=0; i<5; i++) {
 
-    ReadEncoderSpeedM1(0x81);
-    vel[1] = (double)(buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]);
-
-    ReadEncoderSpeedM1(0x82);
-    vel[2] = (double)(buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]);
-
-    ReadEncoderSpeedM2(0x80);
-    vel[3] = (double)(buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]);
-
-    ReadEncoderSpeedM2(0x81);
-    vel[4] = (double)(buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]);
-
-    ReadEncoderSpeedM2(0x82);
-    vel[5] = (double)(buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]);
+        if(i <= 2) {
+            ReadEncoderSpeedM1(motorAddr[i]);
+            vel[i] = ConvertPulsesToRadians((double) (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
+        } else {
+            ReadEncoderSpeedM2(motorAddr[i]);
+            vel[i] = ConvertPulsesToRadians((double) (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
+        }
+    }
 }
 
 // only for positive commands right now, 0 - 2m/s
 
 uint8_t roboclaw::ScaleCommand(double cmd) {
 
-    uint8_t res = (cmd/(2.0/0.127))*127;
+    return ((cmd/(2.0/0.127))*127); // wheel radius approx. 5"
+}
 
-    return res;
+double roboclaw::ConvertPulsesToRadians(double vel) {
+
+    return (vel/119.3697); // convert from QPPS to rad/s, (750 p/rev)(1/(2*pi))
 }

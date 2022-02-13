@@ -19,8 +19,8 @@ namespace pb {
         protobot(roboclaw* rb);
         //~protobot(roboclaw* rb);
 
-        void read();
-        void write(roboclaw* rb);
+        void readCmdVelFromTopic();
+        void writeAndReadFromEncoders(roboclaw* rb);
 
         ros::Time get_time();
         ros::Duration get_period();
