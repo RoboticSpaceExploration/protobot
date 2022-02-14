@@ -7,6 +7,13 @@
 
 pb::protobot::protobot(roboclaw *rb)
 {
+    // initialize cmd & vel to zero
+
+    for(int i=0; i<5; i++) {
+        vel[i] = 0;
+        cmd[i] = 0;
+    }
+
     ROS_INFO("Registering ros_control handlers");
     registerStateHandlers();
     registerJointVelocityHandlers();
@@ -81,12 +88,12 @@ void pb::protobot::writeAndReadFromEncoders(roboclaw *rb)
 {
 
     ROS_INFO_STREAM("SENDING COMMANDS TO WHEELS");
-    ROS_INFO("CMD TO RIGHT_FRONT_WHEEL_JOINT %f", cmd[0]);
-    ROS_INFO("CMD TO RIGHT_MIDDLE_WHEEL_JOINT %f", cmd[1]);
-    ROS_INFO("CMD TO RIGHT_BACK_WHEEL_JOINT %f", cmd[2]);
-    ROS_INFO("CMD TO LEFT_FRONT_WHEEL_JOINT %f", cmd[3]);
-    ROS_INFO("CMD TO RIGHT_MIDDLE_WHEEL_JOINT %f", cmd[4]);
-    ROS_INFO("CMD TO LEFT_BACK_WHEEL_JOINT %f", cmd[5]);
+    ROS_INFO("CMD_VEL TO RIGHT_FRONT_WHEEL_JOINT %f", cmd[0]);
+    ROS_INFO("CMD_VEL TO RIGHT_MIDDLE_WHEEL_JOINT %f", cmd[1]);
+    ROS_INFO("CMD_VEL TO RIGHT_BACK_WHEEL_JOINT %f", cmd[2]);
+    ROS_INFO("CMD_VEL TO LEFT_FRONT_WHEEL_JOINT %f", cmd[3]);
+    ROS_INFO("CMD_VEL TO RIGHT_MIDDLE_WHEEL_JOINT %f", cmd[4]);
+    ROS_INFO("CMD_VEL TO LEFT_BACK_WHEEL_JOINT %f", cmd[5]);
 
     rb->SendCommandToWheels(cmd);
 
@@ -126,7 +133,7 @@ int main(int argc, char** argv)
     ros::AsyncSpinner spinner(3);
     spinner.start();
 
-    ROS_INFO_STREAM("Loading protobot_control_node");
+    ROS_INFO_STREAM("Loading protobot_control_hw_node");
 
     roboclaw rb;
     pb::protobot robot(&rb);

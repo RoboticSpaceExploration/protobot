@@ -310,16 +310,18 @@ void roboclaw::SendCommandToWheels(double* cmd) {
 
     // convert cmd_vel to a usable command between 0-127
 
-    for(int i=0; i<5; i++) {
-
+    for(int i=0; i<5; i++)
         cmd_send[i] = ScaleCommand(cmd[i]);
 
-        if(i <= 2)
-            ForwardM1(motorAddr[i], cmd_send[i]);
-        else
-            ForwardM2(motorAddr[i], cmd_send[i]);
-    }
+    ForwardM1(0x80, cmd_send[0]);
+    ForwardM1(0x81, cmd_send[1]);
+    ForwardM1(0x82, cmd_send[2]);
+
+    ForwardM2(0x80, cmd_send[3]);
+    ForwardM2(0x81, cmd_send[4]);
+    ForwardM2(0x82, cmd_send[5]);
 }
+
 void roboclaw::GetVelocityFromWheels(double* vel) {
 
     for(int i=0; i<5; i++) {
@@ -338,7 +340,12 @@ void roboclaw::GetVelocityFromWheels(double* vel) {
 
 uint8_t roboclaw::ScaleCommand(double cmd) {
 
-    return ((cmd/(2.0/0.127))*127); // wheel radius approx. 5"
+    double res = (cmd/16.667)*127;
+
+    if(res >= 127)
+        res = 127;
+
+    return res; // setup for teleop_twist for now, max teleop_twist is 16.667
 }
 
 double roboclaw::ConvertPulsesToRadians(double vel) {

@@ -19,7 +19,7 @@ project(protobot_control)
 
 find_package(catkin REQUIRED COMPONENTS
         ackermann_msgs
-        protobot_description
+        #protobot_description
         controller_manager
         controller_manager_msgs
         effort_controllers
@@ -44,14 +44,12 @@ install(DIRECTORY config launch
 include_directories(include
         ${catkin_INCLUDE_DIRS}
         ${Boost_INCLUDE_DIRS}
-        src/protobot.h
-        src/roboclaw.h
-        src/macros.h
+        src
         )
 
-add_executable(protobotExec src/protobot.cpp src/roboclaw.cpp)
+add_executable(${PROJECT_NAME}_hw_node src/protobot.cpp src/roboclaw.cpp)
 
-target_link_libraries(protobotExec ${catkin_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}_hw_node ${catkin_LIBRARIES})
 
 link_directories(${catkin_LIBRARY_DIRS})
 
