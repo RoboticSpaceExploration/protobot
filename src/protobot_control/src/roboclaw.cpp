@@ -310,7 +310,7 @@ void roboclaw::SendCommandToWheels(double* cmd) {
 
     // convert cmd_vel to a usable command between 0-127
 
-    for(int i=0; i<5; i++)
+    for(int i=0; i<=5; i++)
         cmd_send[i] = ScaleCommand(cmd[i]);
 
     ForwardM1(0x80, cmd_send[0]);
@@ -324,7 +324,7 @@ void roboclaw::SendCommandToWheels(double* cmd) {
 
 void roboclaw::GetVelocityFromWheels(double* vel) {
 
-    for(int i=0; i<5; i++) {
+    for(int i=0; i<=5; i++) {
 
         if(i <= 2) {
             ReadEncoderSpeedM1(motorAddr[i]);
@@ -340,10 +340,10 @@ void roboclaw::GetVelocityFromWheels(double* vel) {
 
 uint8_t roboclaw::ScaleCommand(double cmd) {
 
-    double res = (cmd/16.667)*127;
+    double res = (cmd/16.667)*MAX_M1M2_VALUE;
 
-    if(res >= 127)
-        res = 127;
+    if(res >= MAX_M1M2_VALUE)
+        res = MAX_M1M2_VALUE;
 
     return res; // setup for teleop_twist for now, max teleop_twist is 16.667
 }
