@@ -5,7 +5,7 @@
 #ifndef PROTOBOT_MACROS_H
 #define PROTOBOT_MACROS_H
 
-#define SERIAL_PORT  "/dev/ttyAMA0"   // serial port location, on RPI use /dev/serial0
+#define SERIAL_PORT  "/dev/ttyAMA0" // serial port location
 #define BAUD_RATE    B115200        // roboclaw encoder baud rate
 #define TIMEOUT_DS   1              // timeout period, 1 ds = 100 ms (not used at the moment)
 #define TIMEOUT_MS   12             // Actual encoder timeout, according to this library: https://github.com/bmegli/roboclaw

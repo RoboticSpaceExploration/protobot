@@ -5,21 +5,6 @@
 #ifndef PROTOBOT_ROBOCLAW_H
 #define PROTOBOT_ROBOCLAW_H
 
-/*
-#include<iostream>
-#include<cstdlib>
-#include<cstring>
-#include<stdint.h>
-#include<fcntl.h>
-#include<errno.h>
-#include<termios.h>
-#include<unistd.h>
-#include<sys/ioctl.h>
-#include<sys/time.h>
-#include<assert.h>
-#include "protobot.h"
-*/
-
 #include <stdint.h>
 #include <termios.h>
 #include "macros.h"
@@ -53,8 +38,6 @@ private:
     struct termios tty;                                                      // declare serial termios struct, used to configure serial port
     int serialPort;                                                          // roboclaw serial port file descriptor
     uint8_t buf[MAX_BUF];                                                    // temp buffer
-    uint8_t motorAddr[6] = {0x80, 0x81, 0x82, 0x80, 0x81, 0x82}; // for M1 & M2
-
 };
 
 #endif //PROTOBOT_ROBOCLAW_H

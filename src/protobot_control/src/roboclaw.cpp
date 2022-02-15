@@ -11,10 +11,15 @@
 #include<unistd.h> // serial read() and write() defined here
 #include<sys/time.h>
 #include<assert.h>
+#include<math.h>
 #include "roboclaw.h"
 #include "macros.h"
 
-roboclaw::roboclaw() {}
+roboclaw::roboclaw() {
+
+    // implement subroutine to verify serial port permissions
+
+}
 
 /* Send and execute commands to encoders. Returns -1 or RETRIES on failure, 1 on success. Commands will be sent up to max RETRIES.
    Successful writes to encoders are then polled to check if data is available to be read back. Once data is available, the data
@@ -231,6 +236,8 @@ void roboclaw::ForwardM1(uint8_t address, uint8_t value) {
     int cmdFlag = SendCommands(data, 5, 1);
 }
 
+/* Move M1 motors backwards */
+
 void roboclaw::BackwardM1(uint8_t address, uint8_t value) {
 
     uint8_t get_crc[3] = {address, M1BACKWARD, value};
@@ -265,6 +272,8 @@ void roboclaw::ForwardM2(uint8_t address, uint8_t value) {
 
     int cmdFlag = SendCommands(data, 5, 1);
 }
+
+/* Move M2 motors backwards */
 
 void roboclaw::BackwardM2(uint8_t address, uint8_t value) {
 
@@ -313,34 +322,73 @@ void roboclaw::SendCommandToWheels(double* cmd) {
     for(int i=0; i<=5; i++)
         cmd_send[i] = ScaleCommand(cmd[i]);
 
-    ForwardM1(0x80, cmd_send[0]);
-    ForwardM1(0x81, cmd_send[1]);
-    ForwardM1(0x82, cmd_send[2]);
+    // if positive, move motors forward. if negative, move backwards
 
-    ForwardM2(0x80, cmd_send[3]);
-    ForwardM2(0x81, cmd_send[4]);
-    ForwardM2(0x82, cmd_send[5]);
+    if(cmd[0] > 0)
+        ForwardM1(0x80, cmd_send[0]);
+    else
+        BackwardM1(0x80, cmd_send[0]);
+
+    if(cmd[1] > 0)
+        ForwardM1(0x81, cmd_send[1]);
+    else
+        BackwardM1(0x81, cmd_send[1]);
+
+    if(cmd[2] > 0)
+        ForwardM1(0x82, cmd_send[2]);
+    else
+        BackwardM1(0x82, cmd_send[2]);
+
+    if(cmd[3] > 0)
+        ForwardM2(0x80, cmd_send[3]);
+    else
+        BackwardM2(0x80, cmd_send[3]);
+
+    if(cmd[4] > 0)
+        ForwardM2(0x81, cmd_send[4]);
+    else
+        BackwardM2(0x81, cmd_send[4]);
+
+    if(cmd[5] > 0)
+        ForwardM2(0x82, cmd_send[5]);
+    else
+        BackwardM2(0x82, cmd_send[5]);
 }
 
 void roboclaw::GetVelocityFromWheels(double* vel) {
 
-    for(int i=0; i<=5; i++) {
+    // return positive or negative value from encoders, depending on direction
 
-        if(i <= 2) {
-            ReadEncoderSpeedM1(motorAddr[i]);
-            vel[i] = ConvertPulsesToRadians((double) (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
-        } else {
-            ReadEncoderSpeedM2(motorAddr[i]);
-            vel[i] = ConvertPulsesToRadians((double) (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
-        }
-    }
+    ReadEncoderSpeedM1(0x80);
+    vel[0] = ConvertPulsesToRadians((double) (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
+    if(buf[4] == 1) vel[0] = -vel[0];
+
+    ReadEncoderSpeedM1(0x81);
+    vel[1] = ConvertPulsesToRadians((double) (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
+    if(buf[4] == 1) vel[0] = -vel[0];
+
+    ReadEncoderSpeedM1(0x82);
+    vel[2] = ConvertPulsesToRadians((double) (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
+    if(buf[4] == 1) vel[0] = -vel[0];
+
+    ReadEncoderSpeedM2(0x80);
+    vel[3] = ConvertPulsesToRadians((double) (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
+    if(buf[4] == 1) vel[0] = -vel[0];
+
+    ReadEncoderSpeedM2(0x81);
+    vel[4] = ConvertPulsesToRadians((double) (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
+    if(buf[4] == 1) vel[0] = -vel[0];
+
+    ReadEncoderSpeedM2(0x82);
+    vel[5] = ConvertPulsesToRadians((double) (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
+    if(buf[4] == 1) vel[0] = -vel[0];
 }
 
 // only for positive commands right now, 0 - 2m/s
 
 uint8_t roboclaw::ScaleCommand(double cmd) {
 
-    double res = (cmd/16.667)*MAX_M1M2_VALUE;
+    double res = (fabs(cmd)/16.667)*MAX_M1M2_VALUE;
 
     if(res >= MAX_M1M2_VALUE)
         res = MAX_M1M2_VALUE;
