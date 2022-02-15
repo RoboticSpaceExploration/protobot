@@ -123,6 +123,8 @@ void roboclaw::SetupEncoders() {
 
     if(tcsetattr(serialPort, TCSANOW, &tty) != 0)
         printf("Error %i from tcsetattr: %s\n", errno, strerror(errno));
+
+    ClearIOBuffers();
 }
 
 /* Close serial port file descriptor. */
@@ -322,37 +324,45 @@ void roboclaw::SendCommandToWheels(double* cmd) {
     for(int i=0; i<=5; i++)
         cmd_send[i] = ScaleCommand(cmd[i]);
 
-    // if positive, move motors forward. if negative, move backwards
+    if(zeroCmdVelCount <= RETRIES) {
 
-    if(cmd[0] > 0)
-        ForwardM1(0x80, cmd_send[0]);
-    else
-        BackwardM1(0x80, cmd_send[0]);
+        // if positive, move motors forward. if negative, move backwards
 
-    if(cmd[1] > 0)
-        ForwardM1(0x81, cmd_send[1]);
-    else
-        BackwardM1(0x81, cmd_send[1]);
+        if(cmd[0] >= 0) // right_front
+            ForwardM1(0x80, cmd_send[0]);
+        else
+            BackwardM1(0x80, cmd_send[0]);
 
-    if(cmd[2] > 0)
-        ForwardM1(0x82, cmd_send[2]);
-    else
-        BackwardM1(0x82, cmd_send[2]);
+        if(cmd[1] >= 0) // right_middle
+            ForwardM2(0x80, cmd_send[1]);
+        else
+            BackwardM2(0x80, cmd_send[1]);
 
-    if(cmd[3] > 0)
-        ForwardM2(0x80, cmd_send[3]);
-    else
-        BackwardM2(0x80, cmd_send[3]);
+        if(cmd[2] >= 0) // right_back
+            ForwardM1(0x81, cmd_send[2]);
+        else
+            BackwardM1(0x81, cmd_send[2]);
 
-    if(cmd[4] > 0)
-        ForwardM2(0x81, cmd_send[4]);
-    else
-        BackwardM2(0x81, cmd_send[4]);
+        if(cmd[3] >= 0) // left_front
+            ForwardM2(0x82, cmd_send[3]);
+        else
+            BackwardM2(0x82, cmd_send[3]);
 
-    if(cmd[5] > 0)
-        ForwardM2(0x82, cmd_send[5]);
+        if(cmd[4] >= 0) // left_middle
+            ForwardM1(0x82, cmd_send[4]);
+        else
+            BackwardM1(0x82, cmd_send[4]);
+
+        if(cmd[5] >= 0) // left_back
+            ForwardM2(0x81, cmd_send[5]);
+        else
+            BackwardM2(0x81, cmd_send[5]);
+    }
+
+    if(cmd[0] == 0 || cmd[1] == 0 || cmd[2] == 0 || cmd[3] == 0 || cmd[4] == 0 || cmd[5] == 0)
+        zeroCmdVelCount++;
     else
-        BackwardM2(0x82, cmd_send[5]);
+        zeroCmdVelCount = 0;
 }
 
 void roboclaw::GetVelocityFromWheels(double* vel) {
@@ -363,23 +373,23 @@ void roboclaw::GetVelocityFromWheels(double* vel) {
     vel[0] = ConvertPulsesToRadians((double) (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
     if(buf[4] == 1) vel[0] = -vel[0];
 
-    ReadEncoderSpeedM1(0x81);
+    ReadEncoderSpeedM2(0x80);
     vel[1] = ConvertPulsesToRadians((double) (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
     if(buf[4] == 1) vel[0] = -vel[0];
 
-    ReadEncoderSpeedM1(0x82);
+    ReadEncoderSpeedM1(0x81);
     vel[2] = ConvertPulsesToRadians((double) (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
     if(buf[4] == 1) vel[0] = -vel[0];
 
-    ReadEncoderSpeedM2(0x80);
+    ReadEncoderSpeedM2(0x82);
     vel[3] = ConvertPulsesToRadians((double) (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
     if(buf[4] == 1) vel[0] = -vel[0];
 
-    ReadEncoderSpeedM2(0x81);
+    ReadEncoderSpeedM1(0x82);
     vel[4] = ConvertPulsesToRadians((double) (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
     if(buf[4] == 1) vel[0] = -vel[0];
 
-    ReadEncoderSpeedM2(0x82);
+    ReadEncoderSpeedM2(0x81);
     vel[5] = ConvertPulsesToRadians((double) (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
     if(buf[4] == 1) vel[0] = -vel[0];
 }

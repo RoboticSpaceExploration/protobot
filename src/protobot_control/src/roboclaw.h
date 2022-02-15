@@ -38,6 +38,7 @@ private:
     struct termios tty;                                                      // declare serial termios struct, used to configure serial port
     int serialPort;                                                          // roboclaw serial port file descriptor
     uint8_t buf[MAX_BUF];                                                    // temp buffer
+    int zeroCmdVelCount;
 };
 
 #endif //PROTOBOT_ROBOCLAW_H
