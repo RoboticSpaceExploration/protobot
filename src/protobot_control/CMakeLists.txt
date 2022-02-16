@@ -16,10 +16,41 @@
 
 cmake_minimum_required(VERSION 2.8.3)
 project(protobot_control)
-find_package(catkin REQUIRED)
+
+find_package(catkin REQUIRED COMPONENTS
+        ackermann_msgs
+        #protobot_description
+        controller_manager
+        controller_manager_msgs
+        effort_controllers
+        gazebo_ros
+        joint_state_controller
+        roscpp
+        urdf
+        std_msgs
+        tf)
+
+#catkin_metapackage()
+
 catkin_package()
+
 
 catkin_install_python(PROGRAMS scripts/ackermann_controller
                       DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
 install(DIRECTORY config launch
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+
+include_directories(include
+        ${catkin_INCLUDE_DIRS}
+        ${Boost_INCLUDE_DIRS}
+        src
+        )
+
+add_executable(${PROJECT_NAME}_hw_node src/protobot.cpp src/roboclaw.cpp)
+
+target_link_libraries(${PROJECT_NAME}_hw_node ${catkin_LIBRARIES})
+
+link_directories(${catkin_LIBRARY_DIRS})
+
+

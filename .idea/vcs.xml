@@ -6,6 +6,7 @@
     <mapping directory="$PROJECT_DIR$/src/grid_map" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/kindr" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/kindr_ros" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/protobot_description/urdf/realsense_ros_gazebo" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/realsense-ros" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/rtcm_msgs" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/ublox" vcs="Git" />
