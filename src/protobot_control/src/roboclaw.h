@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 #include <termios.h>
-#include "macros.h"
+#include "settings.h"
 
 class roboclaw {
 
@@ -36,8 +36,9 @@ private:
     void ReadEncoderSpeedM2(uint8_t address);                                // read M2 encoder speed
 
     struct termios tty;                                                      // declare serial termios struct, used to configure serial port
+    SerialEncoderSettings es;
     int serialPort;                                                          // roboclaw serial port file descriptor
-    uint8_t buf[MAX_BUF];                                                    // temp buffer
+    uint8_t buf[100];                                                        // temp buffer
     int zeroCmdVelCount;
 };
 

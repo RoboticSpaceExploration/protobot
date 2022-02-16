@@ -10,17 +10,17 @@
 #include <hardware_interface/joint_command_interface.h>
 #include <controller_manager/controller_manager.h>
 #include <ros/ros.h>
+#include<string>
 #include "roboclaw.h"
 
 namespace pb {
     class protobot : public hardware_interface::RobotHW {
 
     public:
-        protobot(roboclaw* rb);
-        //~protobot(roboclaw* rb);
+        protobot();
 
-        void readCmdVelFromTopic();
-        void writeAndReadFromEncoders(roboclaw* rb);
+        void readTopicWriteToEncoders();
+        void readFromEncoders();
 
         ros::Time get_time();
         ros::Duration get_period();
@@ -32,6 +32,7 @@ namespace pb {
 
         void registerStateHandlers();
         void registerJointVelocityHandlers();
+        void printDebugInfo(std::string name, double* data);
 
         ros::Duration elapsed_time;
         struct timespec last_time;
@@ -40,6 +41,8 @@ namespace pb {
         double pos[6];
         double vel[6];
         double eff[6];
+
+        roboclaw rb;
     };
 }
 

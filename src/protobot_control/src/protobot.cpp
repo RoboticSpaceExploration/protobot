@@ -5,14 +5,39 @@
 #include "protobot.h"
 #include "roboclaw.h"
 
-pb::protobot::protobot(roboclaw *rb) {
+int main(int argc, char** argv) {
+
+    double hz = 10;
+    ros::init(argc,argv,"handle");
+    ros::AsyncSpinner spinner(3);
+    spinner.start();
+
+    ROS_INFO_STREAM("Loading protobot_control_hw_node");
+
+    pb::protobot robot;
+    controller_manager::ControllerManager cm(&robot);
+
+    // Control loop here
+    ros::Rate rate(hz);
+    while (ros::ok()) {
+
+        robot.readTopicWriteToEncoders();
+        cm.update(robot.get_time(), robot.get_period());
+        robot.readFromEncoders();
+        rate.sleep();
+    }
+
+    return 0;
+}
+
+pb::protobot::protobot() {
 
     ROS_INFO("Registering ros_control handlers");
     registerStateHandlers();
     registerJointVelocityHandlers();
 
     ROS_INFO("Initializing roboclaw motor encoders");
-    rb->SetupEncoders();
+    rb.SetupEncoders();
 
     clock_gettime(CLOCK_MONOTONIC, &last_time);
 
@@ -69,34 +94,22 @@ void pb::protobot::registerJointVelocityHandlers() {
 }
 
 
-void pb::protobot::readCmdVelFromTopic() {
+void pb::protobot::readTopicWriteToEncoders() {
 
     ROS_INFO_STREAM("READING JOINT STATES FROM ROS");
-    ROS_INFO("CMD_VEL RIGHT_FRONT_WHEEL_JOINT %f", cmd[0]);
-    ROS_INFO("CMD_VEL RIGHT_MIDDLE_WHEEL_JOINT %f", cmd[1]);
-    ROS_INFO("CMD_VEL RIGHT_BACK_WHEEL_JOINT %f", cmd[2]);
-    ROS_INFO("CMD_VEL LEFT_FRONT_WHEEL_JOINT %f", cmd[3]);
-    ROS_INFO("CMD_VEL RIGHT_MIDDLE_WHEEL_JOINT %f", cmd[4]);
-    ROS_INFO("CMD_VEL LEFT_BACK_WHEEL_JOINT %f", cmd[5]);
+    printDebugInfo("SENDING CMD_VEL TO", cmd);
+
+    rb.SendCommandToWheels(cmd);
 }
 
 
-void pb::protobot::writeAndReadFromEncoders(roboclaw *rb) {
+void pb::protobot::readFromEncoders() {
 
-    rb->SendCommandToWheels(cmd);
-
-    rb->GetVelocityFromWheels(vel);
+    rb.GetVelocityFromWheels(vel);
 
     ROS_INFO_STREAM("READING JOINT STATES FROM MOTOR ENCODERS");
-    ROS_INFO("VEL FROM RIGHT_FRONT_WHEEL_JOINT %f", vel[0]);
-    ROS_INFO("VEL FROM RIGHT_MIDDLE_WHEEL_JOINT %f", vel[1]);
-    ROS_INFO("VEL FROM RIGHT_BACK_WHEEL_JOINT %f", vel[2]);
-    ROS_INFO("VEL FROM LEFT_FRONT_WHEEL_JOINT %f", vel[3]);
-    ROS_INFO("VEL FROM RIGHT_MIDDLE_WHEEL_JOINT %f", vel[4]);
-    ROS_INFO("VEL FROM LEFT_BACK_WHEEL_JOINT %f", vel[5]);
+    printDebugInfo("VEL FROM", vel);
 }
-
-
 
 ros::Time pb::protobot::get_time() {
 
@@ -113,28 +126,14 @@ ros::Duration pb::protobot::get_period() {
     return elapsed_time;
 }
 
-int main(int argc, char** argv) {
+void pb::protobot::printDebugInfo(std::string name, double* data) {
 
-    double hz = 10;
-    ros::init(argc,argv,"handle");
-    ros::AsyncSpinner spinner(3);
-    spinner.start();
-
-    ROS_INFO_STREAM("Loading protobot_control_hw_node");
-
-    roboclaw rb;
-    pb::protobot robot(&rb);
-    controller_manager::ControllerManager cm(&robot);
-
-    // Control loop here
-    ros::Rate rate(hz);
-    while (ros::ok()) {
-
-        robot.readCmdVelFromTopic();
-        cm.update(robot.get_time(), robot.get_period());
-        robot.writeAndReadFromEncoders(&rb);
-        rate.sleep();
-    }
-
-    return 0;
+    ROS_INFO("%s RIGHT_FRONT_WHEEL_JOINT %f", name.c_str(), data[0]);
+    ROS_INFO("%s RIGHT_MIDDLE_WHEEL_JOINT %f", name.c_str(), data[1]);
+    ROS_INFO("%s RIGHT_BACK_WHEEL_JOINT %f", name.c_str(), data[2]);
+    ROS_INFO("%s LEFT_FRONT_WHEEL_JOINT %f", name.c_str(), data[3]);
+    ROS_INFO("%s RIGHT_MIDDLE_WHEEL_JOINT %f", name.c_str(), data[4]);
+    ROS_INFO("%s LEFT_BACK_WHEEL_JOINT %f", name.c_str(), data[5]);
 }
+
+
