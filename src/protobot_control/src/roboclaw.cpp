@@ -3,33 +3,36 @@
 Copyright (c) [2022] [Jacob Anthony Sequeira]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
+of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
+copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
 #include "../include/roboclaw.h"
-#include<fcntl.h>
-#include<errno.h>
-#include<termios.h>
-#include<unistd.h>  // serial read() and write() defined here
-#include<sys/time.h>
-#include<assert.h>
-#include<math.h>
-#include<cstdlib>
-#include<cstring>
+#include <fcntl.h>
+#include <errno.h>
+#include <termios.h>
+#include <unistd.h>  // serial read() and write() defined here
+#include <sys/time.h>
+#include <assert.h>
+#include <math.h>
+#include <cstdlib>
+#include <cstring>
+
+#define RECOMBINE_BUFFER(X) \
+(((X)[3]) << 24 | ((X)[2]) << 16 | ((X)[1]) << 8 | ((X)[0]))
 
 roboclaw::roboclaw(settings* es_protobot) {
     zeroCmdVelCount = 0;
@@ -80,7 +83,8 @@ int roboclaw::ClearIOBuffers() {
    as per the roboclaw user manual. Send and receive raw bytes only. Set baud rate of sending and receiving end. */
 
 void roboclaw::SetupEncoders() {
-    serialPort = open(es->serialPortAddr.c_str(), O_RDWR | O_NOCTTY);  // enable read & write, disable controlling terminal
+    // enable read & write, disable controlling terminal
+    serialPort = open(es->serialPortAddr.c_str(), O_RDWR | O_NOCTTY);
 
     fcntl(serialPort, F_SETFL, 0);  // set to blocking mode (for reads)
 
@@ -97,20 +101,18 @@ void roboclaw::SetupEncoders() {
 
     // set necessary bits
 
-    tty.c_cflag &= ~PARENB;         // disable parity
-    tty.c_cflag &= ~CSTOPB;         // set 1 stop bit
-    tty.c_cflag |= CS8;             // set 8 bits per byte
-    tty.c_cflag &= ~CRTSCTS;        // Disable RTS/CTS hardware flow control
-    tty.c_cflag |= CREAD | CLOCAL;  // enable read from device, ignore ctrl lines
+    tty.c_cflag &= ~PARENB;
+    tty.c_cflag &= ~CSTOPB;
+    tty.c_cflag |= CS8;
+    tty.c_cflag &= ~CRTSCTS;
+    tty.c_cflag |= CREAD | CLOCAL;
 
-    tty.c_lflag &= ~ICANON;         // disable canonical mode
+    tty.c_lflag &= ~ICANON;
 
-    // next 4 flags are probably already disabled from above flag, but I'll set them anyway
-
-    tty.c_lflag &= ~ECHO;           // disable echo of commands
-    tty.c_lflag &= ~ECHOE;          // disable erasure
-    tty.c_lflag &= ~ECHONL;         // disable new-line echo
-    tty.c_lflag &= ~ISIG;           // disable special character handling
+    tty.c_lflag &= ~ECHO;
+    tty.c_lflag &= ~ECHOE;
+    tty.c_lflag &= ~ECHONL;
+    tty.c_lflag &= ~ISIG;
 
     tty.c_iflag &= ~(IXON | IXOFF | IXANY);
     tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL);
@@ -118,8 +120,8 @@ void roboclaw::SetupEncoders() {
     tty.c_oflag &= ~OPOST;
     tty.c_oflag &= ~ONLCR;
 
-    tty.c_cc[VTIME] = 0;            // set min timeout period
-    tty.c_cc[VMIN]  = 1;            // set min number of characters to be read in
+    tty.c_cc[VTIME] = 0;
+    tty.c_cc[VMIN]  = 1;
 
     // set baud rates
 
@@ -156,20 +158,21 @@ int roboclaw::WriteToEncoders(uint8_t* data, int nBytes) {
    return 0 or -1 signifying an error. */
 
 int roboclaw::WaitReadStatus(int nBytes, int timeout_ms) {
-    struct timeval tv;              // from sys/time.h, used to set timeout for roboclaw reads
-    fd_set input;                   // contains all file descriptors used
-    int ret;                        // select flag
+    struct timeval tv;
+    fd_set input;
+    int ret;
 
-    FD_ZERO(&input);                // initialize file descriptors
-    FD_SET(serialPort, &input);     // set file descriptors
+    FD_ZERO(&input);
+    FD_SET(serialPort, &input);
 
     tv.tv_sec = 0;
-    tv.tv_usec = timeout_ms*1000;   // set timeout period
+    tv.tv_usec = timeout_ms*1000;
 
     if (tty.c_cc[VMIN] != nBytes) {
-        tty.c_cc[VMIN] = nBytes;    // set minimum number of bytes to be read in
+        tty.c_cc[VMIN] = nBytes;
 
-        if (tcsetattr(serialPort, TCSANOW, &tty) < 0) return -1;  // save settings
+        if (tcsetattr(serialPort, TCSANOW, &tty) < 0)
+            return -1;  // save settings
     }
 
     ret = select(serialPort + 1, &input, NULL, NULL, &tv);
@@ -177,14 +180,14 @@ int roboclaw::WaitReadStatus(int nBytes, int timeout_ms) {
     if (FD_ISSET(serialPort, &input))
         return 1;
 
-    return ret;  // error, will return either 0 or -1. check errno
+    return ret;
 }
 
 /* Reads available data from roboclaw buffer. returns the number of bytes specified by the user upon success (readFlag > 0).
    Returns -1 upon failure. */
 
 int roboclaw::ReadFromEncoders(int nBytes) {
-    for (int i = 0; i < es->max_buf_size; i++)     // initialize buffer
+    for (int i = 0; i < es->max_buf_size; i++)
         buf[i] = 0x00;
 
     int readFlag = read(serialPort, &buf, nBytes);
@@ -229,7 +232,7 @@ void roboclaw::ForwardM1(uint8_t address, uint8_t value) {
     data[3] = crc >> 8;
     data[4] = crc;
 
-    int cmdFlag = SendCommands(data, 5, 1);
+    SendCommands(data, 5, 1);
 }
 
 /* Move M1 motors backwards */
@@ -246,7 +249,7 @@ void roboclaw::BackwardM1(uint8_t address, uint8_t value) {
     data[3] = crc >> 8;
     data[4] = crc;
 
-    int cmdFlag = SendCommands(data, 5, 1);
+    SendCommands(data, 5, 1);
 }
 
 /* Move M2 motors. specify the motor address and desired speed value (0-127), then get checksum. Set commands
@@ -264,7 +267,7 @@ void roboclaw::ForwardM2(uint8_t address, uint8_t value) {
     data[3] = crc >> 8;
     data[4] = crc;
 
-    int cmdFlag = SendCommands(data, 5, 1);
+    SendCommands(data, 5, 1);
 }
 
 /* Move M2 motors backwards */
@@ -281,7 +284,7 @@ void roboclaw::BackwardM2(uint8_t address, uint8_t value) {
     data[3] = crc >> 8;
     data[4] = crc;
 
-    int cmdFlag = SendCommands(data, 5, 1);
+    SendCommands(data, 5, 1);
 }
 
 void roboclaw::ReadEncoderSpeedM1(uint8_t address) {
@@ -291,7 +294,7 @@ void roboclaw::ReadEncoderSpeedM1(uint8_t address) {
     for (int i = 0; i < 2; i++)
         data[i] = get_crc[i];
 
-    int cmdFlag = SendCommands(data, 2, 7);
+    SendCommands(data, 2, 7);
 }
 
 void roboclaw::ReadEncoderSpeedM2(uint8_t address) {
@@ -301,7 +304,7 @@ void roboclaw::ReadEncoderSpeedM2(uint8_t address) {
     for (int i = 0; i < 2; i++)
         data[i] = get_crc[i];
 
-    int cmdFlag = SendCommands(data, 2, 7);
+    SendCommands(data, 2, 7);
 }
 
 void roboclaw::SendCommandToWheels(double* cmd) {
@@ -349,7 +352,8 @@ void roboclaw::SendCommandToWheels(double* cmd) {
 
     // if any of the cmd_vel are zero, increment counter
 
-    if (cmd[0] == 0 || cmd[1] == 0 || cmd[2] == 0 || cmd[3] == 0 || cmd[4] == 0 || cmd[5] == 0) {
+    if (cmd[0] == 0 || cmd[1] == 0 || cmd[2] == 0 ||
+        cmd[3] == 0 || cmd[4] == 0 || cmd[5] == 0) {
         zeroCmdVelCount++;
     } else {
         zeroCmdVelCount = 0;  // reset counter
@@ -360,27 +364,33 @@ void roboclaw::SendCommandToWheels(double* cmd) {
 void roboclaw::GetVelocityFromWheels(double* vel) {
     // return positive or negative value from encoders, depending on direction
     ReadEncoderSpeedM1(0x80);  // right_front
-    vel[0] = ConvertPulsesToRadians(static_cast<double> (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
+    vel[0] = ConvertPulsesToRadians(
+        static_cast<double> (RECOMBINE_BUFFER(buf)));
     if (buf[4] == 1) vel[0] = -vel[0];
 
     ReadEncoderSpeedM2(0x80);  // right_middle
-    vel[1] = ConvertPulsesToRadians(static_cast<double> (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
+    vel[1] = ConvertPulsesToRadians(
+        static_cast<double> (RECOMBINE_BUFFER(buf)));
     if (buf[4] == 1) vel[0] = -vel[0];
 
     ReadEncoderSpeedM1(0x81);  // right_back
-    vel[2] = ConvertPulsesToRadians(static_cast<double> (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
+    vel[2] = ConvertPulsesToRadians(
+        static_cast<double> (RECOMBINE_BUFFER(buf)));
     if (buf[4] == 1) vel[0] = -vel[0];
 
     ReadEncoderSpeedM2(0x82);  // left_front
-    vel[3] = ConvertPulsesToRadians(static_cast<double> (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
+    vel[3] = ConvertPulsesToRadians(
+        static_cast<double> (RECOMBINE_BUFFER(buf)));
     if (buf[4] == 1) vel[0] = -vel[0];
 
     ReadEncoderSpeedM1(0x82);  // left_middle
-    vel[4] = ConvertPulsesToRadians(static_cast<double> (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
+    vel[4] = ConvertPulsesToRadians(
+        static_cast<double> (RECOMBINE_BUFFER(buf)));
     if (buf[4] == 1) vel[0] = -vel[0];
 
     ReadEncoderSpeedM2(0x81);  // left_back
-    vel[5] = ConvertPulsesToRadians(static_cast<double> (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
+    vel[5] = ConvertPulsesToRadians(
+        static_cast<double> (RECOMBINE_BUFFER(buf)));
     if (buf[4] == 1) vel[0] = -vel[0];
 }
 
