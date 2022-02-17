@@ -2,8 +2,8 @@
 // Created by jacob on 2/7/22.
 //
 
-#ifndef PROTOBOT_ROBOCLAW_H
-#define PROTOBOT_ROBOCLAW_H
+#ifndef PROTOBOT_ROBOCLAW_H_
+#define PROTOBOT_ROBOCLAW_H_
 
 #include<ros/ros.h>
 #include <stdint.h>
@@ -43,4 +43,4 @@ private:
     SerialEncoderSettings* es;
 };
 
-#endif //PROTOBOT_ROBOCLAW_H
+#endif //PROTOBOT_ROBOCLAW_H_

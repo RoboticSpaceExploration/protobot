@@ -2,12 +2,11 @@
 // Created by jacob on 2/7/22.
 //
 
-#include "protobot.h"
+#include "../include/protobot.h"
 
 int main(int argc, char** argv) {
-
     double hz = 30;
-    ros::init(argc,argv,"handle");
+    ros::init(argc,argv, "handle");
     ros::AsyncSpinner spinner(3);
     spinner.start();
 
@@ -29,7 +28,6 @@ int main(int argc, char** argv) {
     // Control loop here
     ros::Rate rate(hz);
     while (ros::ok()) {
-
         robot.readTopicWriteToEncoders(&rb);
         cm.update(robot.get_time(), robot.get_period());
         robot.readFromEncoders(&rb);
@@ -42,7 +40,6 @@ int main(int argc, char** argv) {
 }
 
 pb::protobot::protobot() {
-
     ROS_INFO("Registering ros_control handlers");
     registerStateHandlers();
     registerJointVelocityHandlers();
@@ -58,7 +55,6 @@ pb::protobot::protobot() {
 }
 
 void pb::protobot::registerStateHandlers() {
-
     hardware_interface::JointStateHandle state_handle_a("right_front_wheel_pivot", &pos[0], &vel[0], &eff[0]);
     jnt_state_interface.registerHandle(state_handle_a);
 
@@ -81,7 +77,6 @@ void pb::protobot::registerStateHandlers() {
 }
 
 void pb::protobot::registerJointVelocityHandlers() {
-
     hardware_interface::JointHandle vel_handle_a(jnt_state_interface.getHandle("right_front_wheel_pivot"), &cmd[0]);
     jnt_vel_interface.registerHandle(vel_handle_a);
 
@@ -103,9 +98,7 @@ void pb::protobot::registerJointVelocityHandlers() {
     registerInterface(&jnt_vel_interface);
 }
 
-
 void pb::protobot::readTopicWriteToEncoders(roboclaw* rb) {
-
     //ROS_INFO_STREAM("READING JOINT STATES FROM ROS");
     //printDebugInfo("SENDING CMD_VEL TO", cmd);
 
@@ -114,7 +107,6 @@ void pb::protobot::readTopicWriteToEncoders(roboclaw* rb) {
 
 
 void pb::protobot::readFromEncoders(roboclaw* rb) {
-
     rb->GetVelocityFromWheels(vel);
 
     //ROS_INFO_STREAM("READING JOINT STATES FROM MOTOR ENCODERS");
@@ -122,12 +114,10 @@ void pb::protobot::readFromEncoders(roboclaw* rb) {
 }
 
 ros::Time pb::protobot::get_time() {
-
     return ros::Time::now();
 }
 
 ros::Duration pb::protobot::get_period() {
-
     clock_gettime(CLOCK_MONOTONIC, &current_time);
     elapsed_time =
             ros::Duration(current_time.tv_sec - last_time.tv_sec + (current_time.tv_nsec - last_time.tv_nsec) / BILLION);
@@ -148,7 +138,6 @@ void pb::protobot::printDebugInfo(std::string name, double* data) {
 }
 
 void pb::protobot::setYamlParameters(SerialEncoderSettings* es) {
-
     nh.getParam("/serial_port", es->serialPortAddr);
     nh.getParam("/send_command_retries", es->retries);
     nh.getParam("/encoder_timeout_ms", es->timeout_ms);

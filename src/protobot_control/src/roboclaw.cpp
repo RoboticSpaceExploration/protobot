@@ -12,11 +12,10 @@
 #include<sys/time.h>
 #include<assert.h>
 #include<math.h>
-#include "roboclaw.h"
-#include "settings.h"
+#include "../include/roboclaw.h"
+#include "../include/settings.h"
 
 roboclaw::roboclaw(SerialEncoderSettings* es_protobot) {
-
     zeroCmdVelCount = 0;
     es = es_protobot;
 }
@@ -26,13 +25,10 @@ roboclaw::roboclaw(SerialEncoderSettings* es_protobot) {
    is read back, then the user's I/O buffers are cleared. */
 
 int roboclaw::SendCommands(uint8_t* data, int writeBytes, int readBytes) {
-
     int r, writeFlag, readFlag, flushFlag, waitStatus;
 
     for(r=0; r<es->retries; ++r) {
-
         for( ; r<es->retries; ++r) {
-
             writeFlag = WriteToEncoders(data, writeBytes);
             if(writeFlag == -1) return -1;
 
@@ -61,7 +57,6 @@ int roboclaw::SendCommands(uint8_t* data, int writeBytes, int readBytes) {
 }
 
 int roboclaw::ClearIOBuffers() {
-
     return tcflush(serialPort, TCIOFLUSH);
 }
 
@@ -69,20 +64,17 @@ int roboclaw::ClearIOBuffers() {
    as per the roboclaw user manual. Send and receive raw bytes only. Set baud rate of sending and receiving end. */
 
 void roboclaw::SetupEncoders() {
-
     serialPort = open(es->serialPortAddr.c_str(), O_RDWR | O_NOCTTY); // enable read & write, disable controlling terminal
 
     fcntl(serialPort, F_SETFL, 0); // set to blocking mode (for reads)
 
     if (serialPort < 0) {
-
         ROS_INFO("Could not open %s: ", es->serialPortAddr.c_str());
         ROS_INFO("Error %i from open: %s\n", errno, strerror(errno));
         exit(1);
     }
 
     if (tcgetattr(serialPort, &tty) != 0) {
-
         ROS_INFO("Error %i from tcgetattr: %s\n", errno, strerror(errno));
         exit(1);
     }
@@ -129,7 +121,6 @@ void roboclaw::SetupEncoders() {
 /* Close serial port file descriptor. */
 
 void roboclaw::CloseEncoders() {
-
     close(serialPort);
 }
 
@@ -137,7 +128,6 @@ void roboclaw::CloseEncoders() {
    Returns -1 on failure. */
 
 int roboclaw::WriteToEncoders(uint8_t* data, int nBytes) {
-
     int writeFlag = write(serialPort, data, nBytes);
 
     if (writeFlag != nBytes) return -1;
@@ -150,7 +140,6 @@ int roboclaw::WriteToEncoders(uint8_t* data, int nBytes) {
    return 0 or -1 signifying an error. */
 
 int roboclaw::WaitReadStatus(int nBytes, int timeout_ms) {
-
     struct timeval tv;              // from sys/time.h, used to set timeout for roboclaw reads
     fd_set input;                   // contains all file descriptors used
     int ret;                        // select flag
@@ -180,7 +169,6 @@ int roboclaw::WaitReadStatus(int nBytes, int timeout_ms) {
    Returns -1 upon failure. */
 
 int roboclaw::ReadFromEncoders(int nBytes) {
-
     for(int i=0; i<es->max_buf_size; i++)     // initialize buffer
         buf[i] = 0x00;
 
@@ -195,7 +183,6 @@ int roboclaw::ReadFromEncoders(int nBytes) {
    commands and data sent to the encoders. Valid commands will be executed by the encoder, invalid commands will be discarded. */
 
 uint32_t roboclaw::ValidateChecksum(uint8_t* packet, int nBytes) {
-
     int crc = 0;
 
     for(int byte=0; byte<nBytes; byte++) {
@@ -218,7 +205,6 @@ uint32_t roboclaw::ValidateChecksum(uint8_t* packet, int nBytes) {
    and checksum in an array, send commands to be executed. */
 
 void roboclaw::ForwardM1(uint8_t address, uint8_t value) {
-
     uint8_t get_crc[3] = {address, es->m1_forward, value};
     uint8_t data[5];
 
@@ -236,7 +222,6 @@ void roboclaw::ForwardM1(uint8_t address, uint8_t value) {
 /* Move M1 motors backwards */
 
 void roboclaw::BackwardM1(uint8_t address, uint8_t value) {
-
     uint8_t get_crc[3] = {address, es->m1_backward, value};
     uint8_t data[5];
 
@@ -255,7 +240,6 @@ void roboclaw::BackwardM1(uint8_t address, uint8_t value) {
    and checksum in an array, send commands to be executed. */
 
 void roboclaw::ForwardM2(uint8_t address, uint8_t value) {
-
     uint8_t get_crc[3] = {address, es->m2_forward, value};
     uint8_t data[5];
 
@@ -273,7 +257,6 @@ void roboclaw::ForwardM2(uint8_t address, uint8_t value) {
 /* Move M2 motors backwards */
 
 void roboclaw::BackwardM2(uint8_t address, uint8_t value) {
-
     uint8_t get_crc[3] = {address, es->m2_backward, value};
     uint8_t data[5];
 
@@ -289,7 +272,6 @@ void roboclaw::BackwardM2(uint8_t address, uint8_t value) {
 }
 
 void roboclaw::ReadEncoderSpeedM1(uint8_t address) {
-
     uint8_t get_crc[2] = {address, es->m1_read_encoder_speed};
     uint8_t data[7];
 
@@ -311,7 +293,6 @@ void roboclaw::ReadEncoderSpeedM2(uint8_t address) {
 }
 
 void roboclaw::SendCommandToWheels(double* cmd) {
-
     uint8_t cmd_send[6] = {0};
 
     // convert cmd_vel to a usable command between 0-127
@@ -322,9 +303,7 @@ void roboclaw::SendCommandToWheels(double* cmd) {
     // prevent zero velocity spamming from ros_control
 
     if(zeroCmdVelCount <= es->retries) {
-
         // if positive, move motors forward. if negative, move backwards
-
         if(cmd[0] >= 0) // right_front
             ForwardM1(0x80, cmd_send[0]);
         else
@@ -367,9 +346,7 @@ void roboclaw::SendCommandToWheels(double* cmd) {
 }
 
 void roboclaw::GetVelocityFromWheels(double* vel) {
-
     // return positive or negative value from encoders, depending on direction
-
     ReadEncoderSpeedM1(0x80); // right_front
     vel[0] = ConvertPulsesToRadians((double) (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]));
     if(buf[4] == 1) vel[0] = -vel[0];
@@ -398,7 +375,6 @@ void roboclaw::GetVelocityFromWheels(double* vel) {
 /* Scale command between 0-127 to be sent to encoders */
 
 uint8_t roboclaw::ScaleCommand(double cmd) {
-
     double res = (fabs(cmd)/16.667)*es->max_m1m2_value;
 
     if(res >= es->max_m1m2_value)
@@ -410,6 +386,5 @@ uint8_t roboclaw::ScaleCommand(double cmd) {
 /* will need to fix conversion in later push */
 
 double roboclaw::ConvertPulsesToRadians(double vel) {
-
     return (vel/119.3697); // convert from QPPS to rad/s, (750 p/rev)(1/(2*pi))
 }

@@ -2,8 +2,8 @@
 // Created by jacob on 2/7/22.
 //
 
-#ifndef PROTOBOT_SETTINGS_H
-#define PROTOBOT_SETTINGS_H
+#ifndef PROTOBOT_SETTINGS_H_
+#define PROTOBOT_SETTINGS_H_
 
 #include<string>
 
@@ -25,4 +25,4 @@ typedef struct {
 
 } SerialEncoderSettings;
 
-#endif //PROTOBOT_SETTINGS_H
+#endif //PROTOBOT_SETTINGS_H_
