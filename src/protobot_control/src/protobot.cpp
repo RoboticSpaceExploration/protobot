@@ -3,11 +3,10 @@
 //
 
 #include "protobot.h"
-#include "roboclaw.h"
 
 int main(int argc, char** argv) {
 
-    double hz = 10;
+    double hz = 30;
     ros::init(argc,argv,"handle");
     ros::AsyncSpinner spinner(3);
     spinner.start();
@@ -17,15 +16,27 @@ int main(int argc, char** argv) {
     pb::protobot robot;
     controller_manager::ControllerManager cm(&robot);
 
+    SerialEncoderSettings* es_ptr = new SerialEncoderSettings; // allocate struct to heap
+
+    ROS_INFO("Setting Yaml parameters for serial port");
+    robot.setYamlParameters(es_ptr); // set config file settings for serial port
+
+    roboclaw rb(es_ptr);
+
+    ROS_INFO("Initializing roboclaw motor encoders");
+    rb.SetupEncoders();
+
     // Control loop here
     ros::Rate rate(hz);
     while (ros::ok()) {
 
-        robot.readTopicWriteToEncoders();
+        robot.readTopicWriteToEncoders(&rb);
         cm.update(robot.get_time(), robot.get_period());
-        robot.readFromEncoders();
+        robot.readFromEncoders(&rb);
         rate.sleep();
     }
+
+    delete es_ptr; // clean up memory allocation from heap
 
     return 0;
 }
@@ -36,15 +47,14 @@ pb::protobot::protobot() {
     registerStateHandlers();
     registerJointVelocityHandlers();
 
-    ROS_INFO("Initializing roboclaw motor encoders");
-    rb.SetupEncoders();
-
     clock_gettime(CLOCK_MONOTONIC, &last_time);
 
     for(int i=0; i<5; i++) {
         cmd[i] = 0;
         vel[i] = 0;
     }
+
+
 }
 
 void pb::protobot::registerStateHandlers() {
@@ -94,21 +104,21 @@ void pb::protobot::registerJointVelocityHandlers() {
 }
 
 
-void pb::protobot::readTopicWriteToEncoders() {
+void pb::protobot::readTopicWriteToEncoders(roboclaw* rb) {
 
-    ROS_INFO_STREAM("READING JOINT STATES FROM ROS");
-    printDebugInfo("SENDING CMD_VEL TO", cmd);
+    //ROS_INFO_STREAM("READING JOINT STATES FROM ROS");
+    //printDebugInfo("SENDING CMD_VEL TO", cmd);
 
-    rb.SendCommandToWheels(cmd);
+    rb->SendCommandToWheels(cmd);
 }
 
 
-void pb::protobot::readFromEncoders() {
+void pb::protobot::readFromEncoders(roboclaw* rb) {
 
-    rb.GetVelocityFromWheels(vel);
+    rb->GetVelocityFromWheels(vel);
 
-    ROS_INFO_STREAM("READING JOINT STATES FROM MOTOR ENCODERS");
-    printDebugInfo("VEL FROM", vel);
+    //ROS_INFO_STREAM("READING JOINT STATES FROM MOTOR ENCODERS");
+    //printDebugInfo("VEL FROM", vel);
 }
 
 ros::Time pb::protobot::get_time() {
@@ -127,13 +137,24 @@ ros::Duration pb::protobot::get_period() {
 }
 
 void pb::protobot::printDebugInfo(std::string name, double* data) {
-
+/*
     ROS_INFO("%s RIGHT_FRONT_WHEEL_JOINT %f", name.c_str(), data[0]);
     ROS_INFO("%s RIGHT_MIDDLE_WHEEL_JOINT %f", name.c_str(), data[1]);
     ROS_INFO("%s RIGHT_BACK_WHEEL_JOINT %f", name.c_str(), data[2]);
     ROS_INFO("%s LEFT_FRONT_WHEEL_JOINT %f", name.c_str(), data[3]);
     ROS_INFO("%s RIGHT_MIDDLE_WHEEL_JOINT %f", name.c_str(), data[4]);
     ROS_INFO("%s LEFT_BACK_WHEEL_JOINT %f", name.c_str(), data[5]);
+*/
 }
+
+void pb::protobot::setYamlParameters(SerialEncoderSettings* es) {
+
+    nh.getParam("/serial_port", es->serialPortAddr);
+    nh.getParam("/send_command_retries", es->retries);
+    nh.getParam("/encoder_timeout_ms", es->timeout_ms);
+    nh.getParam("/max_read_buffer_size", es->max_buf_size);
+}
+
+
 
 

@@ -5,6 +5,7 @@
 #ifndef PROTOBOT_ROBOCLAW_H
 #define PROTOBOT_ROBOCLAW_H
 
+#include<ros/ros.h>
 #include <stdint.h>
 #include <termios.h>
 #include "settings.h"
@@ -12,7 +13,7 @@
 class roboclaw {
 
 public:
-    roboclaw();
+    roboclaw(SerialEncoderSettings* es_protobot);
     void SetupEncoders();                                                    // setup motor encoders
     void CloseEncoders();                                                    // close encoder connection
     void SendCommandToWheels(double* cmd);                                   // send cmd_vel to wheels
@@ -36,10 +37,10 @@ private:
     void ReadEncoderSpeedM2(uint8_t address);                                // read M2 encoder speed
 
     struct termios tty;                                                      // declare serial termios struct, used to configure serial port
-    SerialEncoderSettings es;
     int serialPort;                                                          // roboclaw serial port file descriptor
     uint8_t buf[100];                                                        // temp buffer
     int zeroCmdVelCount;
+    SerialEncoderSettings* es;
 };
 
 #endif //PROTOBOT_ROBOCLAW_H
