@@ -1,55 +1,28 @@
-DWAPlannerROS:
+TrajectoryPlannerROS:
+  max_vel_x: 0.6
+  # min_vel_x: 0.15
+  min_vel_x: 0.15 # Allowing velocities too low will will stop the obstacle avoidance because low velocities won't actually be high enough to move the robot
+  max_vel_theta: 1.0
+  min_vel_theta: -1.0
+  min_in_place_vel_theta: 0.4
 
-  use_dwa: true
-  # Robot Configuration Parameters
-  acc_lim_x: 20.0
+  acc_lim_theta: 1.0
+  acc_lim_x: 1.0
   acc_lim_y: 0.0
-  acc_lim_theta: 10.0
-  acc_limit_trans: 0.1
 
-  max_trans_vel: 0.55
-  min_trans_vel: 0.01 
-  trans_stopped_vel: 0.01
-  rot_stopped_vel: 0.01
+  holonomic_robot: false
 
-  max_vel_x: 0.55
-  min_vel_x: -0.55
+  # New Stuff
 
-  max_vel_y: 0.0
-  min_vel_y: 0.0
-
-  max_rot_vel: 1.5
-  min_rot_vel: 0.02
+  escape_vel: -0.2
 
   # Goal Tolerance Parameters
-  yaw_goal_tolerance: 0.03
-  xy_goal_tolerance: 0.06
+  yaw_goal_tolerance: 0.1  # in rads
+  xy_goal_tolerance: 0.2  # in meters
   latch_xy_goal_tolerance: false
 
   # Forward Simulation Parameters
-  sim_time: 1.0
-  sim_granularity: 0.1
-  vx_samples: 15
-  vy_samples: 10
-  vtheta_samples: 20
-  controller_frequency: 10.0
-
-  # Trajectory Scoring Parameters
-  path_distance_bias: 0.0  #32.0
-  goal_distance_bias: 24.0 
-  occdist_scale: 0.01 
-  forward_point_distance: 0.0 # 2.0 # 0.325 
-  stop_time_buffer: 0.2 
-  scaling_speed: 0.25 
-  max_scaling_factor: 0.2 
-
-  #Oscillation Prevention Parameters
-  oscillation_reset_dist: 0.05 
-  oscillation_reset_angle: 0.2
-  prune_plan: false
-
-TrajectoryPlannerROS: # For RotateRecovery
-  yaw_goal_tolerance: 0.03
-  acc_lim_th: 10.0
-  max_rotational_vel: 1.0
-  min_in_place_rotational_vel: -1.0
+    # these parameters change how the planner simulates trajectories at each update and therefore changes the optimal trajectory that is chosen
+    # These should be adjusted based on your computer performance
+  sim_time: 2.0   # setting time of each simulation that it must evaluate. Higher will create longer curves but too low can limit performance (<2)
+  sim_granularity: 0.02 # the step size ...
