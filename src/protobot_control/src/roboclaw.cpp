@@ -1,7 +1,3 @@
-//
-// Created by jacob on 2/7/22.
-//
-
 #include<iostream>
 #include<cstdlib>
 #include<cstring>
@@ -14,7 +10,7 @@
 #include<math.h>
 #include "../include/roboclaw.h"
 
-roboclaw::roboclaw(SerialEncoderSettings* es_protobot) {
+roboclaw::roboclaw(settings* es_protobot) {
     zeroCmdVelCount = 0;
     es = es_protobot;
 }

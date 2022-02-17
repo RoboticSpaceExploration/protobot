@@ -1,7 +1,3 @@
-//
-// Created by jacob on 2/7/22.
-//
-
 #ifndef SRC_PROTOBOT_CONTROL_INCLUDE_PROTOBOT_H_
 #define SRC_PROTOBOT_CONTROL_INCLUDE_PROTOBOT_H_
 
@@ -22,7 +18,7 @@ namespace pb {
 
         void readTopicWriteToEncoders(roboclaw* rb);
         void readFromEncoders(roboclaw* rb);
-        void setYamlParameters(SerialEncoderSettings* es);
+        void setYamlParameters(settings* es);
 
         ros::Time get_time();
         ros::Duration get_period();

@@ -1,15 +1,11 @@
-//
-// Created by jacob on 2/7/22.
-//
-
 #ifndef PROTOBOT_SETTINGS_H_
 #define PROTOBOT_SETTINGS_H_
 
 #include<string>
 
-#define BAUD_RATE B115200        // roboclaw encoder baud rate
+#define BAUD_RATE B115200
 
-typedef struct {
+struct settings {
 
     std::string serialPortAddr    = "/dev/ttyAMA0";
     int timeout_ms                = 12;
@@ -22,7 +18,8 @@ typedef struct {
     uint8_t m2_read_encoder_speed = 19;
     int max_buf_size              = 100;
     double max_m1m2_value         = 127;
+    double loop_frequency         = 10;
 
-} SerialEncoderSettings;
+};
 
 #endif //PROTOBOT_SETTINGS_H_
