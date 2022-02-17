@@ -1,7 +1,7 @@
 #include "../include/protobot.h"
 
 int main(int argc, char** argv) {
-    ros::init(argc,argv, "handle");
+    ros::init(argc, argv, "handle");
     ros::AsyncSpinner spinner(3);
     spinner.start();
 
@@ -135,7 +135,3 @@ void pb::protobot::setYamlParameters(settings* es) {
     nh.getParam("/max_read_buffer_size", es->max_buf_size);
     nh.getParam("/loop_frequency", es->loop_frequency);
 }
-
-
-
-

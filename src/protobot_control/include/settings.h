@@ -1,12 +1,11 @@
-#ifndef PROTOBOT_SETTINGS_H_
-#define PROTOBOT_SETTINGS_H_
+#ifndef PROTOBOT_CONTROL_INCLUDE_SETTINGS_H_
+#define PROTOBOT_CONTROL_INCLUDE_SETTINGS_H_
 
 #include<string>
 
 #define BAUD_RATE B115200
 
 struct settings {
-
     std::string serialPortAddr    = "/dev/ttyAMA0";
     int timeout_ms                = 12;
     int retries                   = 3;
@@ -19,7 +18,6 @@ struct settings {
     int max_buf_size              = 100;
     double max_m1m2_value         = 127;
     double loop_frequency         = 10;
-
 };
 
-#endif //PROTOBOT_SETTINGS_H_
+#endif  // PROTOBOT_CONTROL_INCLUDE_SETTINGS_H_
