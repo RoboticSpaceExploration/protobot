@@ -23,14 +23,14 @@ SOFTWARE. */
 #ifndef SRC_PROTOBOT_CONTROL_INCLUDE_PROTOBOT_H_
 #define SRC_PROTOBOT_CONTROL_INCLUDE_PROTOBOT_H_
 
-#include "roboclaw.h"
-#include "settings.h"
 #include <hardware_interface/robot_hw.h>
 #include <hardware_interface/joint_state_interface.h>
 #include <hardware_interface/joint_command_interface.h>
 #include <controller_manager/controller_manager.h>
 #include <ros/ros.h>
 #include <string>
+#include "roboclaw.h"
+#include "settings.h"
 
 namespace pb {
 class protobot : public hardware_interface::RobotHW {

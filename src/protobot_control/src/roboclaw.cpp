@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#include "../include/roboclaw.h"
 #include <fcntl.h>
 #include <errno.h>
 #include <termios.h>
@@ -30,6 +29,7 @@ SOFTWARE. */
 #include <math.h>
 #include <cstdlib>
 #include <cstring>
+#include "../include/roboclaw.h"
 
 #define RECOMBINE_BUFFER(X) \
 (((X)[3]) << 24 | ((X)[2]) << 16 | ((X)[1]) << 8 | ((X)[0]))
