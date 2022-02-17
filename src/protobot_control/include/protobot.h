@@ -29,8 +29,8 @@ SOFTWARE. */
 #include <controller_manager/controller_manager.h>
 #include <ros/ros.h>
 #include <string>
-#include "roboclaw.h"
-#include "settings.h"
+#include "../include/roboclaw.h"
+#include "../include/settings.h"
 
 namespace pb {
 class protobot : public hardware_interface::RobotHW {

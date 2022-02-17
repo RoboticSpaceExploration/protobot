@@ -26,7 +26,7 @@ SOFTWARE. */
 #include <ros/ros.h>
 #include <stdint.h>
 #include <termios.h>
-#include "settings.h"
+#include "../include/settings.h"
 
 class roboclaw {
  public:
