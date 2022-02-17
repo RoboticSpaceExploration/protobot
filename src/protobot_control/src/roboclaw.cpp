@@ -13,7 +13,6 @@
 #include<assert.h>
 #include<math.h>
 #include "../include/roboclaw.h"
-#include "../include/settings.h"
 
 roboclaw::roboclaw(SerialEncoderSettings* es_protobot) {
     zeroCmdVelCount = 0;
