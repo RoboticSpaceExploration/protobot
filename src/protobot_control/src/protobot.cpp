@@ -15,10 +15,10 @@ int main(int argc, char** argv) {
     pb::protobot robot;
     controller_manager::ControllerManager cm(&robot);
 
-    SerialEncoderSettings* es_ptr = new SerialEncoderSettings; // allocate struct to heap
+    SerialEncoderSettings* es_ptr = new SerialEncoderSettings;  // allocate struct to heap
 
     ROS_INFO("Setting Yaml parameters for serial port");
-    robot.setYamlParameters(es_ptr); // set config file settings for serial port
+    robot.setYamlParameters(es_ptr);  // set config file settings for serial port
 
     roboclaw rb(es_ptr);
 
@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
         rate.sleep();
     }
 
-    delete es_ptr; // clean up memory allocation from heap
+    delete es_ptr;  // clean up memory allocation from heap
 
     return 0;
 }
@@ -46,12 +46,10 @@ pb::protobot::protobot() {
 
     clock_gettime(CLOCK_MONOTONIC, &last_time);
 
-    for(int i=0; i<5; i++) {
+    for (int i = 0; i < 5; i++) {
         cmd[i] = 0;
         vel[i] = 0;
     }
-
-
 }
 
 void pb::protobot::registerStateHandlers() {

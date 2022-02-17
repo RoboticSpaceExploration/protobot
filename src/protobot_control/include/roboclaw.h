@@ -2,8 +2,8 @@
 // Created by jacob on 2/7/22.
 //
 
-#ifndef PROTOBOT_ROBOCLAW_H_
-#define PROTOBOT_ROBOCLAW_H_
+#ifndef SRC_PROTOBOT_CONTROL_ROBOCLAW_H_
+#define SRC_PROTOBOT_CONTROL_ROBOCLAW_H_
 
 #include<ros/ros.h>
 #include <stdint.h>
@@ -11,15 +11,14 @@
 #include "settings.h"
 
 class roboclaw {
-
-public:
-    roboclaw(SerialEncoderSettings* es_protobot);
+ public:
+  roboclaw(SerialEncoderSettings* es_protobot);
     void SetupEncoders();                                                    // setup motor encoders
     void CloseEncoders();                                                    // close encoder connection
     void SendCommandToWheels(double* cmd);                                   // send cmd_vel to wheels
     void GetVelocityFromWheels(double* vel);                                 // get joint state status
 
-private:
+ private:
     int ClearIOBuffers();                                                    // flush I/O buffers
     int WriteToEncoders(uint8_t* data, int nBytes);                          // write to encoders
     int WaitReadStatus(int nBytes, int timeout_ms);                          // wait for encoders to fill reply data to buffer, returns 1 on success
@@ -43,4 +42,4 @@ private:
     SerialEncoderSettings* es;
 };
 
-#endif //PROTOBOT_ROBOCLAW_H_
+#endif  //SRC_PROTOBOT_CONTROL_ROBOCLAW_H_

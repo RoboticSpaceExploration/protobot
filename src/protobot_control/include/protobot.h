@@ -2,8 +2,8 @@
 // Created by jacob on 2/7/22.
 //
 
-#ifndef PROTOBOT_PROTOBOT_H_
-#define PROTOBOT_PROTOBOT_H_
+#ifndef SRC_PROTOBOT_CONTROL_INCLUDE_PROTOBOT_H_
+#define SRC_PROTOBOT_CONTROL_INCLUDE_PROTOBOT_H_
 
 #include <hardware_interface/robot_hw.h>
 #include <hardware_interface/joint_state_interface.h>
@@ -48,4 +48,4 @@ namespace pb {
     };
 }
 
-#endif //PROTOBOT_PROTOBOT_H_
+#endif  //SRC_PROTOBOT_CONTROL_INCLUDE_PROTOBOT_H_
