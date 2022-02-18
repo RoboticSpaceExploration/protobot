@@ -20,35 +20,26 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#include <ros/ros.h>
-#include <nav_msgs/Odometry.h>
-#include <geometry_msgs/PoseWithCovarianceStamped.h>
+#ifndef SRC_PROTOBOT_CONTROL_INCLUDE_SETTINGS_H_
+#define SRC_PROTOBOT_CONTROL_INCLUDE_SETTINGS_H_
 
-class OdometryTransform{
- public:
-    OdometryTransform() {
-        pub = nh.advertise<geometry_msgs
-            ::PoseWithCovarianceStamped>("pose", 50);
-        sub = nh.subscribe("nav_msgs/Odometry",
-                           1000,
-                           &OdometryTransform::poseMessageRecieved, this);
-}
- private:
-    ros::NodeHandle nh;
-    ros::Publisher pub;
-    ros::Subscriber sub;
+#include <string>
 
+#define BAUD_RATE B115200
 
-    void poseMessageRecieved(const nav_msgs::Odometry& msg) {
-        geometry_msgs::PoseWithCovarianceStamped pose2;
-        pose2.header = msg.header;
-        pose2.pose = msg.pose;
-        pub.publish(pose2);
-    }
+struct settings {
+    std::string serialPortAddr    = "/dev/ttyAMA0";
+    int timeout_ms                = 12;
+    int retries                   = 3;
+    int max_buf_size              = 100;
+    uint8_t m1_forward            = 0;
+    uint8_t m2_forward            = 4;
+    uint8_t m1_backward           = 1;
+    uint8_t m2_backward           = 5;
+    uint8_t m1_read_encoder_speed = 18;
+    uint8_t m2_read_encoder_speed = 19;
+    double max_m1m2_value         = 127;
+    double loop_frequency         = 10;
 };
 
-int main(int argc, char **argv) {
-    ros::init(argc, argv, "node initialized");
-    OdometryTransform pwc;
-    ros::spin();
-}
+#endif  // SRC_PROTOBOT_CONTROL_INCLUDE_SETTINGS_H_

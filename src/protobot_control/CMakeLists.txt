@@ -19,7 +19,6 @@ project(protobot_control)
 
 find_package(catkin REQUIRED COMPONENTS
         ackermann_msgs
-        #protobot_description
         controller_manager
         controller_manager_msgs
         effort_controllers
@@ -41,10 +40,10 @@ catkin_install_python(PROGRAMS scripts/ackermann_controller
 install(DIRECTORY config launch
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
-include_directories(include
+include_directories(
+        .
         ${catkin_INCLUDE_DIRS}
         ${Boost_INCLUDE_DIRS}
-        src
         )
 
 add_executable(${PROJECT_NAME}_hw_node src/protobot.cpp src/roboclaw.cpp)

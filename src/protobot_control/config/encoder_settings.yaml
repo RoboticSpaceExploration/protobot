@@ -1,0 +1,5 @@
+serial_port:          "/dev/ttyAMA0"
+send_command_retries: 1
+encoder_timeout_ms:   12
+max_read_buffer_size: 100
+loop_frequency:       30
