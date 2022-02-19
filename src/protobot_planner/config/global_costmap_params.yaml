@@ -13,8 +13,8 @@ global_costmap:
    - {name: inflater_layer, type: "costmap_2d::InflationLayer"}
    
   inflater_layer:
-    inflation_radius: 2
-    cost_scaling_factor: 2
+    inflation_radius: 0.5
+    cost_scaling_factor: 5
   
   obstacle_layer: 
     obstacle_range: 6
