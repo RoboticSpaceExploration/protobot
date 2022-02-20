@@ -1,13 +1,16 @@
-Source code for Protobot. This directory is currently using ROS 1 (Noetic) tentatively
+Source code for Protobot. This directory is currently using ROS 1 (Melodic) tentatively
 
 # Dependencies
 1. Install librealsense2 with dev and dbg distribution included https://github.com/IntelRealSense/librealsense/blob/master/doc/distribution_linux.md#installing-the-packages
 2. Also ensure that you have the following(Install with ```sudo apt-get install```): 
      - libpcl-dev
      - libeigen3-dev
-     - ros-noetic-costmap2d
-     - ros-noetic-ddynamic-reconfigure
-     - ros-noetic-move-base
+     - librealsense2-dev
+     - ros-melodic-costmap2d
+     - ros-melodic-ddynamic-reconfigure
+     - ros-melodic-move-base
+     - ros-melodic-rtabmap-ros
+     - ros-melodic-rtcm-msgs
 
 # Setup
 1. Go to src/ and run ```git submodule update --init --recursive```
@@ -25,8 +28,8 @@ To run on live rover (Soon)
 1. On properly configured laptop (with correct ROS_IP and ROS_MASTER_URI pointing to own local IPv4 address and rover's local IPv4 address respectively), run ```roslaunch protobot_bringup protobot_remote.launch``` (Autonomous) OR ```roslaunch protobot_bringup protobot_remote_teleop.launch``` (Teleop)
 
 # Guidelines for this repository
-1. Google C++ Style Guide (https://google.github.io/styleguide/cppguide.html)
-2. Google Python Style Guide (https://google.github.io/styleguide/pyguide.html)
+1. (Enforced by linter) Google C++ Style Guide (https://google.github.io/styleguide/cppguide.html)
+2. (Enforced by linter) Google Python Style Guide (https://google.github.io/styleguide/pyguide.html)
 3. ROS Standardizations/Guidelines, particularly
      - REP-103 (https://www.ros.org/reps/rep-0103.html)
      - REP-105 (https://www.ros.org/reps/rep-0105.html)
