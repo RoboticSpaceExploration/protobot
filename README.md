@@ -5,7 +5,6 @@ Source code for Protobot. This directory is currently using ROS 1 (Melodic) tent
 2. Also ensure that you have the following(Install with ```sudo apt-get install```): 
      - libpcl-dev
      - libeigen3-dev
-     - librealsense2-dev
      - ros-melodic-costmap2d
      - ros-melodic-ddynamic-reconfigure
      - ros-melodic-move-base
