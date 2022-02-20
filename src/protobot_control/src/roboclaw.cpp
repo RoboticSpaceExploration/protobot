@@ -89,8 +89,8 @@ void roboclaw::SetupEncoders() {
     fcntl(serialPort, F_SETFL, 0);  // set to blocking mode (for reads)
 
     if (serialPort < 0) {
-        ROS_INFO("Could not open %s: ", es->serialPortAddr.c_str());
-        ROS_INFO("Error %i from open: %s\n", errno, strerror(errno));
+        ROS_INFO("Could not open %s: Error %i from open: %s",
+                 es->serialPortAddr.c_str(), errno, strerror(errno));
         exit(1);
     }
 

@@ -29,6 +29,8 @@ SOFTWARE. */
 
 struct settings {
     std::string serialPortAddr    = "/dev/ttyAMA0";
+    std::string rightJoints[3];
+    std::string leftJoints[3];
     int timeout_ms                = 12;
     int retries                   = 3;
     int max_buf_size              = 100;

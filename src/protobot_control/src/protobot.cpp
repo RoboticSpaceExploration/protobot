@@ -29,20 +29,16 @@ int main(int argc, char** argv) {
 
     ROS_INFO_STREAM("Loading protobot_control_hw_node");
 
-    pb::protobot robot;
+  settings* es_ptr = new settings;
+
+    pb::protobot robot(es_ptr);
     controller_manager::ControllerManager cm(&robot);
-
-    settings* es_ptr = new settings;
-
-    ROS_INFO("Setting Yaml parameters for serial port");
-    robot.setYamlParameters(es_ptr);
 
     roboclaw rb(es_ptr);
 
     ROS_INFO("Initializing roboclaw motor encoders");
     rb.SetupEncoders();
 
-    // Control loop here
     ros::Rate rate(es_ptr->loop_frequency);
 
     while (ros::ok()) {
@@ -60,70 +56,71 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-pb::protobot::protobot() {
+pb::protobot::protobot(settings* es) {
+    ROS_INFO("Setting Yaml parameters for serial port");
+    setYamlParameters(es);
+
     ROS_INFO("Registering ros_control handlers");
-    registerStateHandlers();
-    registerJointVelocityHandlers();
+    registerStateHandlers(es);
+    registerJointVelocityHandlers(es);
 
     clock_gettime(CLOCK_MONOTONIC, &last_time);
 
-    for (int i = 0; i < 5; i++) {
-        cmd[i] = 0;
-        vel[i] = 0;
-    }
+    for (int i = 0; i <= 5; i++)
+        cmd[i] = vel[i] = pos[i] = eff[i] = 0;
 }
 
-void pb::protobot::registerStateHandlers() {
+void pb::protobot::registerStateHandlers(settings* es) {
     hardware_interface::JointStateHandle state_handle_a(
-        "right_front_wheel_pivot", &pos[0], &vel[0], &eff[0]);
+        es->rightJoints[0], &pos[0], &vel[0], &eff[0]);
     jnt_state_interface.registerHandle(state_handle_a);
 
     hardware_interface::JointStateHandle state_handle_b(
-        "right_mid_wheel_pivot", &pos[1], &vel[1], &eff[1]);
+        es->rightJoints[1], &pos[1], &vel[1], &eff[1]);
     jnt_state_interface.registerHandle(state_handle_b);
 
     hardware_interface::JointStateHandle state_handle_c(
-        "right_back_wheel_pivot", &pos[2], &vel[2], &eff[2]);
+        es->rightJoints[2], &pos[2], &vel[2], &eff[2]);
     jnt_state_interface.registerHandle(state_handle_c);
 
     hardware_interface::JointStateHandle state_handle_d(
-        "left_front_wheel_pivot", &pos[3], &vel[3], &eff[3]);
+        es->leftJoints[0], &pos[3], &vel[3], &eff[3]);
     jnt_state_interface.registerHandle(state_handle_d);
 
     hardware_interface::JointStateHandle state_handle_e(
-        "left_mid_wheel_pivot", &pos[4], &vel[4], &eff[4]);
+        es->leftJoints[1], &pos[4], &vel[4], &eff[4]);
     jnt_state_interface.registerHandle(state_handle_e);
 
     hardware_interface::JointStateHandle state_handle_f(
-        "left_back_wheel_pivot", &pos[5], &vel[5], &eff[5]);
+        es->leftJoints[2], &pos[5], &vel[5], &eff[5]);
     jnt_state_interface.registerHandle(state_handle_f);
 
     registerInterface(&jnt_state_interface);
 }
 
-void pb::protobot::registerJointVelocityHandlers() {
+void pb::protobot::registerJointVelocityHandlers(settings* es) {
     hardware_interface::JointHandle vel_handle_a(
-        jnt_state_interface.getHandle("right_front_wheel_pivot"), &cmd[0]);
+        jnt_state_interface.getHandle(es->rightJoints[0]), &cmd[0]);
     jnt_vel_interface.registerHandle(vel_handle_a);
 
     hardware_interface::JointHandle vel_handle_b(
-        jnt_state_interface.getHandle("right_mid_wheel_pivot"), &cmd[1]);
+        jnt_state_interface.getHandle(es->rightJoints[1]), &cmd[1]);
     jnt_vel_interface.registerHandle(vel_handle_b);
 
     hardware_interface::JointHandle vel_handle_c(
-        jnt_state_interface.getHandle("right_back_wheel_pivot"), &cmd[2]);
+        jnt_state_interface.getHandle(es->rightJoints[2]), &cmd[2]);
     jnt_vel_interface.registerHandle(vel_handle_c);
 
     hardware_interface::JointHandle vel_handle_d(
-        jnt_state_interface.getHandle("left_front_wheel_pivot"), &cmd[3]);
+        jnt_state_interface.getHandle(es->leftJoints[0]), &cmd[3]);
     jnt_vel_interface.registerHandle(vel_handle_d);
 
     hardware_interface::JointHandle vel_handle_e(
-        jnt_state_interface.getHandle("left_mid_wheel_pivot"), &cmd[4]);
+        jnt_state_interface.getHandle(es->leftJoints[1]), &cmd[4]);
     jnt_vel_interface.registerHandle(vel_handle_e);
 
     hardware_interface::JointHandle vel_handle_f(
-        jnt_state_interface.getHandle("left_back_wheel_pivot"), &cmd[5]);
+        jnt_state_interface.getHandle(es->leftJoints[2]), &cmd[5]);
     jnt_vel_interface.registerHandle(vel_handle_f);
 
     registerInterface(&jnt_vel_interface);
@@ -168,9 +165,15 @@ void pb::protobot::printDebugInfo(std::string name, double* data) {
 }
 
 void pb::protobot::setYamlParameters(settings* es) {
-    nh.getParam("/serial_port", es->serialPortAddr);
-    nh.getParam("/send_command_retries", es->retries);
-    nh.getParam("/encoder_timeout_ms", es->timeout_ms);
-    nh.getParam("/max_read_buffer_size", es->max_buf_size);
-    nh.getParam("/loop_frequency", es->loop_frequency);
+    nh.getParam("/wheel_encoders/serial_port", es->serialPortAddr);
+    nh.getParam("/wheel_encoders/send_command_retries", es->retries);
+    nh.getParam("/wheel_encoders/encoder_timeout_ms", es->timeout_ms);
+    nh.getParam("/wheel_encoders/loop_frequency", es->loop_frequency);
+    nh.getParam("/protobot_velocity_controller/right_wheel", rightJointList);
+    nh.getParam("/protobot_velocity_controller/left_wheel", leftJointList);
+
+    for (int i = 0; i <= 2; i++) {
+        es->rightJoints[i] = static_cast<std::string>(leftJointList[i]);
+        es->leftJoints[i] = static_cast<std::string>(rightJointList[i]);
+    }
 }
