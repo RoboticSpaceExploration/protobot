@@ -169,8 +169,9 @@ void pb::protobot::setYamlParameters(settings* es) {
     nh.getParam("/wheel_encoders/send_command_retries", es->retries);
     nh.getParam("/wheel_encoders/encoder_timeout_ms", es->timeout_ms);
     nh.getParam("/wheel_encoders/loop_frequency", es->loop_frequency);
-    nh.getParam("/protobot_velocity_controller/right_wheel", rightJointList);
-    nh.getParam("/protobot_velocity_controller/left_wheel", leftJointList);
+    nh.getParam("/wheel_encoders/baud_rate", es->baud_rate);
+    nh.getParam("/wheel_encoders/right_wheel", rightJointList);
+    nh.getParam("/wheel_encoders/left_wheel", leftJointList);
 
     for (int i = 0; i <= 2; i++) {
         es->rightJoints[i] = static_cast<std::string>(leftJointList[i]);

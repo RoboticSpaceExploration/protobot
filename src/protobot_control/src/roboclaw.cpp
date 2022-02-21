@@ -37,6 +37,37 @@ SOFTWARE. */
 roboclaw::roboclaw(settings* es_protobot) {
     zeroCmdVelCount = 0;
     es = es_protobot;
+    GetBaudRate();
+}
+
+void roboclaw::GetBaudRate() {
+    switch (es->baud_rate) {
+        case 9600:
+            baudRate = B9600;
+            break;
+        case 19200:
+            baudRate = B19200;
+            break;
+        case 38400:
+            baudRate = B38400;
+            break;
+        case 57600:
+            baudRate = B57600;
+            break;
+        case 115200:
+            baudRate = B115200;
+            break;
+        case 230400:
+            baudRate = B230400;
+            break;
+        case 460800:
+            baudRate = B460800;
+            break;
+        default:
+            ROS_WARN("Invalid Baud Rate Selection, setting to 115200");
+            baudRate = B115200;
+            break;
+    }
 }
 
 /* Send and execute commands to encoders. Returns -1 or es.retries on failure, 1 on success. Commands will be sent up to max es.retries.
@@ -125,8 +156,8 @@ void roboclaw::SetupEncoders() {
 
     // set baud rates
 
-    cfsetispeed(&tty, BAUD_RATE);
-    cfsetospeed(&tty, BAUD_RATE);
+    cfsetispeed(&tty, baudRate);
+    cfsetospeed(&tty, baudRate);
 
     // save flag settings
 
