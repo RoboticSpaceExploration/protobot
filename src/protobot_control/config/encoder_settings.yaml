@@ -1,8 +1,5 @@
 wheel_encoders:
   serial_port:          "/dev/ttyAMA0"
-  front_motor_address:  0x80
-  middle_motor_address: 0x81
-  back_motor_adress:    0x82
   send_command_retries: 1
   encoder_timeout_ms:   12
   loop_frequency:       30
