@@ -165,6 +165,8 @@ void pb::protobot::printDebugInfo(std::string name, double* data) {
 }
 
 void pb::protobot::setYamlParameters(settings* es) {
+    int exitFlag = false;
+
     nh.getParam("/wheel_encoders/serial_port", es->serialPortAddr);
     nh.getParam("/wheel_encoders/send_command_retries", es->retries);
     nh.getParam("/wheel_encoders/encoder_timeout_ms", es->timeout_ms);
@@ -179,12 +181,15 @@ void pb::protobot::setYamlParameters(settings* es) {
         if (es->rightJoints[i] == "") {
             ROS_ERROR("Right joint [%d] : Incorrect number of "
                       "joints specified in YAML file", i);
-            exit(1);
+            exitFlag = true;
         }
         if (es->leftJoints[i] == "") {
             ROS_ERROR("Left Joint [%d] : Incorrect number of "
                       "joints specified in YAML file", i);
-            exit(1);
+            exitFlag = true;
         }
     }
+
+    if (exitFlag)
+        exit(1);
 }

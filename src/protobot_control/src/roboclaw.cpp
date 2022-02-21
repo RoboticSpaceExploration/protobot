@@ -156,13 +156,13 @@ void roboclaw::SetupEncoders() {
     // enable read & write, disable controlling terminal
     serialPort = open(es->serialPortAddr.c_str(), O_RDWR | O_NOCTTY);
 
-    fcntl(serialPort, F_SETFL, 0);  // set to blocking mode (for reads)
-
     if (serialPort < 0) {
         ROS_ERROR("Could not open %s: Error %i from open: %s",
                  es->serialPortAddr.c_str(), errno, strerror(errno));
         exit(1);
     }
+
+    fcntl(serialPort, F_SETFL, 0);  // set to blocking mode (for reads)
 
     if (tcgetattr(serialPort, &tty) != 0) {
         ROS_ERROR("Error %i from tcgetattr: %s", errno, strerror(errno));
