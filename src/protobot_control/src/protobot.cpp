@@ -156,12 +156,12 @@ ros::Duration pb::protobot::get_period() {
 }
 
 void pb::protobot::printDebugInfo(std::string name, double* data) {
-    ROS_INFO("%s RIGHT_FRONT_WHEEL_JOINT %f", name.c_str(), data[0]);
-    ROS_INFO("%s RIGHT_MIDDLE_WHEEL_JOINT %f", name.c_str(), data[1]);
-    ROS_INFO("%s RIGHT_BACK_WHEEL_JOINT %f", name.c_str(), data[2]);
-    ROS_INFO("%s LEFT_FRONT_WHEEL_JOINT %f", name.c_str(), data[3]);
-    ROS_INFO("%s RIGHT_MIDDLE_WHEEL_JOINT %f", name.c_str(), data[4]);
-    ROS_INFO("%s LEFT_BACK_WHEEL_JOINT %f", name.c_str(), data[5]);
+    ROS_INFO_STREAM(name << " RIGHT_FRONT_WHEEL_JOINT "  << data[0]);
+    ROS_INFO_STREAM(name << " RIGHT_MIDDLE_WHEEL_JOINT " << data[1]);
+    ROS_INFO_STREAM(name << " RIGHT_BACK_WHEEL_JOINT "   << data[2]);
+    ROS_INFO_STREAM(name << " LEFT_FRONT_WHEEL_JOINT "   << data[3]);
+    ROS_INFO_STREAM(name << " LEFT_MIDDLE_WHEEL_JOINT "  << data[4]);
+    ROS_INFO_STREAM(name << " LEFT_BACK_WHEEL_JOINT "    << data[5]);
 }
 
 void pb::protobot::setYamlParameters(settings* es) {
@@ -174,7 +174,17 @@ void pb::protobot::setYamlParameters(settings* es) {
     nh.getParam("/wheel_encoders/left_wheel", leftJointList);
 
     for (int i = 0; i <= 2; i++) {
-        es->rightJoints[i] = static_cast<std::string>(leftJointList[i]);
-        es->leftJoints[i] = static_cast<std::string>(rightJointList[i]);
+        es->rightJoints[i] = static_cast<std::string> (rightJointList[i]);
+        es->leftJoints[i] = static_cast<std::string> (leftJointList[i]);
+        if (es->rightJoints[i] == "") {
+            ROS_ERROR("Right joint [%d] : Incorrect number of "
+                      "joints specified in YAML file", i);
+            exit(1);
+        }
+        if (es->leftJoints[i] == "") {
+            ROS_ERROR("Left Joint [%d] : Incorrect number of "
+                      "joints specified in YAML file", i);
+            exit(1);
+        }
     }
 }

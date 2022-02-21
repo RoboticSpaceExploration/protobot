@@ -42,7 +42,7 @@ class roboclaw {
     int WriteToEncoders(uint8_t* data, int nBytes);
     int WaitReadStatus(int nBytes, int timeout_ms);
     int ReadFromEncoders(int nBytes);
-    int SendCommands(uint8_t* data, int writeBytes, int readBytes);
+    void SendCommands(uint8_t* data, int writeBytes, int readBytes);
     double ConvertPulsesToRadians(double vel);
     uint8_t ScaleCommand(double cmd);
     uint32_t ValidateChecksum(uint8_t* packet, int nBytes);
