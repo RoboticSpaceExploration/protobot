@@ -46,6 +46,7 @@ class roboclaw {
     double ConvertPulsesToRadians(double vel);
     uint8_t ScaleCommand(double cmd);
     uint32_t ValidateChecksum(uint8_t* packet, int nBytes);
+    uint32_t RecombineBuffer(uint8_t* buf);
 
     void ForwardM1(uint8_t address, uint8_t value);
     void ForwardM2(uint8_t address, uint8_t value);

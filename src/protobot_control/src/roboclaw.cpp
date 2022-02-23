@@ -31,13 +31,19 @@ SOFTWARE. */
 #include <cstring>
 #include "../include/roboclaw.h"
 
+/*
 #define RECOMBINE_BUFFER(X) \
 (((X)[3]) << 24 | ((X)[2]) << 16 | ((X)[1]) << 8 | ((X)[0]))
+*/
 
 roboclaw::roboclaw(settings* es_protobot) {
     zeroCmdVelCount = 0;
     es = es_protobot;
     GetBaudRate();
+}
+
+uint32_t roboclaw::RecombineBuffer(uint8_t *buf) {
+    return buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0];
 }
 
 void roboclaw::GetBaudRate() {
@@ -95,7 +101,7 @@ void roboclaw::SendCommands(uint8_t* data, int writeBytes, int readBytes) {
 
         flushFlag = ClearIOBuffers();
         if (flushFlag == -1)
-            ROS_WARN("COULD NOT CLEAR IO BUFFERS");
+            ROS_WARN("COULD NOT CLEAR IO BUFFERS, RETRYING");
     }
 
     // read from encoders for specified number of retries
@@ -113,7 +119,7 @@ void roboclaw::SendCommands(uint8_t* data, int writeBytes, int readBytes) {
 
     flushFlag = ClearIOBuffers();
     if (flushFlag == -1)
-        ROS_WARN("COULD NOT CLEAR IO BUFFERS");
+        ROS_WARN("COULD NOT CLEAR IO BUFFERS, RETRYING");
 /*
     for (r = 0; r < es->retries; ++r) {
         for ( ; r < es->retries; ++r) {
@@ -435,32 +441,32 @@ void roboclaw::GetVelocityFromWheels(double* vel) {
     // return positive or negative value from encoders, depending on direction
     ReadEncoderSpeedM1(0x80);  // right_front
     vel[0] = ConvertPulsesToRadians(
-        static_cast<double> (RECOMBINE_BUFFER(buf)));
+        static_cast<double> (RecombineBuffer(buf)));
     if (buf[4] == 1) vel[0] = -vel[0];
 
     ReadEncoderSpeedM2(0x80);  // right_middle
     vel[1] = ConvertPulsesToRadians(
-        static_cast<double> (RECOMBINE_BUFFER(buf)));
+        static_cast<double> (RecombineBuffer(buf)));
     if (buf[4] == 1) vel[0] = -vel[0];
 
     ReadEncoderSpeedM1(0x81);  // right_back
     vel[2] = ConvertPulsesToRadians(
-        static_cast<double> (RECOMBINE_BUFFER(buf)));
+        static_cast<double> (RecombineBuffer(buf)));
     if (buf[4] == 1) vel[0] = -vel[0];
 
     ReadEncoderSpeedM2(0x82);  // left_front
     vel[3] = ConvertPulsesToRadians(
-        static_cast<double> (RECOMBINE_BUFFER(buf)));
+        static_cast<double> (RecombineBuffer(buf)));
     if (buf[4] == 1) vel[0] = -vel[0];
 
     ReadEncoderSpeedM1(0x82);  // left_middle
     vel[4] = ConvertPulsesToRadians(
-        static_cast<double> (RECOMBINE_BUFFER(buf)));
+        static_cast<double> (RecombineBuffer(buf)));
     if (buf[4] == 1) vel[0] = -vel[0];
 
     ReadEncoderSpeedM2(0x81);  // left_back
     vel[5] = ConvertPulsesToRadians(
-        static_cast<double> (RECOMBINE_BUFFER(buf)));
+        static_cast<double> (RecombineBuffer(buf)));
     if (buf[4] == 1) vel[0] = -vel[0];
 }
 
