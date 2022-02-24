@@ -31,19 +31,14 @@ SOFTWARE. */
 #include <cstring>
 #include "../include/roboclaw.h"
 
-/*
-#define RECOMBINE_BUFFER(X) \
-(((X)[3]) << 24 | ((X)[2]) << 16 | ((X)[1]) << 8 | ((X)[0]))
-*/
-
 roboclaw::roboclaw(settings* es_protobot) {
     zeroCmdVelCount = 0;
     es = es_protobot;
     GetBaudRate();
 }
 
-uint32_t roboclaw::RecombineBuffer(uint8_t *buf) {
-    return buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0];
+uint32_t roboclaw::RecombineBuffer(uint8_t* buf) {
+    return (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]);
 }
 
 void roboclaw::GetBaudRate() {
@@ -92,7 +87,8 @@ void roboclaw::SendCommands(uint8_t* data, int writeBytes, int readBytes) {
                      "RETRYING");
         if (writeFlag == writeBytes) {
             waitStatus = WaitReadStatus(readBytes, es->timeout_ms);
-            if (waitStatus >= 1) break;  // data available to be read back
+            if (waitStatus >= 1)
+                break;  // data available to be read back
             if (waitStatus == -1 || waitStatus == 0) {
                 ROS_WARN("ERROR POLLING AVAILABLE DATA ON SERIAL PORT, "
                          "RESENDING COMMAND");
@@ -101,7 +97,7 @@ void roboclaw::SendCommands(uint8_t* data, int writeBytes, int readBytes) {
 
         flushFlag = ClearIOBuffers();
         if (flushFlag == -1)
-            ROS_WARN("COULD NOT CLEAR IO BUFFERS, RETRYING");
+            ROS_WARN("COULD NOT CLEAR IO BUFFERS");
     }
 
     // read from encoders for specified number of retries
@@ -119,36 +115,7 @@ void roboclaw::SendCommands(uint8_t* data, int writeBytes, int readBytes) {
 
     flushFlag = ClearIOBuffers();
     if (flushFlag == -1)
-        ROS_WARN("COULD NOT CLEAR IO BUFFERS, RETRYING");
-/*
-    for (r = 0; r < es->retries; ++r) {
-        for ( ; r < es->retries; ++r) {
-            writeFlag = WriteToEncoders(data, writeBytes);
-            if (writeFlag == -1) return -1;
-
-            waitStatus = WaitReadStatus(readBytes, es->timeout_ms);
-
-            if (waitStatus == 1) break;  // data is available to be read back
-            if (waitStatus == -1 || waitStatus == 0) return -1;
-
-            flushFlag = ClearIOBuffers();
-            if (flushFlag == -1) return -1;
-        }
-
-        if (r >= es->retries) return -1;
-
-        readFlag = ReadFromEncoders(readBytes);
-        if (readFlag > 0) return 1;
-        if (readFlag == -1) return -1;
-
-        assert(readFlag == readBytes);
-
-        flushFlag = ClearIOBuffers();
-        if (flushFlag == -1) return -1;
-    }
-
-    return r;  // max retries exceeded
-*/
+        ROS_WARN("COULD NOT CLEAR IO BUFFERS");
 }
 
 int roboclaw::ClearIOBuffers() {
