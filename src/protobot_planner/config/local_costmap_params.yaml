@@ -1,8 +1,8 @@
 local_costmap:
   global_frame: map
   robot_base_frame: base_link
-  update_frequency: 6
-  publish_frequency: 6
+  update_frequency: 2.0
+  publish_frequency: 2.0
   static_map: false
   rolling_window: true
   width: 5.0
@@ -14,21 +14,21 @@ local_costmap:
    - {name: inflater_layer, type: "costmap_2d::InflationLayer"}
    
   inflater_layer:
-    inflation_radius: 0.5
-    cost_scaling_factor: 5
+    inflation_radius: 1
+    cost_scaling_factor: 30
    
   obstacle_layer: 
     obstacle_range: 6
-    raytrace_range: 11
+    raytrace_range: 110
     observation_sources: point_cloud_sensor
     point_cloud_sensor: {
       sensor_frame: cam_link_optical,
       data_type: PointCloud2, 
-      topic: /camera/depth/pointcloud,
-      expected_update_rate: 1.5, 
+      topic: planner_cloud,
+      expected_update_rate: 6.0, 
       marking: true, 
       clearing: true,
-      min_obstacle_height: 0.01,
+      min_obstacle_height: -99999.0,
       max_obstacle_height: 99999.0}
 
   
