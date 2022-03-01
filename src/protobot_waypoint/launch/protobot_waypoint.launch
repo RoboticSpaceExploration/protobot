@@ -4,7 +4,6 @@
   <include file="$(find protobot_waypoint)/launch/fiducial_rviz.launch"/>
   <include file="$(find protobot_waypoint)/launch/fiducial_slam.launch"/>
   <!--include file="$(find protobot_description)/launch/protobot_description.launch"/-->
-  <include file="$(find protobot_hardware)/launch/protobot_hardware.launch"/>
 
   <!-- namespace for camera input -->
   <arg name="camera" default="/depth_cam/color"/>

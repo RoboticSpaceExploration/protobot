@@ -31,6 +31,7 @@
       <arg name="calib_odom_file"       value="$(arg calib_odom_file)"/>
       <arg name="enable_pose"           value="true"/>
       <arg name="odom_frame_id"         value="odom"/>
+      <arg name="pose_frame_id"         value="base_link"/> 
       <arg name="publish_odom_tf"       value="true"/>
       <arg name="enable_accel"		value="true"/>
       <arg name="enable_gyro"		value="true"/>
@@ -58,5 +59,7 @@
       <arg name="unite_imu_method"	value="linear_interpolation"/>
    </include>
   </group>
+
   <node pkg="tf" type="static_transform_publisher" name="t265_to_d400" args="0 0 0 0 0 0 /$(arg tf_prefix_camera1)_link /$(arg tf_prefix_camera2)_link 100"/>
+  <node pkg="tf" type="static_transform_publisher" name="track_cam_to_base_link" args="0 0 0.5 0 0 0 base_link track_cam_link 100"/>
 </launch>

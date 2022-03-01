@@ -105,13 +105,13 @@
 	<parent link="base_link"/>
 	<child link="cam_link"/>
 	<origin xyz="0 0 0" rpy="0 0 0"/>
-</joint>
+  </joint>
 
   <joint name="ublox_gps_joint" type="fixed">
 	<parent link="base_link"/>
 	<child link="gps"/>
 	<origin xyz="0 0 0.5"/>
-</joint>
+  </joint>
 
   <joint name="gps_imu_joint" type="fixed">
 	  <parent link="base_link"/>
