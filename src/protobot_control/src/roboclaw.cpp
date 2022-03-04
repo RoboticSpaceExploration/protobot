@@ -32,7 +32,7 @@ SOFTWARE. */
 #include "../include/roboclaw.h"
 
 roboclaw::roboclaw(settings* es_protobot) {
-    for(int i = 0; i < 256; i++)
+    for (int i = 0; i < 256; i++)
         errorBuf[i] = 0x00;
     zeroCmdVelCount = 0;
     es = es_protobot;

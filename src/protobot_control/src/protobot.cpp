@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
 
     ROS_INFO_STREAM("Loading protobot_control_hw_node");
 
-  settings* es_ptr = new settings;
+    settings* es_ptr = new settings;
 
     pb::protobot robot(es_ptr);
     controller_manager::ControllerManager cm(&robot);
