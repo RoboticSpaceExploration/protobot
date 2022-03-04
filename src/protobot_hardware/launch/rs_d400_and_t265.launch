@@ -32,8 +32,10 @@
       <arg name="enable_pose"           value="true"/>
       <arg name="odom_frame_id"         value="odom"/>
       <arg name="publish_odom_tf"       value="true"/>
-    
-      <remap from="track_cam/odom/sample" to="odom_local"/>
+      <arg name="enable_accel"		value="true"/>
+      <arg name="enable_gyro"		value="true"/>
+      <arg name="unite_imu_method"	value="linear_interpolation"/>
+ 
      </include>
   </group>
 
@@ -51,7 +53,10 @@
       <arg name="depth_width"           value="$(arg depth_width)"/>
       <arg name="depth_height"          value="$(arg depth_height)"/>
       <arg name="clip_distance"         value="$(arg clip_distance)"/>
-    </include>
+       <arg name="enable_accel"		value="true"/>
+      <arg name="enable_gyro"		value="true"/>
+      <arg name="unite_imu_method"	value="linear_interpolation"/>
+   </include>
   </group>
   <node pkg="tf" type="static_transform_publisher" name="t265_to_d400" args="0 0 0 0 0 0 /$(arg tf_prefix_camera1)_link /$(arg tf_prefix_camera2)_link 100"/>
 </launch>
