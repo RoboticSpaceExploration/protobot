@@ -61,6 +61,8 @@ class roboclaw {
     int zeroCmdVelCount;
     unsigned int baudRate;  // instead of uint32_t for compatability
     uint8_t buf[100];
+    char* errorBufPtr;
+    char errorBuf[256];     // used by strerror_r, thread safe
 };
 
 #endif  // SRC_PROTOBOT_CONTROL_INCLUDE_ROBOCLAW_H_

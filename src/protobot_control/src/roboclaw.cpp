@@ -32,6 +32,8 @@ SOFTWARE. */
 #include "../include/roboclaw.h"
 
 roboclaw::roboclaw(settings* es_protobot) {
+    for(int i = 0; i < 256; i++)
+        errorBuf[i] = 0x00;
     zeroCmdVelCount = 0;
     es = es_protobot;
     GetBaudRate();
@@ -65,7 +67,7 @@ void roboclaw::GetBaudRate() {
             baudRate = B460800;
             break;
         default:
-            ROS_WARN("Invalid Baud Rate Selection, setting to 115200");
+            ROS_ERROR("Invalid Baud Rate Selection, setting to 115200");
             baudRate = B115200;
             break;
     }
@@ -130,16 +132,18 @@ void roboclaw::SetupEncoders() {
     serialPort = open(es->serialPortAddr.c_str(), O_RDWR | O_NOCTTY);
 
     if (serialPort < 0) {
+        errorBufPtr = strerror_r(errno, errorBuf, sizeof(errorBuf));
         ROS_ERROR("Could not open %s: Error %i from open: %s",
-                 es->serialPortAddr.c_str(), errno, strerror(errno));
-        exit(1);
+                 es->serialPortAddr.c_str(), errno, errorBufPtr);
+        exit(EXIT_FAILURE);
     }
 
     fcntl(serialPort, F_SETFL, 0);  // set to blocking mode (for reads)
 
     if (tcgetattr(serialPort, &tty) != 0) {
-        ROS_ERROR("Error %i from tcgetattr: %s", errno, strerror(errno));
-        exit(1);
+        errorBufPtr = strerror_r(errno, errorBuf, sizeof(errorBuf));
+        ROS_ERROR("Error %i from tcgetattr: %s", errno, errorBufPtr);
+        exit(EXIT_FAILURE);
     }
 
     // set necessary bits
@@ -173,8 +177,10 @@ void roboclaw::SetupEncoders() {
 
     // save flag settings
 
-    if (tcsetattr(serialPort, TCSANOW, &tty) != 0)
-        ROS_ERROR("Error %i from tcsetattr: %s", errno, strerror(errno));
+    if (tcsetattr(serialPort, TCSANOW, &tty) != 0) {
+        strerror_r(errno, errorBuf, sizeof(errorBuf));
+        ROS_ERROR("Error %i from tcsetattr: %s", errno, errorBuf);
+    }
 
     ClearIOBuffers();
 }
