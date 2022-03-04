@@ -191,5 +191,5 @@ void pb::protobot::setYamlParameters(settings* es) {
     }
 
     if (exitFlag)
-        exit(1);
+        exit(EXIT_FAILURE);
 }
