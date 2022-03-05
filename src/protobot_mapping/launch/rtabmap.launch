@@ -1,17 +1,51 @@
 <launch>
-	<include file="$(find rtabmap_ros)/launch/rtabmap.launch">
-	
-    	<!-- If camera is used -->
-    	<arg name="rgb_topic"         value="/d435/color/image_raw" />
-    	<arg name="camera_info_topic" value="/d435/color/camera_info" />
-    	<arg name="depth_topic"       value="/d435/depth/image_raw" />
-    	<arg name="approx_rgbd_sync"  value="false" />
-    	<arg name="database_path"     value="" />
-	
-	<arg name="visual_odometry" value="false"/>
-        <arg name="odom_topic" value="/camera/odom/sample"/>
-        <arg name="rtabmapviz" value="false"/>
-        		
-	</include>
-	
+  <group ns="rtabmap">
+
+    <node pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_ros/rgbd_sync" output="screen">
+      <remap from="rgb/image"       to="/camera/color/image_raw"/>
+      <remap from="depth/image"     to="/camera/depth/image_raw"/>
+      <remap from="rgb/camera_info" to="/camera/color/camera_info"/>
+      <remap from="rgbd_image"      to="rgbd_image"/> <!-- output -->
+      
+      <!-- Should be true for not synchronized camera topics 
+           (e.g., false for kinectv2, zed, realsense, true for xtion, kinect360)-->
+      <param name="approx_sync"       value="true"/> 
+    </node>
+
+    <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="--delete_db_on_start">
+      <param name="frame_id" type="string" value="cam_link_optical"/>
+
+      <param name="subscribe_depth" type="bool" value="false"/>
+      <param name="subscribe_rgbd" type="bool" value="true"/>
+          
+      <param name="publish_tf" type="bool" value="false"/>
+          
+      <param name="visual_odometry" type="bool" value="false"/>
+
+      <remap from="odom" to="/localization/filtered/odom_global"/>
+      <param name="odom_frame_id" value="odom"/>
+
+      <remap from="rgbd_image" to="rgbd_image"/>
+
+      <param name="queue_size" type="int" value="10"/>
+
+      <!-- RTAB-Map's parameters -->
+      <param name="RGBD/AngularUpdate"        type="string" value="0.01"/>
+      <param name="RGBD/LinearUpdate"         type="string" value="0.01"/>
+      <param name="RGBD/OptimizeFromGraphEnd" type="string" value="false"/>
+    </node>
+
+    <node pkg="nodelet" type="nodelet" name="nodeletmanager"  args="manager"/>
+    
+    <!-- Create point cloud for the local planner -->
+    <node pkg="nodelet" type="nodelet" name="obstacles_detection" args="load rtabmap_ros/obstacles_detection nodeletmanager">
+      <remap from="cloud" to="/camera/depth/pointcloud"/>
+      <remap from="obstacles" to="/planner_cloud"/>
+
+      <param name="frame_id" type="string" value="base_link"/>
+      <param name="map_frame_id" type="string" value="map"/>
+      <param name="min_cluster_size" type="int" value="20"/>
+      <param name="max_obstacles_height" type="double" value="0.0"/>
+    </node>
+  </group>
 </launch>

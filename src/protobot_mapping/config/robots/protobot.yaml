@@ -6,13 +6,13 @@ track_point_frame_id: base_link
 track_point_x: 0.0
 track_point_y: 0.0
 track_point_z: 0.0
-point_cloud_topic: /camera/depth_camera/pointcloud
-sensor_frame_id: "camera_link_optical"
+point_cloud_topic: /camera/depth/pointcloud
+sensor_frame_id: "cam_link_optical"
 
 input_sources:
     front: # A name to identify the input source
       type: pointcloud # Supported types: pointcloud
-      topic: /camera/depth_camera/pointcloud
+      topic: /camera/depth/pointcloud
       queue_size: 1
       publish_on_update: true # Wheter to publish the elevation map after a callback from this source.nput_sources:
       sensor_processor:
