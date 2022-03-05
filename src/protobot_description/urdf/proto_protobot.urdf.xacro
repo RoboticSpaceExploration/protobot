@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+
+<robot name="proto_protobot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- Define Macros -->
+
+    <xacro:property name="PI" value="3.1415926535897931"/>
+    <xacro:property name="box_len" value="0.365"/>
+    <xacro:property name="box_width" value="0.28"/>
+    <xacro:property name="box_height" value="0.145"/>
+    <xacro:property name="chassis_mass" value="1"/>
+
+    <xacro:macro name="box_inertia" params="m x y z">
+        <inertia  ixx="${m*(y*y+z*z)/12}" ixy = "0" ixz = "0"
+                  iyy="${m*(x*x+z*z)/12}" iyz = "0"
+                  izz="${m*(x*x+z*z)/12}" />
+    </xacro:macro>
+
+    <!-- Links -->
+
+    <!-- dummy link -->
+
+    <link name="base_link">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <visual>
+            <geometry>
+                <box size="${box_len} ${box_width} ${box_height}"/>
+            </geometry>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${box_len} ${box_width} ${box_height}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${chassis_mass}"/>
+            <xacro:box_inertia m="${chassis_mass}" x="${box_len}" y="${box_width}" z="${box_height}"/>
+        </inertial>
+    </link>
+
+    <link name="chassis_link"/>
+    <link name="gps_link"/>
+    <link name="d435i_link"/>
+    <link name="t265_link"/>
+    <link name="gps_antenna_link"/>
+
+    <!-- Joints -->
+
+    <joint name="chassis_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="chassis_link"/>
+        <origin xyz="0 0 ${box_height/2}" rpy="0 0 0"/>
+    </joint>
+
+    <joint name="gps_joint" type="fixed">
+        <parent link="chassis_link"/>
+        <child link="gps_link"/>
+        <origin xyz="0 -0.06 0" rpy="0 0 0"/>
+    </joint>
+
+    <joint name="d435i_joint" type="fixed">
+        <parent link="chassis_link"/>
+        <child link="d435i_link"/>
+        <origin xyz="${box_len/2} 0 0.045" rpy="0 0 0"/>
+    </joint>
+
+    <joint name="t265_joint" type="fixed">
+        <parent link="chassis_link"/>
+        <child link="t265_link"/>
+        <origin xyz="${box_len/2} 0 0.015" rpy="0 0 0"/>
+    </joint>
+
+    <joint name="gps_antenna_joint" type="fixed">
+        <parent link="chassis_link"/>
+        <child link="gps_antenna_link"/>
+        <origin xyz="${-box_len/2+0.01} 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <!-- T265 gazebo plugin -->
+
+    <xacro:include filename="$(find realsense_ros_gazebo)/xacro/tracker.xacro"/>
+
+    <xacro:realsense_T265 sensor_name="t265_camera" parent_link="t265_link" rate="30.0">
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </xacro:realsense_T265>
+
+    <!-- D435i gazebo plugin -->
+
+    <!--xacro:include filename="$(find realsense2_description)/urdf/_d435i.urdf.xacro"/-->
+
+    <gazebo>
+        <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+            <alwaysOn>true</alwaysOn>
+            <bodyName>d435i_link</bodyName>
+            <topicName>imu/data</topicName>
+            <serviceName>imu_service</serviceName>
+            <gaussianNoise>0</gaussianNoise>
+            <updateRate>20.0</updateRate>
+        </plugin>
+    </gazebo>
+
+    <gazebo>
+        <plugin name="gps_controller" filename="libhector_gazebo_ros_gps.so">
+            <updateRate>30.0</updateRate>
+            <bodyName>gps_antenna_link</bodyName>
+            <topicName>gps/fix</topicName>
+            <frameId>gps_antenna_link</frameId>
+            <gaussianNoise>0</gaussianNoise>
+        </plugin>
+    </gazebo>
+
+    <gazebo reference="d435i_link">
+        <sensor type="depth" name="depth_camera">
+            <plugin name="camera_link_controller" filename="libgazebo_ros_openni_kinect.so">
+                <baseline>0.2</baseline>
+                <alwaysOn>true</alwaysOn>
+                <updateRate>1.0</updateRate>
+                <cameraName>camera</cameraName>
+                <imageTopicName>color/image_raw</imageTopicName>
+                <cameraInfoTopicName>color/camera_info</cameraInfoTopicName>
+                <depthImageTopicName>depth/image_raw</depthImageTopicName>
+                <depthImageInfoTopicName>depth/camera_info</depthImageInfoTopicName>
+                <pointCloudTopicName>depth/pointcloud</pointCloudTopicName>
+                <frameName>d435i_link</frameName>
+                <pointCloudCutoff>0.1</pointCloudCutoff>
+                <pointCloudCutoffMax>5</pointCloudCutoffMax>
+                <distortionK1>0.00000001</distortionK1>
+                <distortionK2>0.00000001</distortionK2>
+                <distortionK3>0.00000001</distortionK3>
+                <distortionT1>0.00000001</distortionT1>
+                <distortionT2>0.00000001</distortionT2>
+                <CxPrime>0</CxPrime>
+                <Cx>0</Cx>
+                <Cy>0</Cy>
+                <focalLength>0</focalLength>
+                <hackBaseline>0</hackBaseline>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+    <!-- physical and color parameters in gazebo -->
+
+    <gazebo reference="base_link">
+        <material>Gazebo/Orange</material>
+    </gazebo>
+
+    <gazebo>
+        <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+            <alwaysOn>true</alwaysOn>
+            <bodyName>gps_imu_link</bodyName>
+            <topicName>imu/data</topicName>
+            <serviceName>imu_service</serviceName>
+            <gaussianNoise>0</gaussianNoise>
+            <updateRate>20.0</updateRate>
+        </plugin>
+    </gazebo>
+
+    <gazebo>
+        <plugin name="gps_controller" filename="libhector_gazebo_ros_gps.so">
+            <updateRate>30.0</updateRate>
+            <bodyName>gps_antenna_link</bodyName>
+            <topicName>gps/fix</topicName>
+            <frameId>gps_antenna_link</frameId>
+            <gaussianNoise>0</gaussianNoise>
+        </plugin>
+    </gazebo>
+
+    <gazebo reference="d435i_link">
+        <sensor type="depth" name="depth_camera">
+            <plugin name="camera_link_controller" filename="libgazebo_ros_openni_kinect.so">
+                <baseline>0.2</baseline>
+                <alwaysOn>true</alwaysOn>
+                <updateRate>1.0</updateRate>
+                <cameraName>camera</cameraName>
+                <imageTopicName>color/image_raw</imageTopicName>
+                <cameraInfoTopicName>color/camera_info</cameraInfoTopicName>
+                <depthImageTopicName>depth/image_raw</depthImageTopicName>
+                <depthImageInfoTopicName>depth/camera_info</depthImageInfoTopicName>
+                <pointCloudTopicName>depth/pointcloud</pointCloudTopicName>
+                <frameName>d435i_link</frameName>
+                <pointCloudCutoff>0.1</pointCloudCutoff>
+                <pointCloudCutoffMax>5</pointCloudCutoffMax>
+                <distortionK1>0.00000001</distortionK1>
+                <distortionK2>0.00000001</distortionK2>
+                <distortionK3>0.00000001</distortionK3>
+                <distortionT1>0.00000001</distortionT1>
+                <distortionT2>0.00000001</distortionT2>
+                <CxPrime>0</CxPrime>
+                <Cx>0</Cx>
+                <Cy>0</Cy>
+                <focalLength>0</focalLength>
+                <hackBaseline>0</hackBaseline>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+    <!-- Implement t265_link -->
+</robot>

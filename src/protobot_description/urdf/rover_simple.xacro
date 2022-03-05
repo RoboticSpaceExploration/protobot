@@ -1,0 +1,255 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="rover">
+
+  <xacro:include filename="$(find protobot_description)/urdf/macro.xacro"/>
+
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="${body_length} ${body_width} ${body_height}"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="${body_length} ${body_width} ${body_height}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="${body_mass}"/>
+      <xacro:box_inertia m="${body_mass}" x="${body_length}" y="${body_width}" z="${body_height}"/>
+    </inertial>
+  </link>
+
+  <link name="right_front_wheel"><xacro:wheel_visual_collision_inertia/></link>
+
+  <joint name="right_front_wheel_pivot" type="continuous">
+    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    <parent link="base_link"/>
+    <child link="right_front_wheel"/>
+    <origin xyz="${front_wheel_forward} -${front_wheel_out} -${wheel_height}"/>
+    <axis xyz="0 1 0" />
+  </joint>
+
+  <link name="right_mid_wheel"><xacro:wheel_visual_collision_inertia/></link>
+
+  <joint name="right_mid_wheel_pivot" type="continuous">
+    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    <parent link="base_link"/>
+    <child link="right_mid_wheel"/>
+    <origin xyz="0 -${mid_wheel_out} -${wheel_height}"/>
+    <axis xyz="0 1 0" />
+  </joint>
+
+  <link name="right_back_wheel"><xacro:wheel_visual_collision_inertia/></link>
+
+  <joint name="right_back_wheel_pivot" type="continuous">
+    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    <parent link="base_link"/>
+    <child link="right_back_wheel"/>
+    <origin xyz="-${rear_wheel_back} -${rear_wheel_out} -${wheel_height}"/>
+    <axis xyz="0 1 0" />
+  </joint>
+
+  <link name="left_front_wheel"><xacro:wheel_visual_collision_inertia/></link>
+
+  <joint name="left_front_wheel_pivot" type="continuous">
+    <parent link="base_link"/>
+    <child link="left_front_wheel"/>
+    <origin xyz="${front_wheel_forward} ${front_wheel_out} -${wheel_height}"/>
+    <axis xyz="0 1 0" />
+  </joint>
+
+  <link name="left_mid_wheel"><xacro:wheel_visual_collision_inertia/></link>
+
+  <joint name="left_mid_wheel_pivot" type="continuous">
+    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    <parent link="base_link"/>
+    <child link="left_mid_wheel"/>
+    <origin xyz="0 ${mid_wheel_out} -${wheel_height}"/>
+    <axis xyz="0 1 0" />
+  </joint>
+
+  <link name="left_back_wheel"><xacro:wheel_visual_collision_inertia/></link>
+
+  <joint name="left_back_wheel_pivot" type="continuous">
+    <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    <parent link="base_link"/>
+    <child link="left_back_wheel"/>
+    <origin xyz="-${rear_wheel_back} ${rear_wheel_out} -${wheel_height}"/>
+    <axis xyz="0 1 0" />
+  </joint>
+
+  <gazebo reference="base_link">
+    <material>Gazebo/Orange</material>
+  </gazebo>
+  
+  <link name="gps_imu_link">
+  </link>
+  
+  <link name="cam_link">
+</link>
+
+  <link name="cam_link_optical">
+</link>
+
+  <link name="gps"></link>
+
+  <joint name="cam_optical_joint" type="fixed">
+	<parent link="cam_link"/>
+	<child link="cam_link_optical"/>
+	<origin xyz="0 0 0" rpy="3.14 3.14 1.571"/>
+</joint>
+
+  <joint name="cam_joint" type="fixed">
+	<parent link="base_link"/>
+	<child link="cam_link"/>
+	<origin xyz="0 0 0" rpy="0 0 0"/>
+</joint>
+
+  <joint name="ublox_gps_joint" type="fixed">
+	<parent link="base_link"/>
+	<child link="gps"/>
+	<origin xyz="0 0 0.5"/>
+</joint>
+
+  <joint name="gps_imu_joint" type="fixed">
+	  <parent link="base_link"/>
+	  <child link="gps_imu_link"/>
+	  <origin xyz="0 0 0.5"/>
+  </joint>
+  
+
+  <xacro:include filename="$(find realsense_ros_gazebo)/xacro/tracker.xacro"/>
+
+  <xacro:realsense_T265 sensor_name="camera" parent_link="cam_link" rate="30.0">
+    <origin rpy="0 0 0" xyz="0 0 0.5"/>
+  </xacro:realsense_T265>
+
+
+  <xacro:include filename="$(find realsense_ros_gazebo)/xacro/depthcam.xacro"/>
+
+  <xacro:realsense_d435 sensor_name="d435" parent_link="cam_link" rate="10">
+    <origin rpy="0 0 0" xyz="0 0 0.5"/>
+  </xacro:realsense_d435>
+
+
+  <gazebo>
+    <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
+    </plugin>
+  </gazebo>
+  
+  <gazebo>
+	<plugin name="gps_controller" filename="libhector_gazebo_ros_gps.so">
+		<updateRate>30.0</updateRate>
+		<bodyName>gps_imu_link</bodyName>
+		<topicName>gps/fix</topicName>
+		<frameId>gps_imu_link</frameId>
+		<gaussianNoise>0</gaussianNoise>
+	</plugin>
+  </gazebo>
+  
+  <gazebo>    
+     <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+      <alwaysOn>true</alwaysOn>
+      <bodyName>gps_imu_link</bodyName>
+      <topicName>imu/data</topicName>
+      <serviceName>imu_service</serviceName>
+      <gaussianNoise>0</gaussianNoise>
+      <updateRate>20.0</updateRate>
+    </plugin>
+  </gazebo>
+  
+  <gazebo reference="camera_link">
+     <sensor type="depth" name="depth_camera">
+      <plugin name="camera_link_controller" filename="libgazebo_ros_openni_kinect.so">
+          <baseline>0.2</baseline>
+          <alwaysOn>true</alwaysOn>
+          <updateRate>1.0</updateRate>
+          <cameraName>camera</cameraName>
+          <imageTopicName>color/image_raw</imageTopicName>
+	  <cameraInfoTopicName>color/camera_info</cameraInfoTopicName>
+	  <depthImageTopicName>depth/image_raw</depthImageTopicName>
+	  <depthImageInfoTopicName>depth/camera_info</depthImageInfoTopicName>
+	  <pointCloudTopicName>depth/pointcloud</pointCloudTopicName>
+          <frameName>cam_link_optical</frameName>
+          <pointCloudCutoff>0.1</pointCloudCutoff>
+	  <pointCloudCutoffMax>5</pointCloudCutoffMax>
+          <distortionK1>0.00000001</distortionK1>
+          <distortionK2>0.00000001</distortionK2>
+          <distortionK3>0.00000001</distortionK3>
+          <distortionT1>0.00000001</distortionT1>
+          <distortionT2>0.00000001</distortionT2>
+          <CxPrime>0</CxPrime>
+          <Cx>0</Cx>
+          <Cy>0</Cy>
+          <focalLength>0</focalLength>
+          <hackBaseline>0</hackBaseline>	
+      </plugin>
+     </sensor>
+  </gazebo>
+  
+  <transmission name="left_front_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="motor1">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="left_front_wheel_pivot">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+  
+  <transmission name="left_middle_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="motor1">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="left_mid_wheel_pivot">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+  
+  <transmission name="left_back_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="motor1">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="left_back_wheel_pivot">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+  
+  <transmission name="right_front_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="motor1">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="right_front_wheel_pivot">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+  
+  <transmission name="right_middle_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="motor1">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="right_mid_wheel_pivot">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+  
+  <transmission name="right_back_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="motor1">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="right_back_wheel_pivot">
+      <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+
+
+
+</robot>

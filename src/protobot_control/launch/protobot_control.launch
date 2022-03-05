@@ -1,0 +1,8 @@
+<launch>
+
+	<rosparam command="load" file="$(find protobot_control)/config/control.yaml"/>
+	<rosparam command="load" file="$(find protobot_control)/config/encoder_settings.yaml"/>
+	<node name="protobot_control_hw_node" pkg="protobot_control" type="protobot_control_hw_node" output="screen"/>
+	<node name="controller_manager_node"  pkg="controller_manager" type="spawner" output="screen" args="protobot_joint_publisher protobot_velocity_controller"/>
+
+</launch>

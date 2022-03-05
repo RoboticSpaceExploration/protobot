@@ -1,0 +1,31 @@
+global_costmap:
+  global_frame: map
+  robot_base_frame: base_link
+  update_frequency: 0.5
+  publish_frequency: 0.5
+  width: 100
+  height: 100
+  rolling_window: true
+  static_map: false
+  
+  plugins:
+   - {name: obstacle_layer, type: "costmap_2d::ObstacleLayer"}
+   - {name: inflater_layer, type: "costmap_2d::InflationLayer"}
+   
+  inflater_layer:
+    inflation_radius: 2
+    cost_scaling_factor: 2
+  
+  obstacle_layer: 
+    obstacle_range: 6
+    raytrace_range: 11
+    observation_sources: point_cloud_sensor
+    point_cloud_sensor: {
+      sensor_frame: cam_link_optical,
+      data_type: PointCloud2, 
+      topic: /camera/depth/pointcloud,
+      expected_update_rate: 1.5, 
+      marking: true, 
+      clearing: true,
+      min_obstacle_height: 0.01,
+      max_obstacle_height: 99999.0}

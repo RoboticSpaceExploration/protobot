@@ -2,8 +2,13 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/src/orb_slam_2_ros" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/elevation_mapping" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/grid_map" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/kindr" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/kindr_ros" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/protobot_description/urdf/realsense_ros_gazebo" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/realsense-ros" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/rtcm_msgs" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/ublox" vcs="Git" />
   </component>
 </project>

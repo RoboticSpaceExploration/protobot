@@ -1,0 +1,78 @@
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 50
+
+# Wheel & Steer
+left_wheel_controller:
+  type: "ackermann_steering_controller/AckermannSteeringController"
+  rear_wheel                    : 'left_rear_axle'
+  front_steer                   : 'left_steering_joint'
+  #publish_rate                  : 100
+
+  pose_covariance_diagonal      : [0.00001, 0.00001, 1000000000000.0, 1000000000000.0, 1000000000000.0, 0.001]
+  twist_covariance_diagonal     : [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  #wheel_separation_h_multiplier : 1.7 # calibration parameter for angle odometory
+  #wheel_radius_multiplier       : 1.0 # calibration parameter for linear odometory
+  #steer_pos_multiplier          : 1.5
+  cmd_vel_timeout               : 4
+  base_frame_id                 : base_link
+
+  enable_odom_tf: true
+  #wheel_separation_h            : 0.79 # retriieved from urdf joints
+  #wheel_radius                  : 0.28 # retrieved from urdf joint
+
+  #linear:
+  #  x:
+  #    has_velocity_limits       : true
+  #    max_velocity              : 0.9  # m/s
+  #    min_velocity              : -0.9 # m/s
+  #    has_acceleration_limits   : true
+  #    max_acceleration          : 1.7  # m/s^2
+  #    min_acceleration          : -0.4 # m/s^2
+  #    has_jerk_limits           : true
+  #    max_jerk                  : 5.0 # m/s^3
+  #angular:
+  #  z:
+  #    has_velocity_limits       : true
+  #    max_velocity              : 0.5  # rad/s
+  #    has_acceleration_limits   : true
+  #    max_acceleration          : 1.5  # rad/s^2
+  #    has_jerk_limits           : true
+  #    max_jerk                  : 2.5 # rad/s^3
+  
+right_wheel_controller:
+  type: "ackermann_steering_controller/AckermannSteeringController"
+  rear_wheel                    : 'right_rear_axle'
+  front_steer                   : 'right_steering_joint	'
+  #publish_rate                  : 100
+
+  pose_covariance_diagonal      : [0.00001, 0.00001, 1000000000000.0, 1000000000000.0, 1000000000000.0, 0.001]
+  twist_covariance_diagonal     : [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  #wheel_separation_h_multiplier : 1.7 # calibration parameter for angle odometory
+  #wheel_radius_multiplier       : 1.0 # calibration parameter for linear odometory
+  #steer_pos_multiplier          : 1.5
+  cmd_vel_timeout               : 4
+  base_frame_id                 : base_link
+
+  enable_odom_tf: true
+  #wheel_separation_h            : 0.79 # retriieved from urdf joints
+  #wheel_radius                  : 0.28 # retrieved from urdf joint
+
+  #linear:
+  #  x:
+  #    has_velocity_limits       : true
+  #    max_velocity              : 0.9  # m/s
+  #    min_velocity              : -0.9 # m/s
+  #    has_acceleration_limits   : true
+  #    max_acceleration          : 1.7  # m/s^2
+  #    min_acceleration          : -0.4 # m/s^2
+  #    has_jerk_limits           : true
+  #    max_jerk                  : 5.0 # m/s^3
+  #angular:
+  #  z:
+  #    has_velocity_limits       : true
+  #    max_velocity              : 0.5  # rad/s
+  #    has_acceleration_limits   : true
+  #    max_acceleration          : 1.5  # rad/s^2
+  #    has_jerk_limits           : true
+  #    max_jerk                  : 2.5 # rad/s^3
