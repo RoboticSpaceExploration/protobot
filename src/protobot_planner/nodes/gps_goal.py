@@ -86,23 +86,23 @@ def calc_goal(origin_lat, origin_long, goal_lat, goal_long):
         The x and y translation from the start to goal coordinate
     """
     # Calculate distance and azimuth between GPS points
-    geod = Geodesic.WGS84  # define the WGS84 ellipsoid
+    geod_obj = Geodesic.WGS84  # define the WGS84 ellipsoid
     # Compute several geodesic calculations between two GPS points
-    g = geod.Inverse(origin_lat, origin_long, goal_lat, goal_long)
-    hypotenuse = distance = g['s12'] # access distance
+    geod = geod_obj.Inverse(origin_lat, origin_long, goal_lat, goal_long)
+    hypotenuse = distance = geod['s12'] # access distance
     rospy.loginfo(f"The distance from the origin to the goal is {distance:.3f} m.")
-    azimuth = g['azi1']
+    azimuth = geod['azi1']
     rospy.loginfo(f"The azimuth from the origin to the goal is {azimuth:.3f} degrees.")
 
     # Convert polar (distance and azimuth) to x,y translation in meters (needed for ROS)
     # by finding side lenghs of a right-angle triangle
     # Convert azimuth to radians
     azimuth = math.radians(azimuth)
-    x = math.cos(azimuth) * hypotenuse # adjacent
-    y = math.sin(azimuth) * hypotenuse # opposite
-    rospy.loginfo(f"The translation from the origin to the goal is (x,y) {x:.3f}, {y:.3f} m.")
+    x_dist = math.cos(azimuth) * hypotenuse # adjacent
+    y_dist = math.sin(azimuth) * hypotenuse # opposite
+    rospy.loginfo(f"The translation from the origin to the goal is (x,y) {x_dist:.3f}, {y_dist:.3f} m.")
 
-    return x, y
+    return x_dist, y_dist
 
 class GpsGoal():
     """
@@ -146,7 +146,8 @@ class GpsGoal():
         goal_long
             The goal coordinate longitude
         """
-        #Calculates goal x and y in the frame_id given the frame's origin GPS and a goal GPS location.
+        # Calculates goal x and y in the frame_id given the frame's origin GPS and a
+        # goal GPS location.
         x, y = calc_goal(self.origin_lat, self.origin_long, goal_lat, goal_long)
         self.goal_pose["x"] = x
         self.goal_pose["y"] = y
@@ -185,9 +186,9 @@ class GpsGoal():
         """
         Creates a new move_base goal, sends the goal, and waits for goal result.
         """
-        x = self.goal_pose["x"]
-        y = self.goal_pose["y"]
-        z = self.goal_pose["z"]
+        x_dist = self.goal_pose["x"]
+        y_dist = self.goal_pose["y"]
+        z_dist = self.goal_pose["z"]
         roll = self.goal_pose["roll"]
         pitch = self.goal_pose["pitch"]
         yaw = self.goal_pose["yaw"]
@@ -195,15 +196,16 @@ class GpsGoal():
         # Create move_base goal
         goal = MoveBaseGoal()
         goal.target_pose.header.frame_id = rospy.get_param('~frame_id','map')
-        goal.target_pose.pose.position.x = x
-        goal.target_pose.pose.position.y = y
-        goal.target_pose.pose.position.z = z
+        goal.target_pose.pose.position.x = x_dist
+        goal.target_pose.pose.position.y = y_dist
+        goal.target_pose.pose.position.z = z_dist
         quaternion = tf.transformations.quaternion_from_euler(roll, pitch, yaw)
         goal.target_pose.pose.orientation.x = quaternion[0]
         goal.target_pose.pose.orientation.y = quaternion[1]
         goal.target_pose.pose.orientation.z = quaternion[2]
         goal.target_pose.pose.orientation.w = quaternion[3]
-        rospy.loginfo(f'Executing move_base goal to position (x,y) {x}, {y}, with {yaw} degrees yaw.')
+        rospy.loginfo(f'Executing move_base goal to position (x,y)' +
+                       '{x_dist}, {y_dist}, with {yaw} degrees yaw.')
         rospy.loginfo(
             "To cancel the goal: 'rostopic pub -1 /move_base/cancel actionlib_msgs/GoalID -- {}'")
 
@@ -251,9 +253,11 @@ def cli_main(lat, long):
     gps_goal.do_gps_goal(lat, long)
 
 def ros_main():
+    """
+    ros main
+    """
     #gpsGoal = GpsGoal()
     rospy.spin()
 
 if __name__ == '__main__':
-    lat, long = get_origin_lat_long()
-    cli_main(lat, long)
+    cli_main((get_origin_lat_long()))
