@@ -1,4 +1,7 @@
 #!/usr/bin/python3.8
+"""
+GPS Goal Node
+"""
 import rospy
 import click
 import math
@@ -14,14 +17,12 @@ from sensor_msgs.msg import NavSatFix
 def dms_to_decimal_format(lat, long):
     """
     Converts a GPS coordinate given in degrees, minutes, seconds format to decimal format.
-    
     Parameters
     ----------
     lat
         The given latitude in DMS
     long
         The given longitude in DMS
-    
     Returns
     -------
     lat, long : tuple[float, float]
@@ -52,15 +53,15 @@ def dms_to_decimal_format(lat, long):
 def get_origin_lat_long():
     """
     Gets the current lat long coordinates.
-
     Returns
     -------
     lat, long : tuple[float, float]
         The latitude and longitude
     """
-    #Get the lat long coordinates of our map frame's origin which must be publshed on topic /local_xy_origin. We use this to calculate our goal within the map frame.
+    # Get the lat long coordinates of our map frame's origin which must be
+    # publshed on topic /local_xy_origin. We use this to calculate our goal within the map frame.
     rospy.loginfo("Waiting for a message to initialize the origin GPS location...")
-    #origin_pose = rospy.wait_for_message('initialpose', PoseStamped)
+    # origin_pose = rospy.wait_for_message('initialpose', PoseStamped)
     origin_lat = 49.89#origin_pose.pose.position.y
     origin_long = 8.9#origin_pose.pose.position.x
     rospy.loginfo(f'Received origin: lat {origin_lat}, long {origin_long}.')
@@ -69,7 +70,6 @@ def get_origin_lat_long():
 def calc_goal(origin_lat, origin_long, goal_lat, goal_long):
     """
     Calculates the x and y translation in meters to reach a goal lat long from the origin lat long
-    
     Parameters
     ----------
     origin_lat
@@ -80,7 +80,6 @@ def calc_goal(origin_lat, origin_long, goal_lat, goal_long):
         The goal coordinate latitude
     goal_long
         The goal coordinate longitude
-
     Returns
     -------
     x, y : tuple[float, float]
@@ -88,13 +87,15 @@ def calc_goal(origin_lat, origin_long, goal_lat, goal_long):
     """
     # Calculate distance and azimuth between GPS points
     geod = Geodesic.WGS84  # define the WGS84 ellipsoid
-    g = geod.Inverse(origin_lat, origin_long, goal_lat, goal_long) # Compute several geodesic calculations between two GPS points 
+    # Compute several geodesic calculations between two GPS points
+    g = geod.Inverse(origin_lat, origin_long, goal_lat, goal_long)
     hypotenuse = distance = g['s12'] # access distance
     rospy.loginfo(f"The distance from the origin to the goal is {distance:.3f} m.")
     azimuth = g['azi1']
     rospy.loginfo(f"The azimuth from the origin to the goal is {azimuth:.3f} degrees.")
 
-    # Convert polar (distance and azimuth) to x,y translation in meters (needed for ROS) by finding side lenghs of a right-angle triangle
+    # Convert polar (distance and azimuth) to x,y translation in meters (needed for ROS)
+    # by finding side lenghs of a right-angle triangle
     # Convert azimuth to radians
     azimuth = math.radians(azimuth)
     x = adjacent = math.cos(azimuth) * hypotenuse
@@ -113,22 +114,22 @@ class GpsGoal():
         Intializes gps_goal node and connects itself to move_base.
         """
         rospy.init_node('gps_goal')
-
         rospy.loginfo("Connecting to move_base...")
         self.move_base = actionlib.SimpleActionClient('move_base', MoveBaseAction)
         self.move_base.wait_for_server()
         rospy.loginfo("Connected.")
-
-        rospy.Subscriber('localization/filtered/global_pose', PoseStamped, self.gps_goal_pose_callback)
+        rospy.Subscriber('localization/filtered/global_pose', PoseStamped,
+                        self.gps_goal_pose_callback)
         rospy.Subscriber('gps/fix', NavSatFix, self.gps_goal_fix_callback)
 
-        # Get the lat long coordinates of our map frame's origin which must be publshed on topic /local_xy_origin. We use this to calculate our goal within the map frame.
+        # Get the lat long coordinates of our map frame's origin which must be publshed on
+        # topic /local_xy_origin. We use this to calculate our goal within the map frame.
         self.origin_lat, self.origin_long = get_origin_lat_long()
     
     def do_gps_goal(self, goal_lat, goal_long, z=0, yaw=0, roll=0, pitch=0):
         """
-        Calculate goal x and y in the frame_id given the frame's origin GPS and a goal GPS location.
-
+        Calculate goal x and y in the frame_id given
+        the frame's origin GPS and a goal GPS location.
         Parameters
         ----------
         goal_lat
@@ -145,13 +146,13 @@ class GpsGoal():
             The pitch (default is 0)
         """
         x, y = calc_goal(self.origin_lat, self.origin_long, goal_lat, goal_long)
+
         # Create move_base goal
         self.publish_goal(x=x, y=y, z=z, yaw=yaw, roll=roll, pitch=pitch)
 
     def gps_goal_pose_callback(self, data):
         """
         Subscriber on localization/filtered/global_pose topic.
-
         Parameters
         ----------
         data
@@ -169,7 +170,6 @@ class GpsGoal():
     def gps_goal_fix_callback(self, data):
         """
         Subcriber on gps/fix topic.
-
         Parameters
         ----------
         data
@@ -180,7 +180,6 @@ class GpsGoal():
     def publish_goal(self, x=0, y=0, z=0, yaw=0, roll=0, pitch=0):
         """
         Creates a new move_base goal, sends the goal, and waits for goal result.
-
         Parameters
         ----------
         x : int
@@ -207,7 +206,7 @@ class GpsGoal():
         goal.target_pose.pose.orientation.y = quaternion[1]
         goal.target_pose.pose.orientation.z = quaternion[2]
         goal.target_pose.pose.orientation.w = quaternion[3]
-        rospy.loginfo('Executing move_base goal to position (x,y) %s, %s, with %s degrees yaw.' % (x, y, yaw))
+        rospy.loginfo(f'Executing move_base goal to position (x,y) {x}, {y}, with {yaw} degrees yaw.')
         rospy.loginfo("To cancel the goal: 'rostopic pub -1 /move_base/cancel actionlib_msgs/GoalID -- {}'")
 
         # Send goal
@@ -233,7 +232,6 @@ class GpsGoal():
 def cli_main(lat, long, roll, pitch, yaw):
     """
     Send a goal to move_base given latitude and longitude.
-    
     Notes
     -----
     Accepts two GPS formats:
@@ -241,7 +239,6 @@ def cli_main(lat, long, roll, pitch, yaw):
             gps_goal.py --lat 43.658 --long -79.379
         Degrees, minutes, seconds format
             gps_goal.py --lat 43,39,31 --long -79,22,45
-    
     Parameters
     ----------
     lat
@@ -260,7 +257,6 @@ def cli_main(lat, long, roll, pitch, yaw):
     # Check for degrees, minutes, seconds format and convert to decimal
     lat, long = dms_to_decimal_format(lat, long)
     gps_goal.do_gps_goal(lat, long, roll=roll, pitch=pitch, yaw=yaw)
-
 
 def ros_main():
     gpsGoal = GpsGoal()
