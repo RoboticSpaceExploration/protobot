@@ -37,14 +37,16 @@ class roboclaw {
     void GetVelocityFromWheels(double* vel);
 
  private:
+    void GetBaudRate();
     int ClearIOBuffers();
     int WriteToEncoders(uint8_t* data, int nBytes);
     int WaitReadStatus(int nBytes, int timeout_ms);
     int ReadFromEncoders(int nBytes);
-    int SendCommands(uint8_t* data, int writeBytes, int readBytes);
-    uint8_t ScaleCommand(double cmd);
+    void SendCommands(uint8_t* data, int writeBytes, int readBytes);
     double ConvertPulsesToRadians(double vel);
+    uint8_t ScaleCommand(double cmd);
     uint32_t ValidateChecksum(uint8_t* packet, int nBytes);
+    uint32_t RecombineBuffer(uint8_t* buf);
 
     void ForwardM1(uint8_t address, uint8_t value);
     void ForwardM2(uint8_t address, uint8_t value);
@@ -57,7 +59,10 @@ class roboclaw {
     settings* es;
     int serialPort;
     int zeroCmdVelCount;
+    unsigned int baudRate;  // instead of uint32_t for compatability
     uint8_t buf[100];
+    char* errorBufPtr;
+    char errorBuf[256];     // used by strerror_r, thread safe
 };
 
 #endif  // SRC_PROTOBOT_CONTROL_INCLUDE_ROBOCLAW_H_
