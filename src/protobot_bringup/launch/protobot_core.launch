@@ -3,4 +3,5 @@
 	<include file="$(find protobot_localization)/launch/protobot_localization.launch"/>
 	<include file="$(find protobot_mapping)/launch/protobot_mapping.launch"/>
 	<include file="$(find protobot_control)/launch/protobot_control.launch"/>
+	<include file="$(find protobot_hardware)/launch/protobot_hardware.launch"/>
 </launch>
