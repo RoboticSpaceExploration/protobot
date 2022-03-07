@@ -1,3 +1,4 @@
 <launch>
-  <node name="protobot_hardware_LED_array_node" pkg="protobot_hardware" type="protobot_hardware_LED_array_node"/>
+  <rosparam command="load" file="$(find protobot_hardware)/config/LED_settings.yaml"/>
+  <node name="protobot_hardware_LED_array_node" pkg="protobot_hardware" type="protobot_hardware_LED_array_node" output="screen"/>
 </launch>

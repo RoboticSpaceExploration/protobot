@@ -33,7 +33,7 @@ void LEDArrayService::ToggleLEDArray() {
 }
 
 void LEDArrayService::GetYamlParams(LEDSettings* ls) {
-  nh.getParam("/LED_array_settings/serial_port_addr", ls->serialPortAddr);
+  nh.getParam("/LED_array_settings/serial_port", ls->serialPortAddr);
   nh.getParam("/LED_array_settings/baud_rate", ls->baudRate);
 }
 
@@ -52,16 +52,17 @@ bool LEDArrayService::SendCommand(protobot_hardware::LED_toggle::Request& req,
 }
 
 void LEDArrayService::AdvertiseService() {
-  service = nh.advertiseService("toggle_LED_array", &LEDArrayService::SendCommand, this);
-  ROS_INFO("Ready to toggle LED array status");
+  service = nh.advertiseService(
+      "toggle_LED_array", &LEDArrayService::SendCommand, this);
+  ROS_INFO("Advertising LED array service");
 }
 
 int main(int argc, char** argv) {
+
   ros::init(argc, argv, "LED_array_server");
   ROS_INFO("Initializing LED array toggle service");
 
   LEDSettings* ls_ptr = new LEDSettings;
-
   LEDArrayService LEDArray_Service(ls_ptr);
   LEDArray LED_array(ls_ptr);
 

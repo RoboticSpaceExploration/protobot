@@ -39,8 +39,6 @@ class LEDArrayService {
   void GetYamlParams(LEDSettings* ls);
   ros::NodeHandle nh;
   ros::ServiceServer service;
-//  protobot_hardware::LED_toggle::Request req;
-//  protobot_hardware::LED_toggle::Request res;
 };
 
 #endif  // SRC_PROTOBOT_HARDWARE_INCLUDE_LEDARRAYSERVICE_H_
