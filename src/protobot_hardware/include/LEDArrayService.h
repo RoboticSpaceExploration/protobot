@@ -31,14 +31,14 @@ SOFTWARE. */
 class LEDArrayService {
  public:
   LEDArrayService(LEDSettings* ls, ros::NodeHandle* nh);
-  bool LEDCommandStatusCallback(
-      protobot_hardware::LED_toggle::Request& req,
-      protobot_hardware::LED_toggle::Response& res);
   void AdvertiseService(LEDArrayService* LEDArray_Service, ros::NodeHandle* nh);
   void SendCommandToHardware(LEDSettings* ls, LEDArray* LED_array);
 
  private:
   void GetYamlParams(LEDSettings* ls, ros::NodeHandle* nh);
+  bool LEDCommandStatusCallback(
+      protobot_hardware::LED_toggle::Request& req,
+      protobot_hardware::LED_toggle::Response& res);
   ros::ServiceServer service;
   int8_t cmd, reply;
 };
