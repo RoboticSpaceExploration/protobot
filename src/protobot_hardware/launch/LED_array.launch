@@ -1,0 +1,3 @@
+<launch>
+  <node name="protobot_hardware_LED_array_node" pkg="protobot_hardware" type="protobot_hardware_LED_array_node"/>
+</launch>

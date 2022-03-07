@@ -1,0 +1,3 @@
+LED_array_settings:
+  serial_port_addr: '/dev/ttyACM0'
+  baud_rate: 9600
