@@ -46,4 +46,4 @@ class LEDArray {
   char errorBuf[256];
 };
 
-#endif //SRC_PROTOBOT_HARDWARE_INCLUDE_LEDARRAY_H_
+#endif  // SRC_PROTOBOT_HARDWARE_INCLUDE_LEDARRAY_H_

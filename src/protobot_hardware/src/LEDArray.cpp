@@ -69,7 +69,6 @@ void LEDArray::GetBaudRate() {
 }
 
 void LEDArray::LEDInit() {
-
   // enable read & write, disable controlling terminal
   serialPort = open(ls->serialPortAddr.c_str(), O_RDWR | O_NOCTTY);
 

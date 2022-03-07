@@ -77,14 +77,16 @@ bool LEDArrayService::LEDCommandStatusCallback(
   return false;
 }
 
-void LEDArrayService::AdvertiseService(LEDArrayService* LEDArray_Service, ros::NodeHandle* nh) {
+void LEDArrayService::AdvertiseService(
+    LEDArrayService* LEDArray_Service, ros::NodeHandle* nh) {
   ROS_INFO("Advertising LED array service");
   service = nh->advertiseService(
       "toggle_LED_array", &LEDArrayService::LEDCommandStatusCallback,
       LEDArray_Service);
 }
 
-void LEDArrayService::SendCommandToHardware(LEDSettings* ls, LEDArray* LED_array) {
+void LEDArrayService::SendCommandToHardware(
+    LEDSettings* ls, LEDArray* LED_array) {
   ls->cmd = cmd;
   ls->reply = reply;
   for (int8_t i = 0; i < 3; i++) {
