@@ -1,0 +1,26 @@
+digraph G {
+"depth_cam_aligned_depth_to_color_frame" -> "depth_cam_color_optical_frame"[label=" Broadcaster: /depth_cam/realsense2_camera_manager\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"track_cam_link" -> "track_cam_gyro_frame"[label=" Broadcaster: /track_cam/realsense2_camera_manager\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"track_cam_link" -> "depth_cam_link"[label=" Broadcaster: /t265_to_d400\nAverage rate: 10.195\nBuffer length: 4.904\nMost recent transform: 1645246939.23\nOldest transform: 1645246934.32\n"];
+"track_cam_pose_frame" -> "track_cam_link"[label=" Broadcaster: /track_cam/realsense2_camera_manager\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"odom" -> "track_cam_pose_frame"[label=" Broadcaster: /track_cam/realsense2_camera_manager\nAverage rate: 200.367\nBuffer length: 4.986\nMost recent transform: 1645246939.16\nOldest transform: 1645246934.18\n"];
+"depth_cam_link" -> "depth_cam_aligned_depth_to_color_frame"[label=" Broadcaster: /depth_cam/realsense2_camera_manager\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"depth_cam_accel_frame" -> "depth_cam_accel_optical_frame"[label=" Broadcaster: /depth_cam/realsense2_camera_manager\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"track_cam_link" -> "track_cam_accel_frame"[label=" Broadcaster: /track_cam/realsense2_camera_manager\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"depth_cam_depth_frame" -> "depth_cam_depth_optical_frame"[label=" Broadcaster: /depth_cam/realsense2_camera_manager\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"depth_cam_link" -> "depth_cam_color_frame"[label=" Broadcaster: /depth_cam/realsense2_camera_manager\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"map" -> "odom"[label=" Broadcaster: /global_ekf\nAverage rate: 5.191\nBuffer length: 4.816\nMost recent transform: 1645246939.02\nOldest transform: 1645246934.21\n"];
+"base_link" -> "cam_link"[label=" Broadcaster: /base_to_cam\nAverage rate: 10.195\nBuffer length: 4.904\nMost recent transform: 1645246939.26\nOldest transform: 1645246934.35\n"];
+"depth_cam_link" -> "depth_cam_gyro_frame"[label=" Broadcaster: /depth_cam/realsense2_camera_manager\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"odom" -> "base_link"[label=" Broadcaster: /odom_to_tf_node\nAverage rate: 201.969\nBuffer length: 4.976\nMost recent transform: 1645246939.16\nOldest transform: 1645246934.19\n"];
+"world" -> "map"[label=" Broadcaster: /world_link_broadcaster\nAverage rate: 196.938\nBuffer length: 4.991\nMost recent transform: 1645246939.17\nOldest transform: 1645246934.18\n"];
+"odom" -> "track_cam_imu_optical_frame"[label=" Broadcaster: /imu_filter_madgwick\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"depth_cam_gyro_frame" -> "depth_cam_imu_optical_frame"[label=" Broadcaster: /depth_cam/realsense2_camera_manager\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"depth_cam_link" -> "depth_cam_accel_frame"[label=" Broadcaster: /depth_cam/realsense2_camera_manager\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"depth_cam_link" -> "depth_cam_depth_frame"[label=" Broadcaster: /depth_cam/realsense2_camera_manager\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"track_cam_accel_frame" -> "track_cam_accel_optical_frame"[label=" Broadcaster: /track_cam/realsense2_camera_manager\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 1645246939.18"[ shape=plaintext ] ;
+}->"world";
+}

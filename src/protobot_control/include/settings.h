@@ -25,13 +25,14 @@ SOFTWARE. */
 
 #include <string>
 
-#define BAUD_RATE B115200
-
 struct settings {
     std::string serialPortAddr    = "/dev/ttyAMA0";
+    std::string rightJoints[3];
+    std::string leftJoints[3];
     int timeout_ms                = 12;
     int retries                   = 3;
     int max_buf_size              = 100;
+    int baud_rate                 = 115200;
     uint8_t m1_forward            = 0;
     uint8_t m2_forward            = 4;
     uint8_t m1_backward           = 1;
