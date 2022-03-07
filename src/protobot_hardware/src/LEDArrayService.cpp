@@ -23,6 +23,34 @@ SOFTWARE. */
 #include "../include/LEDArrayService.h"
 #include "../include/LEDSettings.h"
 
+int main (int argc, char** argv) {
+  ros::init(argc, argv, "LED_array_server");
+  ROS_INFO("Initializing LED array toggle service");
+
+  ros::NodeHandle nh;
+  ros::Rate rate(1.0);
+  ros::AsyncSpinner spinner(4);
+  spinner.start();
+
+  LEDSettings* ls_ptr = new LEDSettings;
+  LEDArrayService LEDArray_Service(ls_ptr, &nh);
+  LEDArray LED_array(ls_ptr);
+
+  LED_array.LEDInit();
+
+  while (ros::ok()) {
+    LEDArray_Service.AdvertiseService(&LEDArray_Service, &nh);
+    LEDArray_Service.SendCommandToHardware(ls_ptr, &LED_array);
+    ros::spinOnce();
+    rate.sleep();
+  }
+
+  LED_array.LEDQuit();
+  delete ls_ptr;
+
+  return 0;
+}
+
 LEDArrayService::LEDArrayService(LEDSettings* ls, ros::NodeHandle* nh) {
   GetYamlParams(ls, nh);
 }
@@ -32,8 +60,9 @@ void LEDArrayService::GetYamlParams(LEDSettings* ls, ros::NodeHandle* nh) {
   nh->getParam("/LED_array_settings/baud_rate", ls->baudRate);
 }
 
-bool LEDArrayService::LEDCommandStatusCallback(protobot_hardware::LED_toggle::Request& req,
-                                          protobot_hardware::LED_toggle::Response& res) {
+bool LEDArrayService::LEDCommandStatusCallback(
+    protobot_hardware::LED_toggle::Request& req,
+    protobot_hardware::LED_toggle::Response& res) {
   ROS_WARN("IS THIS CALLBACK WORKING?");
   for (int8_t i = 0; i < 3; i++) {
     if (req.LED_toggle == i) {
@@ -62,33 +91,4 @@ void LEDArrayService::SendCommandToHardware(LEDSettings* ls, LEDArray* LED_array
     if (ls->cmd == i)
       LED_array->ToggleLEDArray(ls->cmd);
   }
-}
-
-int main(int argc, char** argv) {
-
-  ros::init(argc, argv, "LED_array_server");
-  ROS_INFO("Initializing LED array toggle service");
-
-  ros::NodeHandle nh;
-  ros::Rate rate(1.0);
-  ros::AsyncSpinner spinner(4);
-  spinner.start();
-
-  LEDSettings* ls_ptr = new LEDSettings;
-  LEDArrayService LEDArray_Service(ls_ptr, &nh);
-  LEDArray LED_array(ls_ptr);
-
-  LED_array.LEDInit();
-
-  while (ros::ok()) {
-    LEDArray_Service.AdvertiseService(&LEDArray_Service, &nh);
-    LEDArray_Service.SendCommandToHardware(ls_ptr, &LED_array);
-    ros::spinOnce();
-    rate.sleep();
-  }
-
-  LED_array.LEDQuit();
-  delete ls_ptr;
-
-  return 0;
 }
