@@ -20,8 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#include "../include/LEDSettings.h"
-#include "../include/LEDArray.h"
 #include <fcntl.h>
 #include <errno.h>
 #include <termios.h>
@@ -31,6 +29,8 @@ SOFTWARE. */
 #include <math.h>
 #include <cstdlib>
 #include <cstring>
+#include "../include/LEDSettings.h"
+#include "../include/LEDArray.h"
 
 LEDArray::LEDArray(LEDSettings* ls_ptr) {
   for (int i = 0; i < 256; i++)
@@ -133,6 +133,12 @@ void LEDArray::LEDQuit() {
 
 int LEDArray::ClearIOBuffers() {
   return tcflush(serialPort, TCIOFLUSH);
+}
+
+void LEDArray::ToggleLEDArray(int8_t flag) {
+  int writeFlag = write(serialPort, &flag, 1);
+  ROS_INFO("Wrote [%d] bytes to LED Array", writeFlag);
+  ClearIOBuffers();
 }
 
 

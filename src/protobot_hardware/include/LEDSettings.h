@@ -23,11 +23,13 @@ SOFTWARE. */
 #ifndef SRC_PROTOBOT_HARDWARE_INCLUDE_LEDSETTINGS_H_
 #define SRC_PROTOBOT_HARDWARE_INCLUDE_LEDSETTINGS_H_
 
+#include <stdint.h>
 #include <string>
 
 struct LEDSettings {
   int baudRate;
   std::string serialPortAddr;
+  int8_t cmd, reply;
 };
 
 #endif  // SRC_PROTOBOT_HARDWARE_INCLUDE_LEDSETTINGS_H_

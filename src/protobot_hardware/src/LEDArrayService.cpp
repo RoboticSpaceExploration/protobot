@@ -22,28 +22,25 @@ SOFTWARE. */
 
 #include "../include/LEDArrayService.h"
 #include "../include/LEDSettings.h"
-#include "../include/LEDArray.h"
 
-LEDArrayService::LEDArrayService(LEDSettings* ls) {
-  GetYamlParams(ls);
+LEDArrayService::LEDArrayService(LEDSettings* ls, ros::NodeHandle* nh) {
+  GetYamlParams(ls, nh);
 }
 
-void LEDArrayService::ToggleLEDArray() {
-
+void LEDArrayService::GetYamlParams(LEDSettings* ls, ros::NodeHandle* nh) {
+  nh->getParam("/LED_array_settings/serial_port", ls->serialPortAddr);
+  nh->getParam("/LED_array_settings/baud_rate", ls->baudRate);
 }
 
-void LEDArrayService::GetYamlParams(LEDSettings* ls) {
-  nh.getParam("/LED_array_settings/serial_port", ls->serialPortAddr);
-  nh.getParam("/LED_array_settings/baud_rate", ls->baudRate);
-}
-
-bool LEDArrayService::SendCommand(protobot_hardware::LED_toggle::Request& req,
-                                  protobot_hardware::LED_toggle::Response& res) {
+bool LEDArrayService::LEDCommandStatusCallback(protobot_hardware::LED_toggle::Request& req,
+                                          protobot_hardware::LED_toggle::Response& res) {
+  ROS_WARN("IS THIS CALLBACK WORKING?");
   for (int8_t i = 0; i < 3; i++) {
     if (req.LED_toggle == i) {
-      ROS_INFO("LED Array Command: [%d]", req.LED_toggle);
-      ToggleLEDArray();
-      res.reply = true;
+      ROS_WARN("Received LED Array Command: [%d]", req.LED_toggle);
+      cmd = req.LED_toggle;
+      res.reply = true;  // copy LED command to class
+      reply = true;      // copy reply to class
       return true;
     }
   }
@@ -51,10 +48,20 @@ bool LEDArrayService::SendCommand(protobot_hardware::LED_toggle::Request& req,
   return false;
 }
 
-void LEDArrayService::AdvertiseService() {
-  service = nh.advertiseService(
-      "toggle_LED_array", &LEDArrayService::SendCommand, this);
+void LEDArrayService::AdvertiseService(LEDArrayService* LEDArray_Service, ros::NodeHandle* nh) {
   ROS_INFO("Advertising LED array service");
+  service = nh->advertiseService(
+      "toggle_LED_array", &LEDArrayService::LEDCommandStatusCallback,
+      LEDArray_Service);
+}
+
+void LEDArrayService::SendCommandToHardware(LEDSettings* ls, LEDArray* LED_array) {
+  ls->cmd = cmd;
+  ls->reply = reply;
+  for (int8_t i = 0; i < 3; i++) {
+    if (ls->cmd == i)
+      LED_array->ToggleLEDArray(ls->cmd);
+  }
 }
 
 int main(int argc, char** argv) {
@@ -62,15 +69,23 @@ int main(int argc, char** argv) {
   ros::init(argc, argv, "LED_array_server");
   ROS_INFO("Initializing LED array toggle service");
 
-  LEDSettings* ls_ptr = new LEDSettings;
-  LEDArrayService LEDArray_Service(ls_ptr);
-  LEDArray LED_array(ls_ptr);
+  ros::NodeHandle nh;
+  ros::Rate rate(1.0);
+  ros::AsyncSpinner spinner(4);
+  spinner.start();
 
-  LEDArray_Service.AdvertiseService();
+  LEDSettings* ls_ptr = new LEDSettings;
+  LEDArrayService LEDArray_Service(ls_ptr, &nh);
+  LEDArray LED_array(ls_ptr);
 
   LED_array.LEDInit();
 
-  ros::spin();
+  while (ros::ok()) {
+    LEDArray_Service.AdvertiseService(&LEDArray_Service, &nh);
+    LEDArray_Service.SendCommandToHardware(ls_ptr, &LED_array);
+    ros::spinOnce();
+    rate.sleep();
+  }
 
   LED_array.LEDQuit();
   delete ls_ptr;

@@ -24,21 +24,23 @@ SOFTWARE. */
 #define SRC_PROTOBOT_HARDWARE_INCLUDE_LEDARRAYSERVICE_H_
 
 #include <ros/ros.h>
-#include "LEDSettings.h"
+#include "../include/LEDSettings.h"
+#include "../include/LEDArray.h"
 #include "protobot_hardware/LED_toggle.h"
 
 class LEDArrayService {
  public:
-  explicit LEDArrayService(LEDSettings* ls);
-  bool SendCommand(protobot_hardware::LED_toggle::Request& req,
-                   protobot_hardware::LED_toggle::Response& res);
-  void ToggleLEDArray();
-  void AdvertiseService();
+  LEDArrayService(LEDSettings* ls, ros::NodeHandle* nh);
+  bool LEDCommandStatusCallback(
+      protobot_hardware::LED_toggle::Request& req,
+      protobot_hardware::LED_toggle::Response& res);
+  void AdvertiseService(LEDArrayService* LEDArray_Service, ros::NodeHandle* nh);
+  void SendCommandToHardware(LEDSettings* ls, LEDArray* LED_array);
 
  private:
-  void GetYamlParams(LEDSettings* ls);
-  ros::NodeHandle nh;
+  void GetYamlParams(LEDSettings* ls, ros::NodeHandle* nh);
   ros::ServiceServer service;
+  int8_t cmd, reply;
 };
 
 #endif  // SRC_PROTOBOT_HARDWARE_INCLUDE_LEDARRAYSERVICE_H_
