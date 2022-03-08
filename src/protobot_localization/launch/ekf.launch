@@ -1,17 +1,15 @@
 <launch>
 	<node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform_node" respawn="true">
-		<param name="magnetic_declination_radians" value="0.0445059"/>
-		<param name="yaw_offset" value="1.57079632"/>
-		
+        <param name="magnetic_declination_radians" value="0.165806"/>
 		<remap from="odometry/filtered" to="localization/filtered/odom_global"/>
 		<remap from="odometry/gps" to="/localization/unfiltered/gps_odom"/>
 		<remap from="imu/data" to="imu/data"/>
 		<remap from="gps/fix" to="gps/fix"/>
-		<param name="zero_altitude" value="false"/>
+		<param name="zero_altitude" value="true"/>
 	</node>
 	<node pkg="robot_localization" type="ekf_localization_node" name="global_ekf">
 		<param name="frequency" value="5"/>
-		<param name="sensor_timeout" value="0.1"/>
+		<param name="sensor_timeout" value="0.5"/>
 
 		<remap from="odometry/filtered" to="localization/filtered/odom_global"/>
 		<param name="publish_tf" value="true"/>
@@ -19,21 +17,20 @@
 		<param name="odom_frame" value="odom"/>
 		<param name="base_link_frame" value="base_link"/>
 		<param name="world_frame" value="map"/> 
-		<param name="two_d_mode" value="false"/>
+		<param name="two_d_mode" value="true"/>
 	
-	        <param name="odom0" value="localization/unfiltered/gps_odom"/>
-		<param name="imu0" value="imu/data"/>
+	    <param name="odom0" value="/localization/unfiltered/gps_odom"/>
+		<param name="imu0" value="/imu/data"/>
 		
-                <rosparam param="imu0_config">[false, false, false,
+        <rosparam param="imu0_config">[false, false, false,
                                 true, true, true,
-                                false, false, false,
-                                false, false, true,
+                                true, true, true,
+                                true, true, true,
                                 true, true, true]</rosparam>
 		<rosparam param="odom0_config">[true, true, true,
                                 false, false, false,
                                 false, false, false,
                                 false, false, false,
                                 false, false, false]</rosparam>
-		<rosparam param="odom1_differential" value="false"/>
 	</node>
 </launch>
