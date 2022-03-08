@@ -28,6 +28,10 @@ int main(int argc, char** argv) {
   ros::init(argc, argv, "LED_toggle_client_node");
   if (argc != 2) {
     ROS_INFO("USAGE: [cmd] between 0-3");
+    ROS_INFO("\n[0] : Flashing Success\n"
+             "[1] : Autonomous Mode\n"
+             "[2] : Teleop Mode\n"
+             "[3] : Off");
     return 1;
   }
 
@@ -40,7 +44,7 @@ int main(int argc, char** argv) {
   srv.request.LED_toggle = static_cast<int8_t>(atoi(argv[1]));
 
   if (client.call(srv)) {
-    ROS_INFO("Command sent to server: [%d]", srv.request.LED_toggle);
+    ROS_INFO("Command sent to LED_toggle_server: [%d]", srv.request.LED_toggle);
   } else {
     ROS_ERROR("[%d] is not a valid command "
               "cannot connect to LED_toggle_server",

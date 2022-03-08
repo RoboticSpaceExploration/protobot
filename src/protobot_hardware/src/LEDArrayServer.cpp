@@ -24,8 +24,8 @@ SOFTWARE. */
 #include "../include/LEDSettings.h"
 
 int main(int argc, char** argv) {
-  ros::init(argc, argv, "LED_array_server_node");
-  ROS_INFO("Initializing LED array toggle server");
+  ros::init(argc, argv, "protobot_hardware_LED_array_server_node");
+  ROS_INFO("Initializing LED_toggle_server");
 
   LEDSettings* ls_ptr = new LEDSettings;
 
@@ -51,18 +51,22 @@ bool LEDArrayServer::LEDCommandStatusCallback(
     protobot_hardware::LED_toggle::Response& res) {
   for (int8_t i = 0; i <= 3; i++) {
     if (req.LED_toggle == i) {
+      CheckLEDToggle(req.LED_toggle);
+      ROS_INFO("Received valid command from LED_toggle_client: "
+               "Command: [%d]", req.LED_toggle);
+      ROS_INFO("Toggling LED Array");
       LED_array.ToggleLEDArray(req.LED_toggle);
       res.reply = true;
       return true;
     }
   }
-
+  ROS_INFO("Invalid command: [%d]", req.LED_toggle);
   return false;
 }
 
 void LEDArrayServer::AdvertiseServerCheckCallback(
     LEDArrayServer* LEDArray_Server) {
-  ROS_INFO("Advertising LED array server");
+  ROS_INFO("Advertising LED_toggle_server");
   service = nh.advertiseService(
       "LED_toggle_server", &LEDArrayServer::LEDCommandStatusCallback,
       LEDArray_Server);
@@ -71,4 +75,23 @@ void LEDArrayServer::AdvertiseServerCheckCallback(
 void LEDArrayServer::GetYamlParams(LEDSettings* ls_ptr) {
   nh.getParam("/LED_array_settings/serial_port", ls_ptr->serialPortAddr);
   nh.getParam("/LED_array_settings/baud_rate", ls_ptr->baudRate);
+}
+
+void LEDArrayServer::CheckLEDToggle(int8_t cmd) {
+  switch (cmd) {
+    case 0:
+      ROS_INFO("Flashing Green Success");
+      break;
+    case 1:
+      ROS_INFO("Autonomous Mode");
+      break;
+    case 2:
+      ROS_INFO("Teleop Mode");
+      break;
+    case 3:
+      ROS_INFO("LED Matrix Off");
+      break;
+    default:
+      break;
+  }
 }
