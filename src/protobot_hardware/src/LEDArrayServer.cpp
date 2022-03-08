@@ -60,7 +60,7 @@ bool LEDArrayServer::LEDCommandStatusCallback(
       return true;
     }
   }
-  ROS_INFO("Invalid command: [%d]", req.LED_toggle);
+  ROS_ERROR("Invalid command: [%d]", req.LED_toggle);
   return false;
 }
 
