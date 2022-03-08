@@ -24,8 +24,8 @@ SOFTWARE. */
 #include "../include/LEDSettings.h"
 
 int main(int argc, char** argv) {
-  ros::init(argc, argv, "protobot_hardware_LED_array_server_node");
-  ROS_INFO("Initializing LED_toggle_server");
+  ros::init(argc, argv, "LED_toggle_server_node");
+  ROS_INFO("Initializing LED_toggle_server_node");
 
   LEDSettings* ls_ptr = new LEDSettings;
 
