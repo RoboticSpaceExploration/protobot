@@ -31,48 +31,93 @@ SOFTWARE. */
 #include <cstring>
 #include "../include/roboclaw.h"
 
-#define RECOMBINE_BUFFER(X) \
-(((X)[3]) << 24 | ((X)[2]) << 16 | ((X)[1]) << 8 | ((X)[0]))
-
 roboclaw::roboclaw(settings* es_protobot) {
+    for (int i = 0; i < 256; i++)
+        errorBuf[i] = 0x00;
     zeroCmdVelCount = 0;
     es = es_protobot;
+    GetBaudRate();
+}
+
+uint32_t roboclaw::RecombineBuffer(uint8_t* buf) {
+    return (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]);
+}
+
+void roboclaw::GetBaudRate() {
+    switch (es->baud_rate) {
+        case 9600:
+            baudRate = B9600;
+            break;
+        case 19200:
+            baudRate = B19200;
+            break;
+        case 38400:
+            baudRate = B38400;
+            break;
+        case 57600:
+            baudRate = B57600;
+            break;
+        case 115200:
+            baudRate = B115200;
+            break;
+        case 230400:
+            baudRate = B230400;
+            break;
+        case 460800:
+            baudRate = B460800;
+            break;
+        default:
+            ROS_ERROR("Invalid Baud Rate Selection, setting to 115200");
+            baudRate = B115200;
+            break;
+    }
 }
 
 /* Send and execute commands to encoders. Returns -1 or es.retries on failure, 1 on success. Commands will be sent up to max es.retries.
    Successful writes to encoders are then polled to check if data is available to be read back. Once data is available, the data
    is read back, then the user's I/O buffers are cleared. */
 
-int roboclaw::SendCommands(uint8_t* data, int writeBytes, int readBytes) {
+void roboclaw::SendCommands(uint8_t* data, int writeBytes, int readBytes) {
     int r, writeFlag, readFlag, flushFlag, waitStatus;
 
-    for (r=0; r < es->retries; ++r) {
-        for ( ; r < es->retries; ++r) {
-            writeFlag = WriteToEncoders(data, writeBytes);
-            if (writeFlag == -1) return -1;
+    // write to encoders for specified number of retries
 
+    for (r = 0; r <= es->retries; r++) {
+        writeFlag = WriteToEncoders(data, writeBytes);
+        if (writeBytes == -1)
+            ROS_WARN("CMD TO ENCODERS DID NOT SUCCEED, "
+                     "RETRYING");
+        if (writeFlag == writeBytes) {
             waitStatus = WaitReadStatus(readBytes, es->timeout_ms);
-
-            if (waitStatus == 1) break;  // data is available to be read back
-            if (waitStatus == -1 || waitStatus == 0) return -1;
-
-            flushFlag = ClearIOBuffers();
-            if (flushFlag == -1) return -1;
+            if (waitStatus >= 1)
+                break;  // data available to be read back
+            if (waitStatus == -1 || waitStatus == 0) {
+                ROS_WARN("ERROR POLLING AVAILABLE DATA ON SERIAL PORT, "
+                         "RESENDING COMMAND");
+            }
         }
 
-        if (r >= es->retries) return -1;
-
-        readFlag = ReadFromEncoders(readBytes);
-        if (readFlag > 0) return 1;
-        if (readFlag == -1) return -1;
-
-        assert(readFlag == readBytes);
-
         flushFlag = ClearIOBuffers();
-        if (flushFlag == -1) return -1;
+        if (flushFlag == -1)
+            ROS_WARN("COULD NOT CLEAR IO BUFFERS");
     }
 
-    return r;  // max retries exceeded
+    // read from encoders for specified number of retries
+
+    for (r = 0; r < es->retries; r++) {
+        if (r > es->retries)
+            ROS_WARN("MAX RETRIES EXCEEDED");
+
+        readFlag = ReadFromEncoders(readBytes);
+        if (readFlag == -1)
+            ROS_WARN("COULD NOT READ BACK JOINT STATUS");
+        if (readFlag == readBytes)  // data has been read into buffer
+            break;
+    }
+
+    flushFlag = ClearIOBuffers();
+    if (flushFlag == -1)
+        ROS_WARN("COULD NOT CLEAR IO BUFFERS");
 }
 
 int roboclaw::ClearIOBuffers() {
@@ -86,17 +131,19 @@ void roboclaw::SetupEncoders() {
     // enable read & write, disable controlling terminal
     serialPort = open(es->serialPortAddr.c_str(), O_RDWR | O_NOCTTY);
 
-    fcntl(serialPort, F_SETFL, 0);  // set to blocking mode (for reads)
-
     if (serialPort < 0) {
-        ROS_INFO("Could not open %s: ", es->serialPortAddr.c_str());
-        ROS_INFO("Error %i from open: %s\n", errno, strerror(errno));
-        exit(1);
+        errorBufPtr = strerror_r(errno, errorBuf, sizeof(errorBuf));
+        ROS_ERROR("Could not open %s: Error %i from open: %s",
+                 es->serialPortAddr.c_str(), errno, errorBufPtr);
+        exit(EXIT_FAILURE);
     }
 
+    fcntl(serialPort, F_SETFL, 0);  // set to blocking mode (for reads)
+
     if (tcgetattr(serialPort, &tty) != 0) {
-        ROS_INFO("Error %i from tcgetattr: %s\n", errno, strerror(errno));
-        exit(1);
+        errorBufPtr = strerror_r(errno, errorBuf, sizeof(errorBuf));
+        ROS_ERROR("Error %i from tcgetattr: %s", errno, errorBufPtr);
+        exit(EXIT_FAILURE);
     }
 
     // set necessary bits
@@ -125,13 +172,15 @@ void roboclaw::SetupEncoders() {
 
     // set baud rates
 
-    cfsetispeed(&tty, BAUD_RATE);
-    cfsetospeed(&tty, BAUD_RATE);
+    cfsetispeed(&tty, baudRate);
+    cfsetospeed(&tty, baudRate);
 
     // save flag settings
 
-    if (tcsetattr(serialPort, TCSANOW, &tty) != 0)
-        ROS_INFO("Error %i from tcsetattr: %s\n", errno, strerror(errno));
+    if (tcsetattr(serialPort, TCSANOW, &tty) != 0) {
+        strerror_r(errno, errorBuf, sizeof(errorBuf));
+        ROS_ERROR("Error %i from tcsetattr: %s", errno, errorBuf);
+    }
 
     ClearIOBuffers();
 }
@@ -365,32 +414,32 @@ void roboclaw::GetVelocityFromWheels(double* vel) {
     // return positive or negative value from encoders, depending on direction
     ReadEncoderSpeedM1(0x80);  // right_front
     vel[0] = ConvertPulsesToRadians(
-        static_cast<double> (RECOMBINE_BUFFER(buf)));
+        static_cast<double> (RecombineBuffer(buf)));
     if (buf[4] == 1) vel[0] = -vel[0];
 
     ReadEncoderSpeedM2(0x80);  // right_middle
     vel[1] = ConvertPulsesToRadians(
-        static_cast<double> (RECOMBINE_BUFFER(buf)));
+        static_cast<double> (RecombineBuffer(buf)));
     if (buf[4] == 1) vel[0] = -vel[0];
 
     ReadEncoderSpeedM1(0x81);  // right_back
     vel[2] = ConvertPulsesToRadians(
-        static_cast<double> (RECOMBINE_BUFFER(buf)));
+        static_cast<double> (RecombineBuffer(buf)));
     if (buf[4] == 1) vel[0] = -vel[0];
 
     ReadEncoderSpeedM2(0x82);  // left_front
     vel[3] = ConvertPulsesToRadians(
-        static_cast<double> (RECOMBINE_BUFFER(buf)));
+        static_cast<double> (RecombineBuffer(buf)));
     if (buf[4] == 1) vel[0] = -vel[0];
 
     ReadEncoderSpeedM1(0x82);  // left_middle
     vel[4] = ConvertPulsesToRadians(
-        static_cast<double> (RECOMBINE_BUFFER(buf)));
+        static_cast<double> (RecombineBuffer(buf)));
     if (buf[4] == 1) vel[0] = -vel[0];
 
     ReadEncoderSpeedM2(0x81);  // left_back
     vel[5] = ConvertPulsesToRadians(
-        static_cast<double> (RECOMBINE_BUFFER(buf)));
+        static_cast<double> (RecombineBuffer(buf)));
     if (buf[4] == 1) vel[0] = -vel[0];
 }
 
