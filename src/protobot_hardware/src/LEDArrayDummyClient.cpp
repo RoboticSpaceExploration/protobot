@@ -45,10 +45,12 @@ int main(int argc, char** argv) {
 
   if (client.call(srv)) {
     ROS_INFO("Command sent to LED_toggle_server: [%d]", srv.request.LED_toggle);
+    ROS_INFO("Reply: [%d]", srv.response.reply);
   } else {
     ROS_ERROR("[%d] is not a valid command "
               "cannot connect to LED_toggle_server",
               srv.request.LED_toggle);
+    ROS_ERROR("Reply: [%d]", srv.response.reply);
     return 1;
   }
 
