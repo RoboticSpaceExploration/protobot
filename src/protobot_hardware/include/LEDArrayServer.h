@@ -20,27 +20,27 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef SRC_PROTOBOT_HARDWARE_INCLUDE_LEDARRAYSERVICE_H_
-#define SRC_PROTOBOT_HARDWARE_INCLUDE_LEDARRAYSERVICE_H_
+#ifndef SRC_PROTOBOT_HARDWARE_INCLUDE_LEDARRAYSERVER_H_
+#define SRC_PROTOBOT_HARDWARE_INCLUDE_LEDARRAYSERVER_H_
 
 #include <ros/ros.h>
+#include "protobot_hardware/LED_toggle.h"
 #include "../include/LEDSettings.h"
 #include "../include/LEDArray.h"
-#include "protobot_hardware/LED_toggle.h"
 
-class LEDArrayService {
+class LEDArrayServer {
  public:
-  LEDArrayService(LEDSettings* ls, ros::NodeHandle* nh);
-  void AdvertiseService(LEDArrayService* LEDArray_Service, ros::NodeHandle* nh);
-  void SendCommandToHardware(LEDSettings* ls, LEDArray* LED_array);
+  explicit LEDArrayServer(LEDSettings* ls_ptr);
+  void AdvertiseServerCheckCallback(LEDArrayServer* LEDArray_Server);
+  LEDArray LED_array;
 
  private:
-  void GetYamlParams(LEDSettings* ls, ros::NodeHandle* nh);
+  void GetYamlParams(LEDSettings* ls_ptr);
   bool LEDCommandStatusCallback(
       protobot_hardware::LED_toggle::Request& req,
       protobot_hardware::LED_toggle::Response& res);
   ros::ServiceServer service;
-  int8_t cmd, reply;
+  ros::NodeHandle nh;
 };
 
-#endif  // SRC_PROTOBOT_HARDWARE_INCLUDE_LEDARRAYSERVICE_H_
+#endif  // SRC_PROTOBOT_HARDWARE_INCLUDE_LEDARRAYSERVER_H_

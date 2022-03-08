@@ -111,11 +111,23 @@ include_directories(
  ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(${PROJECT_NAME}_LED_array_node src/LEDArray.cpp src/LEDArrayService.cpp)
+# server node
 
-add_dependencies(${PROJECT_NAME}_LED_array_node ${PROJECT_NAME}_generate_messages_cpp)
+add_executable(${PROJECT_NAME}_LED_array_server_node src/LEDArray.cpp src/LEDArrayServer.cpp)
 
-target_link_libraries(${PROJECT_NAME}_LED_array_node ${catkin_LIBRARIES})
+add_dependencies(${PROJECT_NAME}_LED_array_server_node ${PROJECT_NAME}_generate_messages_cpp)
+
+target_link_libraries(${PROJECT_NAME}_LED_array_server_node ${catkin_LIBRARIES})
+
+link_directories(${catkin_LIBRARY_DIRS})
+
+# client node (dummy client for now)
+
+add_executable(${PROJECT_NAME}_LED_array_client_node src/LEDArrayDummyClient.cpp)
+
+add_dependencies(${PROJECT_NAME}_LED_array_client_node ${PROJECT_NAME}_generate_messages_cpp)
+
+target_link_libraries(${PROJECT_NAME}_LED_array_client_node ${catkin_LIBRARIES})
 
 link_directories(${catkin_LIBRARY_DIRS})
 

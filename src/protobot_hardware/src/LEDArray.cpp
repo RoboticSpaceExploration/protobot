@@ -32,10 +32,9 @@ SOFTWARE. */
 #include "../include/LEDSettings.h"
 #include "../include/LEDArray.h"
 
-LEDArray::LEDArray(LEDSettings* ls_ptr) {
+LEDArray::LEDArray() {
   for (int i = 0; i < 256; i++)
     errorBuf[i] = 0x00;
-  ls = ls_ptr;
 }
 
 void LEDArray::GetBaudRate() {
@@ -68,7 +67,8 @@ void LEDArray::GetBaudRate() {
   }
 }
 
-void LEDArray::LEDInit() {
+void LEDArray::LEDInit(LEDSettings* ls_ptr) {
+  ls = ls_ptr;
   // enable read & write, disable controlling terminal
   serialPort = open(ls->serialPortAddr.c_str(), O_RDWR | O_NOCTTY);
 
@@ -135,8 +135,13 @@ int LEDArray::ClearIOBuffers() {
 }
 
 void LEDArray::ToggleLEDArray(int8_t flag) {
-  int writeFlag = write(serialPort, &flag, 1);
-  ROS_INFO("Wrote [%d] bytes to LED Array", writeFlag);
+  ClearIOBuffers();
+  int writeFlag;
+  for (int i = 0; i < 4; i++) {
+    writeFlag = write(serialPort, &flag, 1);
+    usleep(250000);
+  }
+  ROS_INFO("Wrote [%d] byte(s) to LED Array: cmd: [%d]", writeFlag, flag);
   ClearIOBuffers();
 }
 

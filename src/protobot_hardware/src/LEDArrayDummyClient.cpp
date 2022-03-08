@@ -20,30 +20,33 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef SRC_PROTOBOT_HARDWARE_INCLUDE_LEDARRAY_H_
-#define SRC_PROTOBOT_HARDWARE_INCLUDE_LEDARRAY_H_
-
-#include <ros/ros.h>
-#include <termios.h>
+#include "ros/ros.h"
 #include <stdint.h>
-#include "../include/LEDSettings.h"
+#include "protobot_hardware/LED_toggle.h"
 
-class LEDArray {
- public:
-  LEDArray();
-  void LEDInit(LEDSettings* ls_ptr);
-  void LEDQuit();
-  void ToggleLEDArray(int8_t flag);
+int main (int argc, char** argv) {
+  ros::init(argc, argv, "LED_toggle_client_node");
+  if (argc != 2) {
+    ROS_INFO("USAGE: [cmd] between 0-3");
+    return 1;
+  }
 
- private:
-  int ClearIOBuffers();
-  void GetBaudRate();
-  termios tty;
-  int serialPort;
-  unsigned int baudRate;
-  LEDSettings* ls;
-  char* errorBufPtr;
-  char errorBuf[256];
-};
+  ros::NodeHandle nh;
+  ros::ServiceClient client = nh.serviceClient<protobot_hardware::LED_toggle>
+      ("LED_toggle_server");
 
-#endif  // SRC_PROTOBOT_HARDWARE_INCLUDE_LEDARRAY_H_
+  protobot_hardware::LED_toggle srv;
+
+  srv.request.LED_toggle = static_cast<int8_t>(atoi(argv[1]));
+
+  if (client.call(srv)) {
+    ROS_INFO("Command sent to server: [%d]", srv.request.LED_toggle);
+  } else {
+    ROS_ERROR("[%d] is not a valid command, cannot connect to LED_toggle_server",
+              srv.request.LED_toggle);
+    return 1;
+  }
+
+  return 0;
+}
+
