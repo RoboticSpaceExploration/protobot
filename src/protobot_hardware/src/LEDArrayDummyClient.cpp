@@ -20,11 +20,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#include "ros/ros.h"
 #include <stdint.h>
+#include "ros/ros.h"
 #include "protobot_hardware/LED_toggle.h"
 
-int main (int argc, char** argv) {
+int main(int argc, char** argv) {
   ros::init(argc, argv, "LED_toggle_client_node");
   if (argc != 2) {
     ROS_INFO("USAGE: [cmd] between 0-3");
@@ -42,7 +42,8 @@ int main (int argc, char** argv) {
   if (client.call(srv)) {
     ROS_INFO("Command sent to server: [%d]", srv.request.LED_toggle);
   } else {
-    ROS_ERROR("[%d] is not a valid command, cannot connect to LED_toggle_server",
+    ROS_ERROR("[%d] is not a valid command "
+              "cannot connect to LED_toggle_server",
               srv.request.LED_toggle);
     return 1;
   }
