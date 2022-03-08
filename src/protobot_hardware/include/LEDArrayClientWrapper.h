@@ -20,39 +20,23 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
+#ifndef SRC_PROTOBOT_HARDWARE_INCLUDE_LEDARRAYCLIENTWRAPPER_H_
+#define SRC_PROTOBOT_HARDWARE_INCLUDE_LEDARRAYCLIENTWRAPPER_H_
+
 #include <stdint.h>
 #include "ros/ros.h"
 #include "protobot_hardware/LED_toggle.h"
 
-int main(int argc, char** argv) {
-  ros::init(argc, argv, "LED_toggle_client_node");
-  if (argc != 2) {
-    ROS_INFO("USAGE: [cmd] between 0-3\n"
-             "[0] : Flashing Success\n"
-             "[1] : Autonomous Mode\n"
-             "[2] : Teleop Mode\n"
-             "[3] : Off");
-    return 1;
-  }
-
+class LEDArrayClientWrapper {
+ public:
+  LEDArrayClientWrapper();
+  void ToggleLEDStatus(int cmd);
+ private:
+  void CallServer();
   ros::NodeHandle nh;
-  ros::ServiceClient client = nh.serviceClient<protobot_hardware::LED_toggle>
-      ("LED_toggle_server");
-
+  ros::ServiceClient client;
   protobot_hardware::LED_toggle srv;
+  bool serverStatus;
+};
 
-  srv.request.LED_toggle = static_cast<int8_t>(atoi(argv[1]));
-
-  if (client.call(srv)) {
-    ROS_INFO("Command sent to LED_toggle_server: [%d]", srv.request.LED_toggle);
-    ROS_INFO("Reply: [%d]", srv.response.reply);
-  } else {
-    ROS_ERROR("[%d] is not a valid command ",
-              srv.request.LED_toggle);
-    ROS_ERROR("Reply: [%d]", srv.response.reply);
-    return 1;
-  }
-
-  return 0;
-}
-
+#endif  // SRC_PROTOBOT_HARDWARE_INCLUDE_LEDARRAYCLIENTWRAPPER_H_

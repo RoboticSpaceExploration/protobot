@@ -49,13 +49,18 @@ LEDArrayServer::LEDArrayServer(LEDSettings* ls_ptr) {
 bool LEDArrayServer::LEDCommandStatusCallback(
     protobot_hardware::LED_toggle::Request& req,
     protobot_hardware::LED_toggle::Response& res) {
+
   for (int8_t i = 0; i <= 3; i++) {
     if (req.LED_toggle == i) {
-      CheckLEDToggle(req.LED_toggle);
       ROS_INFO("Received valid command from LED_toggle_client: "
                "Command: [%d]", req.LED_toggle);
+
+      CheckLEDToggle(req.LED_toggle);
+
       ROS_INFO("Toggling LED Array");
+
       LED_array.ToggleLEDArray(req.LED_toggle);
+
       res.reply = true;
       return true;
     }
@@ -66,7 +71,7 @@ bool LEDArrayServer::LEDCommandStatusCallback(
 
 void LEDArrayServer::AdvertiseServerCheckCallback(
     LEDArrayServer* LEDArray_Server) {
-  ROS_INFO("Advertising LED_toggle_server");
+  ROS_INFO("Advertising as LED_toggle_server");
   service = nh.advertiseService(
       "LED_toggle_server", &LEDArrayServer::LEDCommandStatusCallback,
       LEDArray_Server);

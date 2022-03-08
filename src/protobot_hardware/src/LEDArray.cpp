@@ -139,8 +139,10 @@ void LEDArray::ToggleLEDArray(int8_t flag) {
   ClearIOBuffers();
   int writeFlag;
 
-  for (int i = 0; i < 4; i++)
+  for (int i = 0; i < 4; i++) {
     writeFlag = write(serialPort, &flag, 1);
+    usleep(100000);
+  }
 
   ROS_INFO("Wrote [%d] byte(s) to LED Array: cmd: [%d]", writeFlag, flag);
   ClearIOBuffers();
