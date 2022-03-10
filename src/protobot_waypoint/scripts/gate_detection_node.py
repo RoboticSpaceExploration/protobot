@@ -15,8 +15,9 @@ def callback(msg):
    vec1 = transform[0]
    vec2 = transform[1]
    vec3 = [vec1.translation.x - vec2.translation.x, vec1.translation.y - vec2.translation.y, vec1.translation.z - vec2.translation.z]
-   for i in range(0,3):
-      vec3[i] = vec3[i]/2 + vec1[i]
+   vec3[0] = vec3[0]/2 + vec1.translation.x
+   vec3[1] = vec3[1]/2 + vec1.translation.y
+   vec3[2] = vec3[2]/2 + vec1.translation.z
    magnitude = math.sqrt(vec3[0] ** 2 + vec3[1] ** 2 + vec3[2] ** 2)
    for i in range(0,3):
       vec3[i] = vec3[i]/magnitude
