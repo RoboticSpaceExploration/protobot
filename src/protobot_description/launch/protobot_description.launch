@@ -9,6 +9,9 @@
     <node pkg="tf" type="static_transform_publisher" name="world_link_broadcaster" args="0 0 0 0 0 0 1 world map 5" />
     
     <node pkg="tf" type="static_transform_publisher" name="base_to_cam" args=" 0 0 0.5 0 1.57 0 base_link cam_link 100" />
-    
-    <node pkg="protobot_description" type="odom_to_tf_node" name="odom_to_tf_node"/>
+    <!-- 
+    <node pkg="protobot_description" type="odom_to_tf_node" name="odom_to_tf_node">
+    	<remap from="camera/odom/sample" to="track_cam/odom/sample"/>
+    </node>
+    -->
 </launch>

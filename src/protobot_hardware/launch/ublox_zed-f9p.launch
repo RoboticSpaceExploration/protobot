@@ -9,12 +9,5 @@
   <arg name="respawn_delay" value="30"/>
   <arg name="clear_params" value="false"/> 
  </include>
- 
-<!--
-<arg name="bags_directory" value="/home/roselab/Desktop/bags/gps"/>
-
-<node pkg="rosbag" name="record" type="record" args="record -o $(arg bags_directory)/bag /rosout /ublox_gps/fix /ublox_gps/fix_velocity"/>
--->
-
 </launch>
 

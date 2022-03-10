@@ -1,7 +1,12 @@
 <!-- Run the protobot_waypoint node -->
 <launch>
+
+  <include file="$(find protobot_waypoint)/launch/fiducial_rviz.launch"/>
+  <include file="$(find protobot_waypoint)/launch/fiducial_slam.launch"/>
+  <!--include file="$(find protobot_description)/launch/protobot_description.launch"/-->
+
   <!-- namespace for camera input -->
-  <arg name="camera" default="/camera/color/"/>
+  <arg name="camera" default="/depth_cam/color"/>
   <arg name="image" default="image_raw"/>
   <arg name="transport" default="raw"/>
   <arg name="fiducial_len" default="0.14"/>
@@ -24,8 +29,8 @@
     <param name="ignore_fiducials" value="$(arg ignore_fiducials)"/>
     <param name="fiducial_len_override" value="$(arg fiducial_len_override)"/>
     <param name="verbose" value="$(arg verbose)"/>
-    <remap from="camera/" 
-        to="$(arg camera)/$(arg image)/"/>
+    
+    <remap from="camera/" to="$(arg camera)/$(arg image)/"/>
     <remap from="camera_info" to="$(arg camera)/camera_info"/>
   </node>
 </launch>

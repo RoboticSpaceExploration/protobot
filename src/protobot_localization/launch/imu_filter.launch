@@ -1,0 +1,9 @@
+<launch>
+    <node type="imu_filter_node" name="imu_filter_madgwick" pkg="imu_filter_madgwick" output="screen">
+	    <param name="use_mag" type="bool" value="false"/>
+	    <param name="publish_tf" type="bool" value="false" />
+	    <param name="world_frame" type="string" value="enu" />
+        <remap from="/imu/data_raw" to="/track_cam/imu"/>
+        <param name="remove_gravity_vector" value="true"/>
+    </node>
+</launch>
