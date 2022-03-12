@@ -32,13 +32,13 @@ int main(int argc, char** argv) {
   LEDArrayClientWrapper ClientWrapper;
 
   // toggle LED matrix
-  ClientWrapper.ToggleLEDStatus(0);
-  sleep(2);
   ClientWrapper.ToggleLEDStatus(1);
   sleep(2);
   ClientWrapper.ToggleLEDStatus(2);
   sleep(2);
   ClientWrapper.ToggleLEDStatus(3);
+  sleep(2);
+  ClientWrapper.ToggleLEDStatus(4);
 
   // kill node once task is complete
   ros::shutdown();
