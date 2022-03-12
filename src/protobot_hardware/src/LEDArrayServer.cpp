@@ -50,7 +50,7 @@ bool LEDArrayServer::LEDCommandStatusCallback(
     protobot_hardware::LED_toggle::Request& req,
     protobot_hardware::LED_toggle::Response& res) {
 
-  for (int8_t i = 0; i <= 3; i++) {
+  for (uint8_t i = 1; i <= 4; i++) {
     if (req.LED_toggle == i) {
       ROS_INFO("Received valid command from LED_toggle_client: "
                "Command: [%d]", req.LED_toggle);
@@ -82,7 +82,7 @@ void LEDArrayServer::GetYamlParams(LEDSettings* ls_ptr) {
   nh.getParam("/LED_array_settings/baud_rate", ls_ptr->baudRate);
 }
 
-void LEDArrayServer::CheckLEDToggle(int8_t cmd) {
+void LEDArrayServer::CheckLEDToggle(uint8_t cmd) {
   switch (cmd) {
     case 0:
       ROS_INFO("Flashing Green Success");

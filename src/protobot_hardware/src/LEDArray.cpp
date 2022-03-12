@@ -135,7 +135,7 @@ int LEDArray::ClearIOBuffers() {
   return tcflush(serialPort, TCIOFLUSH);
 }
 
-void LEDArray::ToggleLEDArray(int8_t flag) {
+void LEDArray::ToggleLEDArray(uint8_t flag) {
   ClearIOBuffers();
   int writeFlag;
 

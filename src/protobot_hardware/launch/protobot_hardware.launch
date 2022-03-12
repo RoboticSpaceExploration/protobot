@@ -1,4 +1,4 @@
-<>
+<launch>
 	<remap from="/ublox_gps/fix" to="/gps/fix"/>
 	<remap from="/depth_cam/gyro/sample" to="/depth_cam/gyro/data"/>
 	<remap from="/depth_cam/accel/sample" to="/depth_cam/accel/data"/>
@@ -6,6 +6,6 @@
 	
 	<include file="$(find protobot_hardware)/launch/rs_d400_and_t265.launch"/>
 	<include file="$(find protobot_hardware)/launch/ublox_zed-f9p.launch"/>
-	<include file="$(find protobot_hardware)/launch/LED_array.launch"/>
+	<include file="$(find protobot_hardware)/launch/LED_array_server.launch"/>
 
 </launch>

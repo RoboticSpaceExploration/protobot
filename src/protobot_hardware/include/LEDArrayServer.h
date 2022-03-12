@@ -36,7 +36,7 @@ class LEDArrayServer {
 
  private:
   void GetYamlParams(LEDSettings* ls_ptr);
-  void CheckLEDToggle(int8_t cmd);
+  void CheckLEDToggle(uint8_t cmd);
   bool LEDCommandStatusCallback(
       protobot_hardware::LED_toggle::Request& req,
       protobot_hardware::LED_toggle::Response& res);

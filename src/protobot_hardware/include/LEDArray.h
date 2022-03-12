@@ -33,7 +33,7 @@ class LEDArray {
   LEDArray();
   void LEDInit(LEDSettings* ls_ptr);
   void LEDQuit();
-  void ToggleLEDArray(int8_t flag);
+  void ToggleLEDArray(uint8_t flag);
 
  private:
   int ClearIOBuffers();

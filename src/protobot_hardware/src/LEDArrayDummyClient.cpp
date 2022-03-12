@@ -28,10 +28,10 @@ int main(int argc, char** argv) {
   ros::init(argc, argv, "LED_toggle_client_node");
   if (argc != 2) {
     ROS_INFO("USAGE: [cmd] between 0-3\n"
-             "[0] : Flashing Success\n"
-             "[1] : Autonomous Mode\n"
-             "[2] : Teleop Mode\n"
-             "[3] : Off");
+             "[1] : Flashing Success\n"
+             "[2] : Autonomous Mode\n"
+             "[3] : Teleop Mode\n"
+             "[4] : Off");
     return 1;
   }
 
@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
 
   protobot_hardware::LED_toggle srv;
 
-  srv.request.LED_toggle = static_cast<int8_t>(atoi(argv[1]));
+  srv.request.LED_toggle = static_cast<uint8_t> (atoi(argv[1]));
 
   if (client.call(srv)) {
     ROS_INFO("Command sent to LED_toggle_server: [%d]", srv.request.LED_toggle);
