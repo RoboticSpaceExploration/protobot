@@ -23,6 +23,7 @@ SOFTWARE. */
 #ifndef SRC_PROTOBOT_CONTROL_INCLUDE_ROBOCLAW_H_
 #define SRC_PROTOBOT_CONTROL_INCLUDE_ROBOCLAW_H_
 
+#include <memory>
 #include <ros/ros.h>
 #include <stdint.h>
 #include <termios.h>
@@ -30,7 +31,7 @@ SOFTWARE. */
 
 class roboclaw {
  public:
-    explicit roboclaw(settings* es_protobot);
+    explicit roboclaw(std::shared_ptr<settings> es_protobot);
     void SetupEncoders();
     void CloseEncoders();
     void SendCommandToWheels(double* cmd);
@@ -56,7 +57,7 @@ class roboclaw {
     void ReadEncoderSpeedM2(uint8_t address);
 
     termios tty;
-    settings* es;
+    std::shared_ptr<settings> es;
     int serialPort;
     int zeroCmdVelCount;
     unsigned int baudRate;  // instead of uint32_t for compatability

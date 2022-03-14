@@ -23,6 +23,7 @@ SOFTWARE. */
 #ifndef SRC_PROTOBOT_CONTROL_INCLUDE_PROTOBOT_H_
 #define SRC_PROTOBOT_CONTROL_INCLUDE_PROTOBOT_H_
 
+#include <memory>
 #include <hardware_interface/robot_hw.h>
 #include <hardware_interface/joint_state_interface.h>
 #include <hardware_interface/joint_command_interface.h>
@@ -35,11 +36,11 @@ SOFTWARE. */
 namespace pb {
 class protobot : public hardware_interface::RobotHW {
  public:
-    explicit protobot(settings* es);
+    explicit protobot(std::shared_ptr<settings> es);
 
     void readTopicWriteToEncoders(roboclaw* rb);
     void readFromEncoders(roboclaw* rb);
-    void setYamlParameters(settings* es);
+    void setYamlParameters(std::shared_ptr<settings> es);
 
     ros::Time get_time();
     ros::Duration get_period();
@@ -51,8 +52,8 @@ class protobot : public hardware_interface::RobotHW {
     ros::NodeHandle nh;
     XmlRpc::XmlRpcValue rightJointList, leftJointList;
 
-    void registerStateHandlers(settings* es);
-    void registerJointVelocityHandlers(settings* es);
+    void registerStateHandlers(std::shared_ptr<settings> es);
+    void registerJointVelocityHandlers(std::shared_ptr<settings> es);
     void printDebugInfo(std::string name, double* data);
 
     ros::Duration elapsed_time;

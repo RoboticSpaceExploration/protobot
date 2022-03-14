@@ -29,7 +29,8 @@ int main(int argc, char** argv) {
 
     ROS_INFO_STREAM("Loading protobot_control_hw_node");
 
-    settings* es_ptr = new settings;
+    //settings* es_ptr = new settings;
+    std::shared_ptr<settings> es_ptr(new settings);
 
     pb::protobot robot(es_ptr);
     controller_manager::ControllerManager cm(&robot);
@@ -48,7 +49,7 @@ int main(int argc, char** argv) {
         rate.sleep();
     }
 
-    delete es_ptr;
+    //delete es_ptr;
 
     ROS_INFO("Shutting down roboclaw motor encoders");
     rb.CloseEncoders();
@@ -56,7 +57,7 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-pb::protobot::protobot(settings* es) {
+pb::protobot::protobot(std::shared_ptr<settings> es) {
     ROS_INFO("Setting Yaml parameters for serial port");
     setYamlParameters(es);
 
@@ -70,7 +71,7 @@ pb::protobot::protobot(settings* es) {
         cmd[i] = vel[i] = pos[i] = eff[i] = 0;
 }
 
-void pb::protobot::registerStateHandlers(settings* es) {
+void pb::protobot::registerStateHandlers(std::shared_ptr<settings> es) {
     hardware_interface::JointStateHandle state_handle_a(
         es->rightJoints[0], &pos[0], &vel[0], &eff[0]);
     jnt_state_interface.registerHandle(state_handle_a);
@@ -98,7 +99,7 @@ void pb::protobot::registerStateHandlers(settings* es) {
     registerInterface(&jnt_state_interface);
 }
 
-void pb::protobot::registerJointVelocityHandlers(settings* es) {
+void pb::protobot::registerJointVelocityHandlers(std::shared_ptr<settings> es) {
     hardware_interface::JointHandle vel_handle_a(
         jnt_state_interface.getHandle(es->rightJoints[0]), &cmd[0]);
     jnt_vel_interface.registerHandle(vel_handle_a);
@@ -164,7 +165,7 @@ void pb::protobot::printDebugInfo(std::string name, double* data) {
     ROS_INFO_STREAM(name << " LEFT_BACK_WHEEL_JOINT "    << data[5]);
 }
 
-void pb::protobot::setYamlParameters(settings* es) {
+void pb::protobot::setYamlParameters(std::shared_ptr<settings> es) {
     int exitFlag = false;
 
     nh.getParam("/wheel_encoders/serial_port", es->serialPortAddr);
