@@ -7,4 +7,6 @@ jobs:
     - uses: actions/checkout@v1
     - uses: actions/setup-python@v1
     - run: pip install cpplint
-    - run: cpplint --exclude=./src/realsense_ros_gazebo/src/*.cpp --exclude=./src/realsense_ros_gazebo/include/realsense_gazebo_plugin/*.h --recursive .
+    - run: cpplint --exclude=./src/realsense_ros_gazebo/src/*.cpp \
+--exclude=./src/realsense_ros_gazebo/include/realsense_gazebo_plugin/*.h \
+--recursive .
