@@ -23,10 +23,10 @@ SOFTWARE. */
 #ifndef SRC_PROTOBOT_CONTROL_INCLUDE_ROBOCLAW_H_
 #define SRC_PROTOBOT_CONTROL_INCLUDE_ROBOCLAW_H_
 
-#include <memory>
 #include <ros/ros.h>
 #include <stdint.h>
 #include <termios.h>
+#include <memory>
 #include "../include/settings.h"
 
 class roboclaw {
