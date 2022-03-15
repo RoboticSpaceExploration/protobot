@@ -39,6 +39,10 @@ roboclaw::roboclaw(std::shared_ptr<settings> es_protobot) {
     GetBaudRate();
 }
 
+roboclaw::~roboclaw() {
+    ROS_INFO("roboclaw: destructor called");
+}
+
 uint32_t roboclaw::RecombineBuffer(uint8_t* buf) {
     return (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]);
 }

@@ -32,6 +32,7 @@ SOFTWARE. */
 class roboclaw {
  public:
     explicit roboclaw(std::shared_ptr<settings> es_protobot);
+    ~roboclaw();
     void SetupEncoders();
     void CloseEncoders();
     void SendCommandToWheels(double* cmd);

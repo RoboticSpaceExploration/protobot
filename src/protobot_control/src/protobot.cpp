@@ -29,8 +29,8 @@ int main(int argc, char** argv) {
 
     ROS_INFO_STREAM("Loading protobot_control_hw_node");
 
-    //settings* es_ptr = new settings;
-    std::shared_ptr<settings> es_ptr(new settings);
+    std::shared_ptr<settings> es_ptr =
+        std::make_shared<settings>();
 
     pb::protobot robot(es_ptr);
     controller_manager::ControllerManager cm(&robot);
@@ -48,8 +48,6 @@ int main(int argc, char** argv) {
         robot.readFromEncoders(&rb);
         rate.sleep();
     }
-
-    //delete es_ptr;
 
     ROS_INFO("Shutting down roboclaw motor encoders");
     rb.CloseEncoders();
@@ -69,6 +67,10 @@ pb::protobot::protobot(std::shared_ptr<settings> es) {
 
     for (int i = 0; i <= 5; i++)
         cmd[i] = vel[i] = pos[i] = eff[i] = 0;
+}
+
+pb::protobot::~protobot() {
+    std::cout << "protobot: Destructor called" << std::endl;
 }
 
 void pb::protobot::registerStateHandlers(std::shared_ptr<settings> es) {
