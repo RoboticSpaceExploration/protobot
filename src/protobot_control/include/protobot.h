@@ -29,7 +29,6 @@ SOFTWARE. */
 #include <controller_manager/controller_manager.h>
 #include <ros/ros.h>
 #include <string>
-#include <memory>
 #include "../include/roboclaw.h"
 #include "../include/settings.h"
 
