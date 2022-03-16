@@ -31,7 +31,7 @@ SOFTWARE. */
 
 class roboclaw {
  public:
-    explicit roboclaw(std::shared_ptr<settings> es_protobot);
+    explicit roboclaw(settings* es_protobot);
     ~roboclaw();
     void SetupEncoders();
     void CloseEncoders();
@@ -58,7 +58,7 @@ class roboclaw {
     void ReadEncoderSpeedM2(uint8_t address);
 
     termios tty;
-    std::shared_ptr<settings> es;
+    settings* es;
     int serialPort;
     int zeroCmdVelCount;
     unsigned int baudRate;  // instead of uint32_t for compatability

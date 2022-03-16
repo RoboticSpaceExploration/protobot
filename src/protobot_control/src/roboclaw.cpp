@@ -31,7 +31,7 @@ SOFTWARE. */
 #include <cstring>
 #include "../include/roboclaw.h"
 
-roboclaw::roboclaw(std::shared_ptr<settings> es_protobot) {
+roboclaw::roboclaw(settings* es_protobot) {
     for (int i = 0; i < 256; i++)
         errorBuf[i] = 0x00;
     zeroCmdVelCount = 0;
@@ -50,24 +50,31 @@ uint32_t roboclaw::RecombineBuffer(uint8_t* buf) {
 void roboclaw::GetBaudRate() {
     switch (es->baud_rate) {
         case 9600:
+            ROS_INFO("Setting baud rate to 9600");
             baudRate = B9600;
             break;
         case 19200:
+            ROS_INFO("Setting baud rate to 19200");
             baudRate = B19200;
             break;
         case 38400:
+            ROS_INFO("Setting baud rate to 38400");
             baudRate = B38400;
             break;
         case 57600:
+            ROS_INFO("Setting baud rate to 57600");
             baudRate = B57600;
             break;
         case 115200:
+            ROS_INFO("Setting baud rate to 115200");
             baudRate = B115200;
             break;
         case 230400:
+            ROS_INFO("Setting baud rate to 230400");
             baudRate = B230400;
             break;
         case 460800:
+            ROS_INFO("Setting baud rate to 460800");
             baudRate = B460800;
             break;
         default:
