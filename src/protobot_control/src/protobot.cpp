@@ -29,48 +29,49 @@ int main(int argc, char** argv) {
 
     ROS_INFO_STREAM("Loading protobot_control_hw_node");
 
-    settings* es_ptr = new settings;
-
-    pb::protobot robot(es_ptr);
+    pb::protobot robot;
     controller_manager::ControllerManager cm(&robot);
 
-    roboclaw rb(es_ptr);
-
-    ROS_INFO("Initializing roboclaw motor encoders");
-    rb.SetupEncoders();
-
-    ros::Rate rate(es_ptr->loop_frequency);
-
     while (ros::ok()) {
-        robot.readTopicWriteToEncoders(&rb);
+        robot.readTopicWriteToEncoders();
         cm.update(robot.get_time(), robot.get_period());
-        robot.readFromEncoders(&rb);
-        rate.sleep();
+        robot.readFromEncoders();
+        robot.rate->sleep();
     }
-
-    delete es_ptr;
-
-    ROS_INFO("Shutting down roboclaw motor encoders");
-    rb.CloseEncoders();
 
     return 0;
 }
 
-pb::protobot::protobot(settings* es) {
+pb::protobot::protobot() {
     ROS_INFO("Setting Yaml parameters for serial port");
-    setYamlParameters(es);
+    settings es_ref;
+    es = &es_ref;
+    setYamlParameters();
+
+    ros::Rate rate_ref(es->loop_frequency);
+    rate = &rate_ref;
 
     ROS_INFO("Registering ros_control handlers");
-    registerStateHandlers(es);
-    registerJointVelocityHandlers(es);
+    registerStateHandlers();
+    registerJointVelocityHandlers();
 
     clock_gettime(CLOCK_MONOTONIC, &last_time);
 
     for (int i = 0; i <= 5; i++)
         cmd[i] = vel[i] = pos[i] = eff[i] = 0;
+
+    roboclaw rb_ref(es);
+    rb = &rb_ref;
+    ROS_INFO("Initializing roboclaw motor encoders");
+    rb->SetupEncoders();
 }
 
-void pb::protobot::registerStateHandlers(settings* es) {
+pb::protobot::~protobot() {
+    ROS_INFO("Shutting down roboclaw motor encoders");
+    rb->CloseEncoders();
+}
+
+void pb::protobot::registerStateHandlers() {
     hardware_interface::JointStateHandle state_handle_a(
         es->rightJoints[0], &pos[0], &vel[0], &eff[0]);
     jnt_state_interface.registerHandle(state_handle_a);
@@ -98,7 +99,7 @@ void pb::protobot::registerStateHandlers(settings* es) {
     registerInterface(&jnt_state_interface);
 }
 
-void pb::protobot::registerJointVelocityHandlers(settings* es) {
+void pb::protobot::registerJointVelocityHandlers() {
     hardware_interface::JointHandle vel_handle_a(
         jnt_state_interface.getHandle(es->rightJoints[0]), &cmd[0]);
     jnt_vel_interface.registerHandle(vel_handle_a);
@@ -126,7 +127,7 @@ void pb::protobot::registerJointVelocityHandlers(settings* es) {
     registerInterface(&jnt_vel_interface);
 }
 
-void pb::protobot::readTopicWriteToEncoders(roboclaw* rb) {
+void pb::protobot::readTopicWriteToEncoders() {
     ROS_INFO_STREAM("READING JOINT STATES FROM ROS");
     printDebugInfo("SENDING CMD_VEL TO", cmd);
 
@@ -134,7 +135,7 @@ void pb::protobot::readTopicWriteToEncoders(roboclaw* rb) {
 }
 
 
-void pb::protobot::readFromEncoders(roboclaw* rb) {
+void pb::protobot::readFromEncoders() {
     rb->GetVelocityFromWheels(vel);
 
     ROS_INFO_STREAM("READING JOINT STATES FROM MOTOR ENCODERS");
@@ -164,7 +165,7 @@ void pb::protobot::printDebugInfo(std::string name, double* data) {
     ROS_INFO_STREAM(name << " LEFT_BACK_WHEEL_JOINT "    << data[5]);
 }
 
-void pb::protobot::setYamlParameters(settings* es) {
+void pb::protobot::setYamlParameters() {
     int exitFlag = false;
 
     nh.getParam("/wheel_encoders/serial_port", es->serialPortAddr);

@@ -39,6 +39,10 @@ roboclaw::roboclaw(settings* es_protobot) {
     GetBaudRate();
 }
 
+roboclaw::~roboclaw() {
+    ROS_INFO("roboclaw: destructor called");
+}
+
 uint32_t roboclaw::RecombineBuffer(uint8_t* buf) {
     return (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]);
 }
@@ -46,24 +50,31 @@ uint32_t roboclaw::RecombineBuffer(uint8_t* buf) {
 void roboclaw::GetBaudRate() {
     switch (es->baud_rate) {
         case 9600:
+            ROS_INFO("Setting baud rate to 9600");
             baudRate = B9600;
             break;
         case 19200:
+            ROS_INFO("Setting baud rate to 19200");
             baudRate = B19200;
             break;
         case 38400:
+            ROS_INFO("Setting baud rate to 38400");
             baudRate = B38400;
             break;
         case 57600:
+            ROS_INFO("Setting baud rate to 57600");
             baudRate = B57600;
             break;
         case 115200:
+            ROS_INFO("Setting baud rate to 115200");
             baudRate = B115200;
             break;
         case 230400:
+            ROS_INFO("Setting baud rate to 230400");
             baudRate = B230400;
             break;
         case 460800:
+            ROS_INFO("Setting baud rate to 460800");
             baudRate = B460800;
             break;
         default:

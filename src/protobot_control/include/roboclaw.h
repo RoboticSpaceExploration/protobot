@@ -31,6 +31,7 @@ SOFTWARE. */
 class roboclaw {
  public:
     explicit roboclaw(settings* es_protobot);
+    ~roboclaw();
     void SetupEncoders();
     void CloseEncoders();
     void SendCommandToWheels(double* cmd);
