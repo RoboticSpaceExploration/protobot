@@ -423,6 +423,7 @@ void roboclaw::SendCommandToWheels(double* cmd) {
 
 void roboclaw::GetVelocityFromWheels(double* vel) {
     // return positive or negative value from encoders, depending on direction
+    // TODO: get corresponding motor addresses and map to M1 M2 functions
     ReadEncoderSpeedM1(0x80);  // right_front
     vel[0] = ConvertPulsesToRadians(
         static_cast<double> (RecombineBuffer(buf)));
