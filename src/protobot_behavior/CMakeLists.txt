@@ -10,7 +10,7 @@ project(protobot_behavior)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
-  stg_msgs
+  std_msgs
 )
 
 ## System dependencies are found with CMake's conventions
