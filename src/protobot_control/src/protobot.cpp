@@ -29,9 +29,7 @@ int main(int argc, char** argv) {
     spinner.start();
 
     ROS_INFO_STREAM("Loading protobot_control_hw_node");
-    
     settings es_main;
-
     pb::protobot robot(&es_main, &nh);
     controller_manager::ControllerManager cm(&robot);
     roboclaw rb(&es_main);
