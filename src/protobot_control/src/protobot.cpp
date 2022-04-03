@@ -32,13 +32,10 @@ int main(int argc, char** argv) {
     
     settings es_main;
 
-    pb::protobot robot(&es_main);
+    pb::protobot robot(&es_main, &nh);
     controller_manager::ControllerManager cm(&robot);
     roboclaw rb(&es_main);
     ros::Rate rate(es_main.loop_frequency);
-
-    ROS_INFO("Setting Yaml parameters for serial port");
-    robot.setYamlParameters(&nh);
 
     ROS_INFO("Initializing roboclaw motor encoders");
     rb.SetupEncoders();
@@ -56,9 +53,11 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-pb::protobot::protobot(settings* es_ptr) {
-    ROS_INFO("Registering ros_control handlers");
+pb::protobot::protobot(settings* es_ptr, ros::NodeHandle* nh) {
     es = es_ptr;
+    ROS_INFO("Setting Yaml parameters for serial port");
+    setYamlParameters(nh);
+    ROS_INFO("Registering ros_control handlers");
     registerStateHandlers();
     registerJointVelocityHandlers();
 

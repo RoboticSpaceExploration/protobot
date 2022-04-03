@@ -35,12 +35,11 @@ SOFTWARE. */
 namespace pb {
 class protobot : public hardware_interface::RobotHW {
  public:
-    protobot(settings* es_ptr);
+    protobot(settings* es_ptr, ros::NodeHandle* nh);
     ~protobot();
 
     void readTopicWriteToEncoders(roboclaw* rb);
     void readFromEncoders(roboclaw* rb);
-    void setYamlParameters(ros::NodeHandle* nh);
 
     ros::Time get_time();
     ros::Duration get_period();
@@ -55,6 +54,7 @@ class protobot : public hardware_interface::RobotHW {
     void registerStateHandlers();
     void registerJointVelocityHandlers();
     void printDebugInfo(std::string name, double* data);
+    void setYamlParameters(ros::NodeHandle* nh);
 
     ros::Duration elapsed_time;
     struct timespec last_time;
