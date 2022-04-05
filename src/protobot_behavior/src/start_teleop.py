@@ -2,8 +2,6 @@
 
 import rospy
 import roslaunch
+import subprocess
 
-uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
-roslaunch.configure_logging(uuid)
-launch = roslaunch.parent.ROSLaunchParent (uuid, ['/home/roselab/protobot/src/protobot_teleop/launch/protobot_teleop.launch'])
-launch.start()
+subprocess.Popen('roslaunch protobot_teleop protobot_teleop.launch', shell=True)
