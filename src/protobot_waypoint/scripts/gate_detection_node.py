@@ -33,5 +33,5 @@ def main():
     rospy.Subscriber("/fiducial", FiducialTransformArray, callback)
     rospy.spin()
     
-if __name__ == '__main__';
+if __name__ == '__main__':
     main()
