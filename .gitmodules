@@ -13,3 +13,6 @@
 [submodule "src/protobot_description/urdf/realsense_ros_gazebo"]
 	path = src/realsense_ros_gazebo
 	url = https://github.com/nilseuropa/realsense_ros_gazebo.git
+[submodule "src/SCI_protobot"]
+	path = src/SCI_protobot
+	url = https://github.com/RoboticSpaceExploration/SCI_protobot.git
