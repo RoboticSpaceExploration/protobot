@@ -1,5 +1,6 @@
 <launch>
 	<include file="$(find protobot_bringup)/launch/protobot_core.launch"/>
 	<include file="$(find protobot_gazebo)/launch/protobot_gazebo.launch"/>
+	<include file="$(find protobot_description)/launch/protobot_rviz.launch"/>
 	<include file="$(find protobot_planner)/launch/move_base.launch"/>
 </launch>

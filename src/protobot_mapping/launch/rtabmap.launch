@@ -44,8 +44,8 @@
 
       <param name="frame_id" type="string" value="base_link"/>
       <param name="map_frame_id" type="string" value="map"/>
-      <param name="min_cluster_size" type="int" value="20"/>
-      <param name="max_obstacles_height" type="double" value="0.0"/>
+      <param name="Grid/MinClusterSize" type="int" value="20"/>
+      <param name="Grid/MaxObstacleHeight" type="double" value="0.0"/>
     </node>
   </group>
 </launch>
