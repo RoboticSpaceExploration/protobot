@@ -13,6 +13,7 @@
     </node>
 
     <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="--delete_db_on_start">
+      
       <param name="frame_id" type="string" value="cam_link_optical"/>
 
       <param name="subscribe_depth" type="bool" value="false"/>
@@ -23,6 +24,7 @@
       <param name="visual_odometry" type="bool" value="false"/>
 
       <remap from="odom" to="/localization/filtered/odom_global"/>
+      
       <param name="odom_frame_id" value="odom"/>
 
       <remap from="rgbd_image" to="rgbd_image"/>
@@ -44,6 +46,7 @@
 
       <param name="frame_id" type="string" value="base_link"/>
       <param name="map_frame_id" type="string" value="map"/>
+
       <param name="min_cluster_size" type="int" value="20"/>
       <param name="max_obstacles_height" type="double" value="0.0"/>
     </node>
