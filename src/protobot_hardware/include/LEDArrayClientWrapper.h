@@ -20,33 +20,23 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef SRC_PROTOBOT_CONTROL_INCLUDE_SETTINGS_H_
-#define SRC_PROTOBOT_CONTROL_INCLUDE_SETTINGS_H_
+#ifndef SRC_PROTOBOT_HARDWARE_INCLUDE_LEDARRAYCLIENTWRAPPER_H_
+#define SRC_PROTOBOT_HARDWARE_INCLUDE_LEDARRAYCLIENTWRAPPER_H_
 
 #include <stdint.h>
-#include <string>
+#include "ros/ros.h"
+#include "protobot_hardware/LED_toggle.h"
 
-struct settings {
-    std::string serialPortAddr    = "/dev/ttyAMA0";
-    std::string rightJoints[3];
-    std::string leftJoints[3];
-    int leftAddr[3];
-    int rightAddr[3];
-    int timeout_ms                = 12;
-    int retries                   = 3;
-    int max_buf_size              = 100;
-    int baud_rate                 = 115200;
-    uint8_t m1_forward            = 0;
-    uint8_t m2_forward            = 4;
-    uint8_t m1_backward           = 1;
-    uint8_t m2_backward           = 5;
-    uint8_t m1_read_encoder_speed = 18;
-    uint8_t m2_read_encoder_speed = 19;
-    double max_m1m2_value         = 127;
-    double loop_frequency         = 10;
+class LEDArrayClientWrapper {
+ public:
+  LEDArrayClientWrapper();
+  void ToggleLEDStatus(int cmd);
+ private:
+  void CallServer();
+  ros::NodeHandle nh;
+  ros::ServiceClient client;
+  protobot_hardware::LED_toggle srv;
+  bool serverStatus;
 };
 
-// 0x80 - 0x87
-// 128 - 135
-
-#endif  // SRC_PROTOBOT_CONTROL_INCLUDE_SETTINGS_H_
+#endif  // SRC_PROTOBOT_HARDWARE_INCLUDE_LEDARRAYCLIENTWRAPPER_H_

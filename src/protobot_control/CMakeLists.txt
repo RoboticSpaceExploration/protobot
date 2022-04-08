@@ -14,11 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.0.2)
 project(protobot_control)
 
 find_package(catkin REQUIRED COMPONENTS
-        ackermann_msgs
         controller_manager
         controller_manager_msgs
         effort_controllers
@@ -33,15 +32,10 @@ find_package(catkin REQUIRED COMPONENTS
 
 catkin_package()
 
-
-catkin_install_python(PROGRAMS scripts/ackermann_controller
-                      DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
-
 install(DIRECTORY config launch
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 include_directories(
-        .
         ${catkin_INCLUDE_DIRS}
         ${Boost_INCLUDE_DIRS}
         )
