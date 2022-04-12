@@ -22,6 +22,7 @@
     <!-- Create the world. -->
 
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
+
        <!-- <arg name="world_name" value="$(find protobot_gazebo)/$(arg world_name)"/> -->
        <arg name="gui" default="true"/>
        <!--<arg name="world_name" value=""/>-->

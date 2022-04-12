@@ -1,4 +1,4 @@
-map_frame_id: odom
+map_frame_id: map
 robot_base_frame_id: base_link
 robot_pose_with_covariance_topic: /localization/filtered/pose_local
 robot_pose_cache_size: 200

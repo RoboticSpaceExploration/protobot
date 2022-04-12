@@ -2,7 +2,7 @@ Source code for Protobot. This directory is currently using ROS 1 (Melodic) tent
 
 # Dependencies
 1. Install librealsense2 with dev and dbg distribution included https://github.com/IntelRealSense/librealsense/blob/master/doc/distribution_linux.md#installing-the-packages
-2. Also ensure that you have the following(Install with ```sudo apt-get install```): 
+2. Also ensure that you have the following(Install with ```sudo apt-get install```):
      - libpcl-dev
      - libeigen3-dev
      - ros-melodic-costmap2d
@@ -10,6 +10,7 @@ Source code for Protobot. This directory is currently using ROS 1 (Melodic) tent
      - ros-melodic-move-base
      - ros-melodic-rtabmap-ros
      - ros-melodic-rtcm-msgs
+     - ros-melodic-smach
 
 # Setup
 1. Go to src/ and run ```git submodule update --init --recursive```
@@ -17,7 +18,7 @@ Source code for Protobot. This directory is currently using ROS 1 (Melodic) tent
 3. Build your project using ```catkin_make -DCMAKE_BUILD_TYPE=Release```
 4. It is recommended to automatically source the project inside of your ~/.bashrc file. Put the following at the end of ~/.bashrc: ```source <cloned directory root path>/devel/setup.sh ```
 
-# Launch 
+# Launch
 To run simulation
 1. Source project at root directory using ```. devel/setup.sh``` when first opening the shell. If you don't want to do this everytime, refer to #4
 2. To launch, ```roslaunch protobot_bringup protobot_simulation.launch```
