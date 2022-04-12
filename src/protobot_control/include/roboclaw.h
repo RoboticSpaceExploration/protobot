@@ -31,6 +31,7 @@ SOFTWARE. */
 class roboclaw {
  public:
     explicit roboclaw(settings* es_protobot);
+    ~roboclaw();
     void SetupEncoders();
     void CloseEncoders();
     void SendCommandToWheels(double* cmd);
@@ -42,7 +43,7 @@ class roboclaw {
     int WriteToEncoders(uint8_t* data, int nBytes);
     int WaitReadStatus(int nBytes, int timeout_ms);
     int ReadFromEncoders(int nBytes);
-    void SendCommands(uint8_t* data, int writeBytes, int readBytes);
+    int SendCommands(uint8_t* data, int writeBytes, int readBytes);
     double ConvertPulsesToRadians(double vel);
     uint8_t ScaleCommand(double cmd);
     uint32_t ValidateChecksum(uint8_t* packet, int nBytes);

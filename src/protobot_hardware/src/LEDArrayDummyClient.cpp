@@ -20,33 +20,39 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. */
 
-#ifndef SRC_PROTOBOT_CONTROL_INCLUDE_SETTINGS_H_
-#define SRC_PROTOBOT_CONTROL_INCLUDE_SETTINGS_H_
-
 #include <stdint.h>
-#include <string>
+#include "ros/ros.h"
+#include "protobot_hardware/LED_toggle.h"
 
-struct settings {
-    std::string serialPortAddr    = "/dev/ttyAMA0";
-    std::string rightJoints[3];
-    std::string leftJoints[3];
-    int leftAddr[3];
-    int rightAddr[3];
-    int timeout_ms                = 12;
-    int retries                   = 3;
-    int max_buf_size              = 100;
-    int baud_rate                 = 115200;
-    uint8_t m1_forward            = 0;
-    uint8_t m2_forward            = 4;
-    uint8_t m1_backward           = 1;
-    uint8_t m2_backward           = 5;
-    uint8_t m1_read_encoder_speed = 18;
-    uint8_t m2_read_encoder_speed = 19;
-    double max_m1m2_value         = 127;
-    double loop_frequency         = 10;
-};
+int main(int argc, char** argv) {
+  ros::init(argc, argv, "LED_toggle_client_node");
+  if (argc != 2) {
+    ROS_INFO("USAGE: [cmd] between 0-3\n"
+             "[1] : Flashing Success\n"
+             "[2] : Autonomous Mode\n"
+             "[3] : Teleop Mode\n"
+             "[4] : Off");
+    return 1;
+  }
 
-// 0x80 - 0x87
-// 128 - 135
+  ros::NodeHandle nh;
+  ros::ServiceClient client = nh.serviceClient<protobot_hardware::LED_toggle>
+      ("LED_toggle_server");
 
-#endif  // SRC_PROTOBOT_CONTROL_INCLUDE_SETTINGS_H_
+  protobot_hardware::LED_toggle srv;
+
+  srv.request.LED_toggle = static_cast<uint8_t> (atoi(argv[1]));
+
+  if (client.call(srv)) {
+    ROS_INFO("Command sent to LED_toggle_server: [%d]", srv.request.LED_toggle);
+    ROS_INFO("Reply: [%d]", srv.response.reply);
+  } else {
+    ROS_ERROR("[%d] is not a valid command ",
+              srv.request.LED_toggle);
+    ROS_ERROR("Reply: [%d]", srv.response.reply);
+    return 1;
+  }
+
+  return 0;
+}
+

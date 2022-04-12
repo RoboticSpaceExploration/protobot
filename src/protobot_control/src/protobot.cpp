@@ -24,22 +24,19 @@ SOFTWARE. */
 
 int main(int argc, char** argv) {
     ros::init(argc, argv, "handle");
+    ros::NodeHandle nh;
     ros::AsyncSpinner spinner(3);
     spinner.start();
 
     ROS_INFO_STREAM("Loading protobot_control_hw_node");
-
-    settings* es_ptr = new settings;
-
-    pb::protobot robot(es_ptr);
+    settings es_main;
+    pb::protobot robot(&es_main, &nh);
     controller_manager::ControllerManager cm(&robot);
-
-    roboclaw rb(es_ptr);
+    roboclaw rb(&es_main);
+    ros::Rate rate(es_main.loop_frequency);
 
     ROS_INFO("Initializing roboclaw motor encoders");
     rb.SetupEncoders();
-
-    ros::Rate rate(es_ptr->loop_frequency);
 
     while (ros::ok()) {
         robot.readTopicWriteToEncoders(&rb);
@@ -48,21 +45,19 @@ int main(int argc, char** argv) {
         rate.sleep();
     }
 
-    delete es_ptr;
-
     ROS_INFO("Shutting down roboclaw motor encoders");
     rb.CloseEncoders();
 
     return 0;
 }
 
-pb::protobot::protobot(settings* es) {
+pb::protobot::protobot(settings* es_ptr, ros::NodeHandle* nh) {
+    es = es_ptr;
     ROS_INFO("Setting Yaml parameters for serial port");
-    setYamlParameters(es);
-
+    setYamlParameters(nh);
     ROS_INFO("Registering ros_control handlers");
-    registerStateHandlers(es);
-    registerJointVelocityHandlers(es);
+    registerStateHandlers();
+    registerJointVelocityHandlers();
 
     clock_gettime(CLOCK_MONOTONIC, &last_time);
 
@@ -70,7 +65,10 @@ pb::protobot::protobot(settings* es) {
         cmd[i] = vel[i] = pos[i] = eff[i] = 0;
 }
 
-void pb::protobot::registerStateHandlers(settings* es) {
+pb::protobot::~protobot() {
+}
+
+void pb::protobot::registerStateHandlers() {
     hardware_interface::JointStateHandle state_handle_a(
         es->rightJoints[0], &pos[0], &vel[0], &eff[0]);
     jnt_state_interface.registerHandle(state_handle_a);
@@ -98,7 +96,7 @@ void pb::protobot::registerStateHandlers(settings* es) {
     registerInterface(&jnt_state_interface);
 }
 
-void pb::protobot::registerJointVelocityHandlers(settings* es) {
+void pb::protobot::registerJointVelocityHandlers() {
     hardware_interface::JointHandle vel_handle_a(
         jnt_state_interface.getHandle(es->rightJoints[0]), &cmd[0]);
     jnt_vel_interface.registerHandle(vel_handle_a);
@@ -164,28 +162,50 @@ void pb::protobot::printDebugInfo(std::string name, double* data) {
     ROS_INFO_STREAM(name << " LEFT_BACK_WHEEL_JOINT "    << data[5]);
 }
 
-void pb::protobot::setYamlParameters(settings* es) {
+void pb::protobot::setYamlParameters(ros::NodeHandle* nh) {
     int exitFlag = false;
+    for (int i = 0; i < 2; i++) {
+        es->rightAddr[i] = 0;
+        es->leftAddr[i] = 0;
+    }
 
-    nh.getParam("/wheel_encoders/serial_port", es->serialPortAddr);
-    nh.getParam("/wheel_encoders/send_command_retries", es->retries);
-    nh.getParam("/wheel_encoders/encoder_timeout_ms", es->timeout_ms);
-    nh.getParam("/wheel_encoders/loop_frequency", es->loop_frequency);
-    nh.getParam("/wheel_encoders/baud_rate", es->baud_rate);
-    nh.getParam("/wheel_encoders/right_wheel", rightJointList);
-    nh.getParam("/wheel_encoders/left_wheel", leftJointList);
+    nh->getParam("/wheel_encoders/serial_port", es->serialPortAddr);
+    nh->getParam("/wheel_encoders/send_command_retries", es->retries);
+    nh->getParam("/wheel_encoders/encoder_timeout_ms", es->timeout_ms);
+    nh->getParam("/wheel_encoders/loop_frequency", es->loop_frequency);
+    nh->getParam("/wheel_encoders/baud_rate", es->baud_rate);
+    nh->getParam("/wheel_encoders/right_wheel", rightJointList);
+    nh->getParam("/wheel_encoders/left_wheel", leftJointList);
+    nh->getParam("/wheel_encoders/right_addr", rightJointAddrList);
+    nh->getParam("/wheel_encoders/left_addr", leftJointAddrList);
 
     for (int i = 0; i <= 2; i++) {
         es->rightJoints[i] = static_cast<std::string> (rightJointList[i]);
         es->leftJoints[i] = static_cast<std::string> (leftJointList[i]);
+        es->rightAddr[i] = static_cast<int> (rightJointAddrList[i]);
+        es->leftAddr[i] = static_cast<int> (leftJointAddrList[i]);
+
         if (es->rightJoints[i] == "") {
             ROS_ERROR("Right joint [%d] : Incorrect number of "
                       "joints specified in YAML file", i);
             exitFlag = true;
         }
+
+        if (es->rightAddr[i] < 128 || es->rightAddr[i] > 135) {
+            ROS_ERROR("Right address [%d] : Incorrect address "
+                      "specified in YAML file", i);
+            exitFlag = true;
+        }
+
         if (es->leftJoints[i] == "") {
             ROS_ERROR("Left Joint [%d] : Incorrect number of "
                       "joints specified in YAML file", i);
+            exitFlag = true;
+        }
+
+        if (es->leftAddr[i] < 128 || es->leftAddr[i] > 135) {
+            ROS_ERROR("Left address [%d] : Incorrect address "
+                      "specified in YAML file", i);
             exitFlag = true;
         }
     }

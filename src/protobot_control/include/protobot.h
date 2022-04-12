@@ -35,11 +35,11 @@ SOFTWARE. */
 namespace pb {
 class protobot : public hardware_interface::RobotHW {
  public:
-    explicit protobot(settings* es);
+    protobot(settings* es_ptr, ros::NodeHandle* nh);
+    ~protobot();
 
     void readTopicWriteToEncoders(roboclaw* rb);
     void readFromEncoders(roboclaw* rb);
-    void setYamlParameters(settings* es);
 
     ros::Time get_time();
     ros::Duration get_period();
@@ -48,12 +48,13 @@ class protobot : public hardware_interface::RobotHW {
     static constexpr double BILLION = 1000000000.0;
     hardware_interface::JointStateInterface jnt_state_interface;
     hardware_interface::VelocityJointInterface jnt_vel_interface;
-    ros::NodeHandle nh;
     XmlRpc::XmlRpcValue rightJointList, leftJointList;
+    XmlRpc::XmlRpcValue rightJointAddrList, leftJointAddrList;
 
-    void registerStateHandlers(settings* es);
-    void registerJointVelocityHandlers(settings* es);
+    void registerStateHandlers();
+    void registerJointVelocityHandlers();
     void printDebugInfo(std::string name, double* data);
+    void setYamlParameters(ros::NodeHandle* nh);
 
     ros::Duration elapsed_time;
     struct timespec last_time;
@@ -62,6 +63,7 @@ class protobot : public hardware_interface::RobotHW {
     double pos[6];
     double vel[6];
     double eff[6];
+    settings* es;
 };
 }  // namespace pb
 

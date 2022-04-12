@@ -39,6 +39,10 @@ roboclaw::roboclaw(settings* es_protobot) {
     GetBaudRate();
 }
 
+roboclaw::~roboclaw() {
+    ROS_INFO("roboclaw: destructor called");
+}
+
 uint32_t roboclaw::RecombineBuffer(uint8_t* buf) {
     return (buf[3] << 24 | buf[2] << 16 | buf[1] << 8 | buf[0]);
 }
@@ -46,24 +50,31 @@ uint32_t roboclaw::RecombineBuffer(uint8_t* buf) {
 void roboclaw::GetBaudRate() {
     switch (es->baud_rate) {
         case 9600:
+            ROS_INFO("Setting baud rate to 9600");
             baudRate = B9600;
             break;
         case 19200:
+            ROS_INFO("Setting baud rate to 19200");
             baudRate = B19200;
             break;
         case 38400:
+            ROS_INFO("Setting baud rate to 38400");
             baudRate = B38400;
             break;
         case 57600:
+            ROS_INFO("Setting baud rate to 57600");
             baudRate = B57600;
             break;
         case 115200:
+            ROS_INFO("Setting baud rate to 115200");
             baudRate = B115200;
             break;
         case 230400:
+            ROS_INFO("Setting baud rate to 230400");
             baudRate = B230400;
             break;
         case 460800:
+            ROS_INFO("Setting baud rate to 460800");
             baudRate = B460800;
             break;
         default:
@@ -77,47 +88,36 @@ void roboclaw::GetBaudRate() {
    Successful writes to encoders are then polled to check if data is available to be read back. Once data is available, the data
    is read back, then the user's I/O buffers are cleared. */
 
-void roboclaw::SendCommands(uint8_t* data, int writeBytes, int readBytes) {
+int roboclaw::SendCommands(uint8_t* data, int writeBytes, int readBytes) {
     int r, writeFlag, readFlag, flushFlag, waitStatus;
 
-    // write to encoders for specified number of retries
+    for (r=0; r < es->retries; ++r) {
+        for ( ; r < es->retries; ++r) {
+            writeFlag = WriteToEncoders(data, writeBytes);
+            if (writeFlag == -1) return -1;
 
-    for (r = 0; r <= es->retries; r++) {
-        writeFlag = WriteToEncoders(data, writeBytes);
-        if (writeBytes == -1)
-            ROS_WARN("CMD TO ENCODERS DID NOT SUCCEED, "
-                     "RETRYING");
-        if (writeFlag == writeBytes) {
             waitStatus = WaitReadStatus(readBytes, es->timeout_ms);
-            if (waitStatus >= 1)
-                break;  // data available to be read back
-            if (waitStatus == -1 || waitStatus == 0) {
-                ROS_WARN("ERROR POLLING AVAILABLE DATA ON SERIAL PORT, "
-                         "RESENDING COMMAND");
-            }
+
+            if (waitStatus == 1) break;  // data is available to be read back
+            if (waitStatus == -1 || waitStatus == 0) return -1;
+
+            flushFlag = ClearIOBuffers();
+            if (flushFlag == -1) return -1;
         }
 
-        flushFlag = ClearIOBuffers();
-        if (flushFlag == -1)
-            ROS_WARN("COULD NOT CLEAR IO BUFFERS");
-    }
-
-    // read from encoders for specified number of retries
-
-    for (r = 0; r < es->retries; r++) {
-        if (r > es->retries)
-            ROS_WARN("MAX RETRIES EXCEEDED");
+        if (r >= es->retries) return -1;
 
         readFlag = ReadFromEncoders(readBytes);
-        if (readFlag == -1)
-            ROS_WARN("COULD NOT READ BACK JOINT STATUS");
-        if (readFlag == readBytes)  // data has been read into buffer
-            break;
+        if (readFlag > 0) return 1;
+        if (readFlag == -1) return -1;
+
+        assert(readFlag == readBytes);
+
+        flushFlag = ClearIOBuffers();
+        if (flushFlag == -1) return -1;
     }
 
-    flushFlag = ClearIOBuffers();
-    if (flushFlag == -1)
-        ROS_WARN("COULD NOT CLEAR IO BUFFERS");
+    return r;  // max retries exceeded
 }
 
 int roboclaw::ClearIOBuffers() {
