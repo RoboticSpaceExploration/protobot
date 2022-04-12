@@ -1,0 +1,3 @@
+<launch>
+  <node name="BehaviorTree" pkg="protobot_behavior" type="bt.py" output="screen"/>
+</launch>
