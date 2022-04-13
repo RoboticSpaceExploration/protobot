@@ -95,11 +95,16 @@ int roboclaw::SendCommands(uint8_t* data, int writeBytes, int readBytes) {
         for ( ; r < es->retries; ++r) {
             writeFlag = WriteToEncoders(data, writeBytes);
             if (writeFlag == -1) return -1;
+            
+            if (es->debug_mode) {
+                waitStatus = WaitReadStatus(readBytes, es->timeout_ms);
 
-            waitStatus = WaitReadStatus(readBytes, es->timeout_ms);
+                if (waitStatus == 1) break;  // data is available to be read back
+                if (waitStatus == -1 || waitStatus == 0) return -1;
+            }
 
-            if (waitStatus == 1) break;  // data is available to be read back
-            if (waitStatus == -1 || waitStatus == 0) return -1;
+            else 
+                break;
 
             flushFlag = ClearIOBuffers();
             if (flushFlag == -1) return -1;
@@ -107,11 +112,15 @@ int roboclaw::SendCommands(uint8_t* data, int writeBytes, int readBytes) {
 
         if (r >= es->retries) return -1;
 
-        readFlag = ReadFromEncoders(readBytes);
-        if (readFlag > 0) return 1;
-        if (readFlag == -1) return -1;
+        if (es->debug_mode) {
+            readFlag = ReadFromEncoders(readBytes);
+            if (readFlag > 0) return 1;
+            if (readFlag == -1) return -1;
 
-        assert(readFlag == readBytes);
+            assert(readFlag == readBytes);
+        } else {
+            return 1;
+        }
 
         flushFlag = ClearIOBuffers();
         if (flushFlag == -1) return -1;
@@ -374,29 +383,29 @@ void roboclaw::SendCommandToWheels(double* cmd) {
             BackwardM1(0x80, cmd_send[0]);
 
         if (cmd[1] >= 0)  // right_middle
-            ForwardM2(0x80, cmd_send[1]);
+            ForwardM1(0x81, cmd_send[1]);
         else
-            BackwardM2(0x80, cmd_send[1]);
+            BackwardM1(0x81, cmd_send[1]);
 
         if (cmd[2] >= 0)  // right_back
-            ForwardM1(0x81, cmd_send[2]);
+            ForwardM1(0x82, cmd_send[2]);
         else
-            BackwardM1(0x81, cmd_send[2]);
+            BackwardM1(0x82, cmd_send[2]);
 
         if (cmd[3] >= 0)  // left_front
-            ForwardM2(0x82, cmd_send[3]);
+            ForwardM2(0x80, cmd_send[3]);
         else
-            BackwardM2(0x82, cmd_send[3]);
+            BackwardM2(0x80, cmd_send[3]);
 
         if (cmd[4] >= 0)  // left_middle
-            ForwardM1(0x82, cmd_send[4]);
+            ForwardM2(0x81, cmd_send[4]);
         else
-            BackwardM1(0x82, cmd_send[4]);
+            BackwardM2(0x81, cmd_send[4]);
 
         if (cmd[5] >= 0)  // left_back
-            ForwardM2(0x81, cmd_send[5]);
+            ForwardM2(0x82, cmd_send[5]);
         else
-            BackwardM2(0x81, cmd_send[5]);
+            BackwardM2(0x82, cmd_send[5]);
     }
 
     // if any of the cmd_vel are zero, increment counter
