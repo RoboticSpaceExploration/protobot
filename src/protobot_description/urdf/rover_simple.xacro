@@ -98,7 +98,7 @@
   <joint name="cam_optical_joint" type="fixed">
 	<parent link="cam_link"/>
 	<child link="cam_link_optical"/>
-	<origin xyz="0 0 0" rpy="3.14 3.14 1.571"/>
+	<origin xyz="0.55 0 -0.1" rpy="3.14 3.14 1.571"/>
 </joint>
 
   <joint name="cam_joint" type="fixed">
