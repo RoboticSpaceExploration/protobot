@@ -38,8 +38,8 @@ class protobot : public hardware_interface::RobotHW {
     protobot(settings* es_ptr, ros::NodeHandle* nh);
     ~protobot();
 
-    void readTopicWriteToEncoders(roboclaw* rb);
-    void readFromEncoders(roboclaw* rb);
+    void readTopicWriteToEncoders(roboclaw* rb, settings* es);
+    void readFromEncoders(roboclaw* rb, settings* es);
 
     ros::Time get_time();
     ros::Duration get_period();

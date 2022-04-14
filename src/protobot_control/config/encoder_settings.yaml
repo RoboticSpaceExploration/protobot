@@ -1,4 +1,5 @@
 wheel_encoders:
+  debug_mode:           False
   serial_port:          "/dev/ttyTHS2"
   send_command_retries: 3
   encoder_timeout_ms:   12
@@ -6,5 +7,5 @@ wheel_encoders:
   baud_rate:            115200
   right_wheel:          [ 'right_front_wheel_pivot', 'right_mid_wheel_pivot', 'right_back_wheel_pivot' ]
   left_wheel:           [ 'left_front_wheel_pivot', 'left_mid_wheel_pivot', 'left_back_wheel_pivot' ]
-  right_addr:           [ 128, 128, 129 ]
-  left_addr:            [ 130, 130, 129 ]
+  right_addr:           [ 128, 129, 130 ] # note: implement
+  left_addr:            [ 128, 129, 130 ] # note: implement
