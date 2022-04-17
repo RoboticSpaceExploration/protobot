@@ -16,3 +16,6 @@
 [submodule "src/SCI_protobot"]
 	path = src/SCI_protobot
 	url = https://github.com/RoboticSpaceExploration/SCI_protobot.git
+[submodule "src/ARM_protobot"]
+	path = src/ARM_protobot
+	url = https://github.com/RoboticSpaceExploration/ARM_protobot.git
