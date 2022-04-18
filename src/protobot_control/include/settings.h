@@ -44,6 +44,7 @@ struct settings {
     uint8_t m2_read_encoder_speed = 19;
     double max_m1m2_value         = 127;
     double loop_frequency         = 10;
+    bool debug_mode               = true;
 };
 
 // 0x80 - 0x87

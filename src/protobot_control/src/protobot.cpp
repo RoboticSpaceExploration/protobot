@@ -39,9 +39,9 @@ int main(int argc, char** argv) {
     rb.SetupEncoders();
 
     while (ros::ok()) {
-        robot.readTopicWriteToEncoders(&rb);
+        robot.readTopicWriteToEncoders(&rb, &es_main);
         cm.update(robot.get_time(), robot.get_period());
-        robot.readFromEncoders(&rb);
+        robot.readFromEncoders(&rb, &es_main);
         rate.sleep();
     }
 
@@ -124,19 +124,23 @@ void pb::protobot::registerJointVelocityHandlers() {
     registerInterface(&jnt_vel_interface);
 }
 
-void pb::protobot::readTopicWriteToEncoders(roboclaw* rb) {
-    ROS_INFO_STREAM("READING JOINT STATES FROM ROS");
-    printDebugInfo("SENDING CMD_VEL TO", cmd);
+void pb::protobot::readTopicWriteToEncoders(roboclaw* rb, settings* es) {
+    if (es->debug_mode) {
+        ROS_INFO_STREAM("READING JOINT STATES FROM ROS");
+        printDebugInfo("SENDING CMD_VEL TO", cmd);
+    }
 
     rb->SendCommandToWheels(cmd);
 }
 
 
-void pb::protobot::readFromEncoders(roboclaw* rb) {
-    rb->GetVelocityFromWheels(vel);
+void pb::protobot::readFromEncoders(roboclaw* rb, settings* es) {
+    if (es->debug_mode) {
+        rb->GetVelocityFromWheels(vel);
 
-    ROS_INFO_STREAM("READING JOINT STATES FROM MOTOR ENCODERS");
-    printDebugInfo("VEL FROM", vel);
+        ROS_INFO_STREAM("READING JOINT STATES FROM MOTOR ENCODERS");
+        printDebugInfo("VEL FROM", vel);
+    }
 }
 
 ros::Time pb::protobot::get_time() {
@@ -169,6 +173,7 @@ void pb::protobot::setYamlParameters(ros::NodeHandle* nh) {
         es->leftAddr[i] = 0;
     }
 
+    nh->getParam("/wheel_encoders/debug_mode", es->debug_mode);
     nh->getParam("/wheel_encoders/serial_port", es->serialPortAddr);
     nh->getParam("/wheel_encoders/send_command_retries", es->retries);
     nh->getParam("/wheel_encoders/encoder_timeout_ms", es->timeout_ms);

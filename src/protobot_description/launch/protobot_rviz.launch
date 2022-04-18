@@ -9,6 +9,5 @@
   <!-- load model into parameter server -->
   <param name="robot_description" command="$(find xacro)/xacro '$(find protobot_description)/urdf/rover_simple.xacro'"/>
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true"/>
-  <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find protobot_description)/rviz/test.rviz" required="true"/> -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find protobot_description)/rviz/test.rviz" required="true"/> 
 </launch>
