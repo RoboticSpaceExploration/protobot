@@ -95,10 +95,8 @@ int roboclaw::SendCommands(uint8_t* data, int writeBytes, int readBytes) {
         for ( ; r < es->retries; ++r) {
             writeFlag = WriteToEncoders(data, writeBytes);
             if (writeFlag == -1) return -1;
-            
             if (es->debug_mode) {
                 waitStatus = WaitReadStatus(readBytes, es->timeout_ms);
-
                 // data is available to be read back
                 if (waitStatus == 1) break;
                 if (waitStatus == -1 || waitStatus == 0) return -1;
