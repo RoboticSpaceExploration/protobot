@@ -99,12 +99,12 @@ int roboclaw::SendCommands(uint8_t* data, int writeBytes, int readBytes) {
             if (es->debug_mode) {
                 waitStatus = WaitReadStatus(readBytes, es->timeout_ms);
 
-                if (waitStatus == 1) break;  // data is available to be read back
+                // data is available to be read back
+                if (waitStatus == 1) break;
                 if (waitStatus == -1 || waitStatus == 0) return -1;
-            }
-
-            else 
+            } else {
                 break;
+            }
 
             flushFlag = ClearIOBuffers();
             if (flushFlag == -1) return -1;

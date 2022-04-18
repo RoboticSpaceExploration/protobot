@@ -125,7 +125,6 @@ void pb::protobot::registerJointVelocityHandlers() {
 }
 
 void pb::protobot::readTopicWriteToEncoders(roboclaw* rb, settings* es) {
-    
     if (es->debug_mode) {
         ROS_INFO_STREAM("READING JOINT STATES FROM ROS");
         printDebugInfo("SENDING CMD_VEL TO", cmd);
