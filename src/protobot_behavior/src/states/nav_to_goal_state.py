@@ -5,10 +5,12 @@ import smach
 import smach_ros
 
 
-class Name(smach.State):
+class NavToGoal(smach.State):
     def __init__(self):
-        smach.State.__init__(self, outcomes=[""], input_keys=[""])
+        smach.State.__init__(self, outcomes=["reached_goal", "start_search", "abort_path"])
 
     def execute(self, userdata):
         rospy.loginfo("Executing state NAME")
-        return
+        return "reached_goal"
+        return "start_search"
+        return "abort_path"
