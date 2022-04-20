@@ -2,6 +2,8 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/ARM_protobot" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/SCI_protobot" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/elevation_mapping" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/grid_map" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/src/kindr" vcs="Git" />
