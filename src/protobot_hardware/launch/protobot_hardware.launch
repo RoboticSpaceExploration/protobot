@@ -7,5 +7,5 @@
 	<include file="$(find protobot_hardware)/launch/rs_d400_and_t265.launch"/>
 	<include file="$(find protobot_hardware)/launch/ublox_zed-f9p.launch"/>
 	<include file="$(find protobot_hardware)/launch/LED_array_server.launch"/>
-
+    <include file="$(find motor_p)/launch/motor_p_server.launch"/>
 </launch>

@@ -1,6 +1,6 @@
 #footprint: [[-0.1, -0.15], [-0.1, 0.15], [0.1, 0.15], [0.1, -0.15]]
 footprint_padding: 0.2
-robot_radius: 0.5
+robot_radius: 0.3 #0.5 is the right value
 transform_tolerance: 1
 
 controller_patience: 2.0
