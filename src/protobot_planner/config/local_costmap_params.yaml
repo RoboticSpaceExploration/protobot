@@ -1,5 +1,5 @@
 local_costmap:
-  global_frame: map
+  global_frame: odom
   robot_base_frame: base_link
   update_frequency: 2.0
   publish_frequency: 2.0
@@ -14,15 +14,15 @@ local_costmap:
    - {name: inflater_layer, type: "costmap_2d::InflationLayer"}
    
   inflater_layer:
-    inflation_radius: 1
-    cost_scaling_factor: 30
+    inflation_radius: 0.1
+    cost_scaling_factor: 50
    
   obstacle_layer: 
     obstacle_range: 6
     raytrace_range: 110
     observation_sources: point_cloud_sensor
     point_cloud_sensor: {
-      sensor_frame: cam_link_optical,
+      sensor_frame: cam_link,
       data_type: PointCloud2, 
       topic: planner_cloud,
       expected_update_rate: 6.0, 

@@ -13,7 +13,7 @@ global_costmap:
    - {name: inflater_layer, type: "costmap_2d::InflationLayer"}
    
   inflater_layer:
-    inflation_radius: 1
+    inflation_radius: 0.1
     cost_scaling_factor: 30
    
   obstacle_layer: 
@@ -21,7 +21,7 @@ global_costmap:
     raytrace_range: 110
     observation_sources: point_cloud_sensor
     point_cloud_sensor: {
-      sensor_frame: cam_link_optical,
+      sensor_frame: cam_link,
       data_type: PointCloud2, 
       topic: planner_cloud,
       expected_update_rate: 6.0, 
