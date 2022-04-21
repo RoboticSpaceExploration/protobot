@@ -1,4 +1,4 @@
-ocal_costmap:
+local_costmap:
   global_frame: odom
   robot_base_frame: base_link
   update_frequency: 2.0
