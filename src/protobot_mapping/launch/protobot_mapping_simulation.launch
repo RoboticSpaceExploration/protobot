@@ -1,0 +1,8 @@
+<launch>
+    <node pkg="protobot_mapping" type="OdometryTransform" name="odom_transform_node">
+        <remap from="nav_msgs/Odometry" to="/localization/filtered/odom_local"/>
+        <remap from="pose" to="/localization/filtered/pose_local"/>
+    </node>
+    <!--<include file="$(find protobot_mapping)/launch/elevation_mapping.launch"/> -->
+    <include file="$(find protobot_mapping)/launch/rtabmap_simulation.launch"/>
+</launch>

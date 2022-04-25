@@ -1,6 +1,7 @@
 <launch>
-	<include file="$(find protobot_bringup)/launch/protobot_core.launch"/>
-	<include file="$(find protobot_gazebo)/launch/protobot_gazebo.launch"/>
-	<include file="$(find protobot_description)/launch/protobot_rviz.launch"/>
-	<include file="$(find protobot_planner)/launch/move_base.launch"/>
+	<!--param name="/use_sim_time" value="true"/-->
+	<include file="$(find protobot_bringup)/launch/protobot_core_simulation.launch"/>
+	<include file="$(find protobot_gazebo)/launch/protobot_gazebo_simulation.launch"/>
+	<include file="$(find protobot_description)/launch/protobot_rviz_simulation.launch"/>
+	<include file="$(find protobot_planner)/launch/move_base_simulation.launch"/>
 </launch>

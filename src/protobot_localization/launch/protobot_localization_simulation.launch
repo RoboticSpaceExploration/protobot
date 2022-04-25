@@ -1,0 +1,5 @@
+<launch>
+
+    <include file="$(find protobot_localization)/launch/ekf_simulation.launch"/>
+
+</launch>
