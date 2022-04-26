@@ -10,4 +10,5 @@
         <rosparam file="$(find protobot_planner)/config/base_local_planner_params_sim.yaml" command="load" />
         <remap from="/cmd_vel" to="/protobot_velocity_controller/cmd_vel"/>
     </node>
+
 </launch>

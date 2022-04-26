@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <launch>
     <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform_node" respawn="true">
         <param name="magnetic_declination_radians" value="0.0445059"/>
@@ -10,7 +11,7 @@
         <param name="zero_altitude" value="false"/>
     </node>
     <node pkg="robot_localization" type="ekf_localization_node" name="global_ekf">
-        <param name="frequency" value="5"/>
+        <param name="frequency" value="5.0"/>
         <param name="sensor_timeout" value="0.1"/>
 
         <remap from="odometry/filtered" to="localization/filtered/odom_global"/>

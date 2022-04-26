@@ -14,7 +14,7 @@
             <heightmap>
               <uri>file://dem/mars_129.tif</uri>
               <size>150 150 50</size>
-              <pos>0 0 -1120</pos>
+              <pos>0 0 -1128</pos> 
             </heightmap>
           </geometry>
         </collision>
@@ -47,7 +47,7 @@
               </blend>
               <uri>file://dem/mars_129.tif</uri>
               <size>150 150 50</size>
-              <pos>0 0 -1120</pos>
+              <pos>0 0 -1128</pos>
             </heightmap>
           </geometry>
         </visual>

@@ -7,9 +7,9 @@
     <!-- Vehicle pose -->
     <arg name="x" default="0.0"/>
     <arg name="y" default="0.0"/>
-    <arg name="z" default="9"/>
+    <arg name="z" default="5"/>
     <arg name="roll" default="0.0"/>
-    <arg name="pitch" default="0.6"/>
+    <arg name="pitch" default="0.0"/>
     <arg name="yaw" default="0.0"/>
 
     <!--

@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
 
   ros::NodeHandle node;
   ros::Subscriber sub = node.subscribe(
-      "/camera/odom/sample", 30, &poseCallback);
+      "/camera/odom/sample", 10, &poseCallback);
 
   ros::spin();
   return 0;

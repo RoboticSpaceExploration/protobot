@@ -1,6 +1,7 @@
 global_costmap:
-  global_frame: base_link
+  global_frame: odom
   robot_base_frame: base_link
+  transform_tolerance: 1.0
   update_frequency: 0.5
   publish_frequency: 0.5
   static_map: false
@@ -13,12 +14,12 @@ global_costmap:
     - {name: inflater_layer, type: "costmap_2d::InflationLayer"}
 
   inflater_layer:
-    inflation_radius: 0.5
-    cost_scaling_factor: 30
+    inflation_radius: 0.2
+    cost_scaling_factor: 15.0
 
   obstacle_layer:
-    obstacle_range: 6
-    raytrace_range: 110
+    obstacle_range: 15.0
+    raytrace_range: 15.0
     observation_sources: point_cloud_sensor
     point_cloud_sensor: {
       sensor_frame: cam_link_optical,
@@ -27,5 +28,5 @@ global_costmap:
       expected_update_rate: 6.0,
       marking: true,
       clearing: true,
-      min_obstacle_height: -99999.0,
-      max_obstacle_height: 99999.0}
+      min_obstacle_height: -99999,
+      max_obstacle_height: 99999}
