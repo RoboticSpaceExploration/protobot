@@ -5,13 +5,16 @@ import smach
 import smach_ros
 
 
-class BeginAuto(smach.State):
+class BeginMission(smach.State):
 	def __init__(self):
 		smach.State.__init__(self, outcomes=["to_auto", "to_teleop"],
-								   input_keys=["start_teleop", "start_sim"])
+                                   input_keys=["start_teleop"],
+                                   output_keys=["current_leg"])
 	
 	def execute(self, userdata):
-		rospy.loginfo("Executing state BEGIN_AUTO")
+		rospy.loginfo("Executing state BEGIN_MISSION")
+        userdata.current_leg = 0
+
 		if (userdata.start_teleop == "y"):
 			return "to_teleop"
 		else:

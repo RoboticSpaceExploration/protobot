@@ -4,7 +4,7 @@ import rospy
 import smach
 import smach_ros
 
-from states import auto_state, teleop_state, simulation_state as sim_state, red_led_state, check_leg_state, led_array, wait_for_goal_state, nav_to_goal_state, search_state
+from states import startup_state, teleop_state, led_array, nav_states, search_state, prep_nav_state
 
 
 def main():
@@ -23,39 +23,44 @@ def main():
 
             smach.StateMachine.add(
                 "FLASH_RED", led_array.FlashRed(),
-                transitions={"complete" : "CHECK_LEG"})
-
-			smach.StateMachine.add(
-				"CHECK_LEG", check_leg_state.CheckLeg(),
-                transitions={"done" : "BEGIN_AUTO"})
-
+                transitions={"complete" : "BEGIN_MISSION"})
             smach.StateMachine.add(
-                "BEGIN_AUTO", auto_state.BeginAuto(),
+                "BEGIN_MISSION", startup_state.BeginMission(),
                 transitions={"to_teleop" : "TELEOP",
                              "to_auto" : "SUCCESS"})
             smach.StateMachine.add(
                 "TELEOP", teleop_state.Teleop(),
                 transitions={"complete" : "BEGIN_AUTO"})
 
-        smach.StateMachine.add("SETUP_TREE", setup_sm,
-            transitions={"SUCCESS" : "NAV_TREE"})
+        smach.StateMachine.add(
+            "SETUP_TREE", setup_sm,
+            transitions={"SUCCESS" : "PREP_NAV"})
 
+        # Transition to navigation
+        smach.StateMachine.add(
+            "PREP_NAV", prep_nav_state.PrepNav(),
+            transitions={"to_nav" : "NAV_TREE"})
+        
         # NAVIGATION SM
         nav_sm = smach.StateMachine(outcomes=["SUCCESS", "FAIL"])
         with nav_sm:
             smach.StateMachine.add(
-                "WAIT_FOR_GOAL", wait_for_goal_state.WaitForGoal(),
+                "WAIT_FOR_GOAL", nav_states.WaitForGoal(),
                 transitions={"ready" : "NAV_TO_GOAL"})
             smach.StateMachine.add(
-                "NAV_TO_GOAL", nav_to_goal_state.NavToGoal(),
-                transitions={"reached_goal" : "SUCCESS",
+                "NAV_TO_GOAL", nav_states.NavToGoal(),
+                transitions={"reached_goal" : "FLASH_GREEN",
                              "start_search" : "SEARCH",
-                             "abort_path" : "FAIL"})
+                             "aborted_goal" : "FAIL"})
             smach.StateMachine.add(
                 "SEARCH", search_state.Search(),
                 transitions={"goal_found" : "NAV_TO_GOAL"})
+            smach.StateMachine.add(
+                "FLASH_GREEN", led_array.FlashGreen(),
+                transitions={"complete" : "SUCCESS"})
         
-        smach.StateMachine.add("NAV_TREE", nav_sm,
+        smach.StateMachine.add(
+            "NAV_TREE", nav_sm,
             transitions={"SUCCESS" : "MISSION_END"})
 
     # Create and start the introspection server
