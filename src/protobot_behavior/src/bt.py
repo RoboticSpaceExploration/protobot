@@ -39,7 +39,8 @@ def main():
         # Transition to navigation
         smach.StateMachine.add(
             "PREP_NAV", prep_nav_state.PrepNav(),
-            transitions={"to_nav" : "NAV_TREE"})
+            transitions={"to_nav" : "NAV_TREE",
+                         "finish" : "MISSION_END"})
         
         # NAVIGATION SM
         nav_sm = smach.StateMachine(outcomes=["SUCCESS", "FAIL"])
@@ -54,14 +55,14 @@ def main():
                              "aborted_goal" : "FAIL"})
             smach.StateMachine.add(
                 "SEARCH", search_state.Search(),
-                transitions={"goal_found" : "NAV_TO_GOAL"})
+                transitions={"goal_found" : "NAV_TO_GOAL")
             smach.StateMachine.add(
                 "FLASH_GREEN", led_array.FlashGreen(),
                 transitions={"complete" : "SUCCESS"})
         
         smach.StateMachine.add(
             "NAV_TREE", nav_sm,
-            transitions={"SUCCESS" : "MISSION_END"})
+            transitions={"SUCCESS" : "PREP_NAV"})
 
     # Create and start the introspection server
     sis = smach_ros.IntrospectionServer('Introspection', bt, '/SM_ROOT')
