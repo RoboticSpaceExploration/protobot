@@ -15,18 +15,19 @@ global_costmap:
 
   inflater_layer:
     inflation_radius: 0.2
-    cost_scaling_factor: 15.0
+    cost_scaling_factor: 10.0
 
   obstacle_layer:
-    obstacle_range: 15.0
-    raytrace_range: 15.0
+    track_unknown_space: true
     observation_sources: point_cloud_sensor
     point_cloud_sensor: {
       sensor_frame: cam_link_optical,
       data_type: PointCloud2,
-      topic: planner_cloud,
-      expected_update_rate: 6.0,
+      topic: /rtabmap/cloud_obstacles,
+      expected_update_rate: 60.0,
       marking: true,
       clearing: true,
-      min_obstacle_height: -99999,
-      max_obstacle_height: 99999}
+      obstacle_range: 10.0,
+      raytrace_range: 10.0,
+      min_obstacle_height: -50.0,
+      max_obstacle_height: 50.0}
