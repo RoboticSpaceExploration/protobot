@@ -3,7 +3,7 @@
 
     <node pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_ros/rgbd_sync" output="screen">
       <remap from="rgb/image"       to="/depth_cam/color/image_raw"/>
-      <remap from="depth/image"     to="/depth_cam/depth/image_raw"/>
+      <remap from="depth/image"     to="/depth_cam/aligned_depth_to_color/image_raw"/>
       <remap from="rgb/camera_info" to="/depth_cam/color/camera_info"/>
       
       <remap from="rgbd_image"      to="rgbd_image"/> <!-- output -->
