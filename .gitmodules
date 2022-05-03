@@ -22,3 +22,9 @@
 [submodule "src/video_stream_opencv"]
 	path = src/video_stream_opencv
 	url = https://github.com/ros-drivers/video_stream_opencv
+[submodule "src/I-C_protobot"]
+	path = src/I-C_protobot
+	url = https://github.com/anotheruser1458/I-C_protobot.git
+[submodule "src/rosbridge_suite"]
+	path = src/rosbridge_suite
+	url = https://github.com/RobotWebTools/rosbridge_suite
