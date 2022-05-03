@@ -98,7 +98,7 @@
   <joint name="gps_imu_joint" type="fixed">
 	  <parent link="base_link"/>
 	  <child link="gps_imu_link"/>
-	  <origin xyz="0 0 0.5"/>
+	  <origin xyz="0 0 0"/>
   </joint>
   
   <!--
