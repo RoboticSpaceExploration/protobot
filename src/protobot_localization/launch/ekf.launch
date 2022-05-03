@@ -7,10 +7,10 @@
 		<remap from="odometry/gps" to="/localization/unfiltered/gps_odom"/>
 		<remap from="imu/data" to="imu/data"/>
 		<remap from="gps/fix" to="gps/fix"/>
-		<param name="zero_altitude" value="false"/>
+		<param name="zero_altitude" value="true"/>
 	</node>
 	<node pkg="robot_localization" type="ekf_localization_node" name="global_ekf">
-		<param name="frequency" value="5"/>
+		<param name="frequency" value="1"/>
 		<param name="sensor_timeout" value="0.1"/>
 	
 		<remap from="odometry/filtered" to="localization/filtered/odom_global"/>
@@ -19,7 +19,7 @@
 		<param name="odom_frame" value="odom"/>
 		<param name="base_link_frame" value="base_link"/>
 		<param name="world_frame" value="map"/> 
-		<param name="two_d_mode" value="false"/>
+		<param name="two_d_mode" value="true"/>
 		
 		<param name="odom0" value="localization/unfiltered/gps_odom"/>
 		<param name="imu0" value="imu/data"/>
