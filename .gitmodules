@@ -19,9 +19,6 @@
 [submodule "src/ARM_protobot"]
 	path = src/ARM_protobot
 	url = https://github.com/RoboticSpaceExploration/ARM_protobot.git
-[submodule "src/video_stream_opencv"]
-	path = src/video_stream_opencv
-	url = https://github.com/ros-drivers/video_stream_opencv
 [submodule "src/web_video_server"]
 	path = src/web_video_server
 	url = https://github.com/RobotWebTools/web_video_server
