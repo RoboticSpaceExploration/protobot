@@ -4,12 +4,12 @@
 <xacro:property name="body_length" value="0.8"/>
 <xacro:property name="body_width" value="0.5"/>
 <xacro:property name="body_height" value="0.2"/>
-<xacro:property name="body_mass" value="21"/>
+<xacro:property name="body_mass" value="55"/>
 
 <xacro:property name="wheel_radius" value="0.12"/>
 <xacro:property name="wheel_width" value="0.128"/>
 <xacro:property name="wheel_height" value="0.24"/>
-<xacro:property name="wheel_mass" value="0.5"/>
+<xacro:property name="wheel_mass" value="0.7"/>
 
 <xacro:property name="front_wheel_forward" value="0.4"/>
 <xacro:property name="front_wheel_out" value="0.3"/>

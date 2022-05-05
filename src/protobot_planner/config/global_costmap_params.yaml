@@ -21,7 +21,7 @@ global_costmap:
     raytrace_range: 110
     observation_sources: point_cloud_sensor
     point_cloud_sensor: {
-      sensor_frame: cam_link,
+      sensor_frame: depth_cam_link,
       data_type: PointCloud2, 
       topic: planner_cloud,
       expected_update_rate: 6.0, 
